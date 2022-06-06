@@ -173,28 +173,29 @@ class JobTitleMatch:
                                                 if re.search(rf'\b{j} {i}\b', jt).start() == 0:
                                                     high_perc = 0.99
                                             except:
-                                                if k == j:
-                                                    vector1 = self.text_to_vector(
-                                                        jt)
-                                                    vector2 = self.text_to_vector(
-                                                        f'{i} {j}')
-                                                    cosine = round(
-                                                        self.get_cosine(vector1, vector2), 2)
-                                                else:
-                                                    keywords.append(k)
-                                                    vector1 = self.text_to_vector(
-                                                        jt)
-                                                    vector2 = self.text_to_vector(
-                                                        f'{i} {j} {" ".join(keywords)}')
-                                                    cosine = round(
-                                                        self.get_cosine(vector1, vector2), 2)
+                                                pass
+                                        if k == j:
+                                            vector1 = self.text_to_vector(
+                                                jt)
+                                            vector2 = self.text_to_vector(
+                                                f'{i} {j}')
+                                            cosine = round(
+                                                self.get_cosine(vector1, vector2), 2)
+                                        else:
+                                            keywords.append(k)
+                                            vector1 = self.text_to_vector(
+                                                jt)
+                                            vector2 = self.text_to_vector(
+                                                f'{i} {j} {" ".join(keywords)}')
+                                            cosine = round(
+                                                self.get_cosine(vector1, vector2), 2)
 
-                                                if cosine == 1.00:
-                                                    high_perc = cosine
-                                                    break
+                                        if cosine == 1.00:
+                                            high_perc = cosine
+                                            break
 
-                                                if cosine > high_perc:
-                                                    high_perc = cosine
+                                        if cosine > high_perc:
+                                            high_perc = cosine
 
                             if high_perc == 1.00:
                                 break
@@ -318,44 +319,51 @@ class CompanyMatch(JobTitleMatch):
     def check_percentage_match(self):
 
         report = {}
-        report_counts = {'High': 0, 'Medium': 0, 'Low': 0}
-
+        report_counts = {'High':0, 'Medium':0, 'Low':0}
+        matched_companies = {}
+        
         for index, comp in enumerate(self.companies_clean):
-
+            
             high_perc = 0.00
-
+            
             for i in self.exclude_clean:
                 if re.search(rf'\b{i}\b', comp) or re.search(rf'\b{comp}\b', i):
                     high_perc = 2.00
+                    matched_companies[comp] = i
                     break
-
+            
             if i == comp:
                 high_perc = 1.00
+                matched_companies[comp] = i
                 break
-
+            
             for i in self.targets_clean:
                 try:
                     if re.search(rf'\b{i}\b', comp).start() == 0:
                         high_perc = 0.99
+                        matched_companies[comp] = i
                         break
                 except:
                     try:
                         if re.search(rf'\b{comp}\b', i).start() == 0:
                             high_perc = 0.99
+                            matched_companies[comp] = i
                             break
                     except:
                         pass
-
+                    
                 vector1 = self.text_to_vector(comp)
                 vector2 = self.text_to_vector(i)
-                cosine = round(self.get_cosine(vector1, vector2), 2)
-
+                cosine = round(self.get_cosine(vector1, vector2),2)
+                
                 if cosine == 1.00:
                     high_perc = cosine
+                    matched_companies[comp] = i
                     break
-
+                
                 if cosine > high_perc:
                     high_perc = cosine
+                    matched_companies[comp] = i   
 
             if high_perc == 0.00:
                 report[self.companies[index]] = 'No match'
@@ -376,7 +384,7 @@ class CompanyMatch(JobTitleMatch):
                 report[self.companies[index]] = 'Weak match'
                 report_counts['Low'] += 1
 
-        return report, report_counts
+        return report, report_counts, matched_companies
 
     def hello(self):
 
@@ -427,5 +435,5 @@ class handler(BaseHTTPRequestHandler):
         unique_comps = len(set(data["companies"]))
 
         self.wfile.write(json.dumps({"jt_report": a[0], "jt_report_sum": a[1], "jt_ucounts": unique_jts,
-                         "comp_report": b[0], "comp_report_sum": b[1], "comp_ucounts": unique_comps}).encode())
+                         "comp_report": b[0], "comp_report_sum": b[1], "comp_ucounts": unique_comps, "matched_companies":b[2]}).encode())
         return
