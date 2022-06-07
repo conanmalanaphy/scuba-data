@@ -2,7 +2,8 @@ import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
+import CardContent from '@mui/material/CardContent';
+import TextField from '@mui/material/TextField';
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
@@ -63,13 +64,19 @@ const updateFn = async (newData: formPost) => {
     })
 }
 
+function filterlist(list: formPost[], name: string) {
+    return list.filter(function (s: formPost) {
+        return s.name.match(name);
+    });
+};
+
 function DashboardContent() {
     const [isOpen, setIsOpen] = useState(false)
     const [expanded, setExpanded] = useState('')
-    const [cards, setCards] = useState([])
+    const [cards, setCards] = useState<formPost[]>([])
     const { jsonToCSV } = usePapaParse()
     const { mutate } = useSWRConfig()
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(true);
     const profile = supabase.auth.user()
     const { data } = useSWR(`/api/dashboard/${profile?.id}`, fetcher)
 
@@ -117,9 +124,20 @@ function DashboardContent() {
             >
                 <Toolbar />
                 <Box sx={{ m: 4 }}>
-                    <Button variant="outlined" onClick={handleClickOpen}>
+                    <Button variant="contained" onClick={handleClickOpen}>
                         Upload
                     </Button>
+                    <TextField
+                        sx={{ width: 300, marginLeft: 20 }}
+                        autoFocus
+                        label="Filter Results"
+                        type="email"
+                        variant="standard"
+                        onChange={(event) => {
+                            setCards(filterlist(data, event.target.value))
+                        }}
+
+                    />
                     <Modal
                         isOpen={isOpen}
                         handleClose={handleClose}
@@ -169,7 +187,7 @@ function DashboardContent() {
 
                             const fomattedData = await fetch(
                                 (baseURL ? baseURL + '/' : '') +
-                                    'api/updatedata',
+                                'api/updatedata',
                                 {
                                     method: 'POST',
                                     headers: new Headers({
