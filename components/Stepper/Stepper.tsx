@@ -37,7 +37,7 @@ export default function LineStepper({ onClose }: StepperProps) {
     const profile = supabase.auth.user()
 
     const { CSVReader } = useCSVReader()
-    const { data } = useSWR(`/api/settings/${profile?.id}`, fetcher)
+    const { data } = useSWR(`/api/campaigns/${profile?.id}`, fetcher)
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1)

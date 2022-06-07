@@ -21,13 +21,13 @@ const fetcher = async (url: string) => {
     return data
 }
 
-function Settings() {
+function ArchivedCampaigns() {
     const [expanded, setExpanded] = useState('')
     const [state, setState] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const profile = supabase.auth.user()
 
-    const result = useSWR(`/api/settings/${profile?.id}`, fetcher)
+    const result = useSWR(`/api/campaigns/${profile?.id}`, fetcher)
     const data = result.data
 
     const handleChange = (event: string) => {
@@ -46,7 +46,7 @@ function Settings() {
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <Wrapper pageName={'Settings'} />
+            <Wrapper pageName={'Campaigns'} />
             <Box
                 sx={{
                     backgroundColor: (theme) =>
@@ -74,11 +74,11 @@ function Settings() {
                             state.map((item: any) => (
                                 <Accord
                                     key={item.id}
-                                    updateData={() => {}}
+                                    updateData={() => { }}
                                     item={item}
                                     isExpanded={expanded == item.id?.toString()}
                                     handleChange={() => handleChange(item.id)}
-                                    sendToArchive={() => {}}
+                                    sendToArchive={() => { }}
                                 />
                             ))
                         ) : (
@@ -99,4 +99,4 @@ function Settings() {
     )
 }
 
-export default Settings
+export default ArchivedCampaigns;

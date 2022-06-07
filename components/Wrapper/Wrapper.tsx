@@ -78,12 +78,12 @@ export const secondaryListItems = (
                 <ListItemText primary="Dashboard" />
             </ListItemButton>
         </Link>
-        <Link href="/settings" sx={{ textDecoration: "none" }}>
+        <Link href="/campaigns" sx={{ textDecoration: "none" }}>
             <ListItemButton>
                 <ListItemIcon>
                     <SettingsApplicationsIcon sx={{ color: "#1976d2" }} />
                 </ListItemIcon>
-                <ListItemText primary="Settings" />
+                <ListItemText primary="Campaigns" />
             </ListItemButton>
         </Link>
         <Link href="/profile" sx={{ textDecoration: "none" }}>
