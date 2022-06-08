@@ -32,7 +32,7 @@ const archieveSetting = async (id: string) => {
         }),
         body: JSON.stringify({
             id: id,
-            state: 'LIVE',
+            state: 'INACTIVE',
         }),
     })
 }

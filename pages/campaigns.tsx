@@ -69,7 +69,7 @@ const archieveSetting = async (id: string) => {
         }),
         body: JSON.stringify({
             id: id,
-            state: 'INACTIVE',
+            state: 'ARCHIVED',
         }),
     })
 }
@@ -125,7 +125,7 @@ function Campaigns() {
                     const newTodo = {
                         id: '',
                         name: name,
-                        state: 'LIVE',
+                        state: 'INACTIVE',
                         seniorites: [],
                         keywords: [],
                         companysList: [],
@@ -184,9 +184,7 @@ function Campaigns() {
                                     return (
                                         <Accord
                                             key={item.id}
-                                            isDisabled={
-                                                item.state === 'INACTIVE'
-                                            }
+                                            isDisabled={false}
                                             updateData={async (
                                                 updatedsetting
                                             ) => {
@@ -260,13 +258,14 @@ function Campaigns() {
                                         width: '100%',
                                         justifyContent: 'center',
                                         margin: 'auto',
+                                        marginTop: "2rem"
                                     }}
                                 >
                                     <AddCircleOutlineIcon
                                         sx={{
                                             color: '#1976d2',
                                         }}
-                                    />{' '}
+                                    />
                                     Please upload some results
                                 </Box>
                             )
