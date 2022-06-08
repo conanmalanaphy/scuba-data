@@ -38,31 +38,58 @@ const user: NextApiHandler = async (req, res) => {
         return
     }
 
-    if (id) {
+    if (req.method === 'DELETE') {
+        // probs do some validation on this??
+        const { id } = req.query
+        console.log(id)
+
         const { data, error } = await supabase
             .from('campaigns')
-            .select('*')
-            .eq('user', id)
+            .update({ deleted_at: (new Date()).toISOString() })
+            .eq('id', id)
 
-        if (data) {
-            const aa = data.map((campaign: any) => {
-                return {
-                    id: campaign.id,
-                    name: campaign.name,
-                    state: campaign.state,
-                    seniorites: JSON.parse(campaign.seniorites),
-                    keywords: JSON.parse(campaign.keywords),
-                    companysList: JSON.parse(campaign.companys_list),
-                    jobTitles: JSON.parse(campaign.job_titles),
-                    user: id,
-                }
-            })
-            res.status(200).json(aa)
+        if (!error) {
+            res.status(200).json(data)
         } else {
+            console.log(error)
             res.status(404).end()
         }
+
+        return
     }
-    res.status(404).end()
+
+    if (req.method === 'GET') {
+        if (id) {
+            const { data, error } = await supabase
+                .from('campaigns')
+                .select('*')
+                .eq('user', id)
+                .is('deleted_at', null)
+    
+            if (!error) {
+                const formattedData = data.map((campaign: any) => {
+                    return {
+                        id: campaign.id,
+                        name: campaign.name,
+                        state: campaign.state,
+                        seniorites: JSON.parse(campaign.seniorites),
+                        keywords: JSON.parse(campaign.keywords),
+                        companysList: JSON.parse(campaign.companys_list),
+                        jobTitles: JSON.parse(campaign.job_titles),
+                        user: id,
+                    }
+                })
+
+                res.status(200).json(formattedData)
+            } else {
+                res.status(404).end()
+            }
+        }
+        res.status(404).end()
+        return
+    }
+
+   
 }
 
 export default user

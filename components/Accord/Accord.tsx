@@ -1,8 +1,11 @@
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
+import DeleteIcon from '@mui/icons-material/Delete'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import ArchiveIcon from '@mui/icons-material/Archive';
 import Chip from '@mui/material/Chip'
 import TextField from '@mui/material/TextField'
 import ToggleButton from '@mui/material/ToggleButton'
@@ -204,7 +207,8 @@ interface AccordProps {
     handleChange: () => void
     item: campaign
     updateData: (items: campaign) => void
-    sendToArchive: () => void
+    sendToArchive: () => void;
+    onDelete: () => void
 }
 
 export default function Accord({
@@ -213,6 +217,7 @@ export default function Accord({
     item,
     updateData,
     sendToArchive,
+    onDelete
 }: AccordProps) {
     return (
         <Accordion expanded={isExpanded} onChange={handleChange}>
@@ -248,9 +253,29 @@ export default function Accord({
                     <ToggleButton value="LIVE">LIVE</ToggleButton>
                     <ToggleButton value="INACTIVE">INACTIVE</ToggleButton>
                 </ToggleButtonGroup>
-                <Button variant="contained" onClick={sendToArchive}>
-                    Archive
-                </Button>
+                <IconButton
+                    edge="start"
+                    color="inherit"
+                    onClick={sendToArchive}
+                    sx={{
+                        color: "#1976d2",
+                        marginLeft: '1rem',
+
+                    }}
+                >
+                    <ArchiveIcon />
+                </IconButton>
+                <IconButton
+                    edge="start"
+                    color="inherit"
+                    onClick={onDelete}
+                    sx={{
+                        color: "#1976d2",
+                        marginLeft: '1rem',
+                    }}
+                >
+                    <DeleteIcon />
+                </IconButton>
             </AccordionSummary>
             <AccordionDetails
                 sx={{

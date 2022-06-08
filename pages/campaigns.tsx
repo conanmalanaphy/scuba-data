@@ -71,6 +71,17 @@ const archieveSetting = async (id: string) => {
     })
 }
 
+
+const deleteSetting = async (id: string) => {
+    await fetch(`/api/campaigns/${id}`, {
+        method: 'DELETE',
+        headers: new Headers({
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        }),
+    })
+}
+
 function Campaigns() {
     const [expanded, setExpanded] = useState('')
     const [state, setState] = useState<campaign[]>([])
@@ -210,6 +221,22 @@ function Campaigns() {
                                                 mutate(
                                                     `/api/campaigns/${profile?.id}`,
                                                     archieveSetting(item.id),
+                                                    {
+                                                        optimisticData: [
+                                                            ...newData,
+                                                        ],
+                                                        rollbackOnError: true,
+                                                    }
+                                                )
+                                            }}
+                                            onDelete={async () => {
+                                                const newData = data.filter(
+                                                    (post: campaign) =>
+                                                        post.id !== item.id
+                                                )
+                                                mutate(
+                                                    `/api/campaigns/${profile?.id}`,
+                                                    deleteSetting(item.id),
                                                     {
                                                         optimisticData: [
                                                             ...newData,
