@@ -79,6 +79,7 @@ function ArchivedCampaigns() {
                                     isExpanded={expanded == item.id?.toString()}
                                     handleChange={() => handleChange(item.id)}
                                     sendToArchive={() => { }}
+                                    onDelete={() => { }}
                                 />
                             ))
                         ) : (

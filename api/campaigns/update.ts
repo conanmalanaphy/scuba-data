@@ -6,6 +6,7 @@ const user: NextApiHandler = async (req, res) => {
         // probs do some validation on this??
 
         const updates = {
+            state: req.body.state,
             seniorites: JSON.stringify(req.body.seniorites),
             keywords: JSON.stringify(req.body.keywords),
             companys_list: JSON.stringify(req.body.companysList),
