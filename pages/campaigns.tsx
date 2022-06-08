@@ -5,6 +5,7 @@ import Link from '@mui/material/Link'
 import Toolbar from '@mui/material/Toolbar'
 import { useEffect, useState } from 'react'
 import CampaignModal from '../components/CampaignModal/CampaignModal'
+import CampaignCopyModal from '../components/CampaignModal/CampaignCopyModal'
 import Wrapper from '../components/Wrapper/Wrapper'
 import Accord from '../components/Accord/Accord'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -88,6 +89,7 @@ function Campaigns() {
     const [expanded, setExpanded] = useState('')
     const [state, setState] = useState<campaign[]>([])
     const [isOpen, setIsOpen] = useState(false)
+    const [isSaveAsOpen, setIsSaveAsOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const profile = supabase.auth.user()
 
@@ -101,6 +103,13 @@ function Campaigns() {
     }
     const handleClose = () => {
         setIsOpen(false)
+    }
+
+    const handleClickSaveAsOpen = () => {
+        setIsSaveAsOpen(true)
+    }
+    const handleSaveAsClose = () => {
+        setIsSaveAsOpen(false)
     }
 
     const handleChange = (event: string) => {
@@ -141,6 +150,20 @@ function Campaigns() {
                     handleClose()
                 }}
             />
+            <CampaignCopyModal
+                isOpen={isSaveAsOpen}
+                handleClose={handleSaveAsClose}
+                campaigns={data}
+                onSubmit={(newTodo: any) => {
+
+                    mutate(`/api/campaigns/${profile?.id}`, updateFn(newTodo), {
+                        optimisticData: [...data, newTodo],
+                        rollbackOnError: true,
+                    })
+
+                    handleSaveAsClose()
+                }}
+            />
             <CssBaseline />
             <Wrapper pageName={'Campaigns'} />
             <Box
@@ -159,9 +182,13 @@ function Campaigns() {
                             justifyContent: 'space-between',
                         }}
                     >
-                        <Button variant="contained" onClick={handleClickOpen}>
+                        <Box><Button variant="contained" onClick={handleClickOpen}>
                             Create
                         </Button>
+                            <Button variant="outlined" sx={{ ml: 2 }} onClick={handleClickSaveAsOpen}>
+                                Save As
+                            </Button></Box>
+
                         <Link href="/archieved-campaigns">
                             <Button variant="contained">
                                 View Archieved Campaigns
