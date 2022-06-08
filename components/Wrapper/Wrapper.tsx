@@ -70,26 +70,26 @@ const Drawer = styled(MuiDrawer, {
 
 export const secondaryListItems = (
     <Fragment>
-        <Link href="/dashboard" sx={{ textDecoration: "none" }}>
+        <Link href="/dashboard" sx={{ textDecoration: 'none' }}>
             <ListItemButton>
                 <ListItemIcon>
-                    <DashboardIcon sx={{ color: "#1976d2" }} />
+                    <DashboardIcon sx={{ color: '#1976d2' }} />
                 </ListItemIcon>
                 <ListItemText primary="Dashboard" />
             </ListItemButton>
         </Link>
-        <Link href="/campaigns" sx={{ textDecoration: "none" }}>
+        <Link href="/campaigns" sx={{ textDecoration: 'none' }}>
             <ListItemButton>
                 <ListItemIcon>
-                    <SettingsApplicationsIcon sx={{ color: "#1976d2" }} />
+                    <SettingsApplicationsIcon sx={{ color: '#1976d2' }} />
                 </ListItemIcon>
                 <ListItemText primary="Campaigns" />
             </ListItemButton>
         </Link>
-        <Link href="/profile" sx={{ textDecoration: "none" }}>
+        <Link href="/profile" sx={{ textDecoration: 'none' }}>
             <ListItemButton>
                 <ListItemIcon>
-                    <AccountCircleIcon sx={{ color: "#1976d2" }} />
+                    <AccountCircleIcon sx={{ color: '#1976d2' }} />
                 </ListItemIcon>
                 <ListItemText primary="Profile" />
             </ListItemButton>

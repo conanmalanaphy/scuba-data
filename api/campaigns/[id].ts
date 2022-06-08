@@ -45,7 +45,7 @@ const user: NextApiHandler = async (req, res) => {
 
         const { data, error } = await supabase
             .from('campaigns')
-            .update({ deleted_at: (new Date()).toISOString() })
+            .update({ deleted_at: new Date().toISOString() })
             .eq('id', id)
 
         if (!error) {
@@ -65,7 +65,7 @@ const user: NextApiHandler = async (req, res) => {
                 .select('*')
                 .eq('user', id)
                 .is('deleted_at', null)
-    
+
             if (!error) {
                 const formattedData = data.map((campaign: any) => {
                     return {
@@ -88,8 +88,6 @@ const user: NextApiHandler = async (req, res) => {
         res.status(404).end()
         return
     }
-
-   
 }
 
 export default user

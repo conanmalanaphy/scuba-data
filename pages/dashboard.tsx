@@ -3,8 +3,8 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import DeleteIcon from '@mui/icons-material/Delete'
-import CardContent from '@mui/material/CardContent';
-import TextField from '@mui/material/TextField';
+import CardContent from '@mui/material/CardContent'
+import TextField from '@mui/material/TextField'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
@@ -69,9 +69,9 @@ const updateFn = async (newData: formPost) => {
 
 function filterlist(list: formPost[], name: string) {
     return list.filter(function (s: formPost) {
-        return s.name.match(name);
-    });
-};
+        return s.name.match(name)
+    })
+}
 
 const deleteResult = async (id?: number) => {
     await fetch(`/api/dashboard/${id}`, {
@@ -89,7 +89,7 @@ function DashboardContent() {
     const [cards, setCards] = useState<formPost[]>([])
     const { jsonToCSV } = usePapaParse()
     const { mutate } = useSWRConfig()
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true)
     const profile = supabase.auth.user()
     const { data } = useSWR(`/api/dashboard/${profile?.id}`, fetcher)
 
@@ -149,7 +149,6 @@ function DashboardContent() {
                         onChange={(event) => {
                             setCards(filterlist(data, event.target.value))
                         }}
-
                     />
                     <Modal
                         isOpen={isOpen}
@@ -200,7 +199,7 @@ function DashboardContent() {
 
                             const fomattedData = await fetch(
                                 (baseURL ? baseURL + '/' : '') +
-                                'api/updatedata',
+                                    'api/updatedata',
                                 {
                                     method: 'POST',
                                     headers: new Headers({
@@ -419,23 +418,27 @@ function DashboardContent() {
                                                     edge="start"
                                                     color="inherit"
                                                     onClick={async () => {
-                                                        const newData = data.filter(
-                                                            (post: any) =>
-                                                                post.id !== id
-                                                        )
+                                                        const newData =
+                                                            data.filter(
+                                                                (post: any) =>
+                                                                    post.id !==
+                                                                    id
+                                                            )
                                                         mutate(
                                                             `/api/dashboard/${profile?.id}`,
                                                             deleteResult(id),
                                                             {
-                                                                optimisticData: [
-                                                                    ...newData,
-                                                                ],
-                                                                rollbackOnError: true,
+                                                                optimisticData:
+                                                                    [
+                                                                        ...newData,
+                                                                    ],
+                                                                rollbackOnError:
+                                                                    true,
                                                             }
                                                         )
                                                     }}
                                                     sx={{
-                                                        color: "#1976d2",
+                                                        color: '#1976d2',
                                                         marginLeft: '1rem',
                                                     }}
                                                 >

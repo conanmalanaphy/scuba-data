@@ -5,10 +5,12 @@ const user: NextApiHandler = async (req, res) => {
     if (req.method === 'POST') {
         // probs do some validation on this??
 
-        const idToArchive = req.body
+        const idToArchive = req.body.id
+        const state = req.body.state
+
         const { data, error } = await supabase
             .from('campaigns')
-            .update({ state: 'ARCHIVED' })
+            .update({ state: state })
             .eq('id', idToArchive)
         if (!error) {
             res.status(200).json(data)

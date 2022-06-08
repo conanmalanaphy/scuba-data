@@ -14,7 +14,8 @@ interface item {
     name: string
     isIncluded: boolean
 }
-interface campaign {
+
+interface Campaign {
     user: string
     id: string
     name: string
@@ -25,23 +26,24 @@ interface campaign {
     jobTitles: item[]
 }
 
-
 interface AccordProps {
     isExpanded: boolean
+    isDisabled: boolean
     handleChange: () => void
-    item: campaign
-    updateData: (items: campaign) => void
-    sendToArchive: () => void;
-    onDelete: () => void
+    item: Campaign
+    updateData: (items: Campaign) => void
+    sendToArchive?: () => void
+    onDelete?: () => void
 }
 
 export default function Accord({
     isExpanded,
+    isDisabled,
     handleChange,
     item,
     updateData,
     sendToArchive,
-    onDelete
+    onDelete,
 }: AccordProps) {
     return (
         <Accordion expanded={isExpanded} onChange={handleChange}>
@@ -61,45 +63,50 @@ export default function Accord({
                 >
                     {item.name}
                 </Typography>
-                <ToggleButtonGroup
-                    color="primary"
-                    value={item.state}
-                    exclusive
-                    onChange={(
-                        event: React.MouseEvent<HTMLElement>,
-                        newAlignment: string
-                    ) => {
-                        event.preventDefault()
-                        event.stopPropagation()
-                        updateData({ ...item, state: newAlignment })
-                    }}
-                >
-                    <ToggleButton value="LIVE">LIVE</ToggleButton>
-                    <ToggleButton value="INACTIVE">INACTIVE</ToggleButton>
-                </ToggleButtonGroup>
-                <IconButton
-                    edge="start"
-                    color="inherit"
-                    onClick={sendToArchive}
-                    sx={{
-                        color: "#1976d2",
-                        marginLeft: '1rem',
-
-                    }}
-                >
-                    <ArchiveIcon />
-                </IconButton>
-                <IconButton
-                    edge="start"
-                    color="inherit"
-                    onClick={onDelete}
-                    sx={{
-                        color: "#1976d2",
-                        marginLeft: '1rem',
-                    }}
-                >
-                    <DeleteIcon />
-                </IconButton>
+                {sendToArchive ? (
+                    <ToggleButtonGroup
+                        color="primary"
+                        value={item.state}
+                        exclusive
+                        onChange={(
+                            event: React.MouseEvent<HTMLElement>,
+                            newAlignment: string
+                        ) => {
+                            event.preventDefault()
+                            event.stopPropagation()
+                            updateData({ ...item, state: newAlignment })
+                        }}
+                    >
+                        <ToggleButton value="LIVE">LIVE</ToggleButton>
+                        <ToggleButton value="INACTIVE">INACTIVE</ToggleButton>
+                    </ToggleButtonGroup>
+                ) : null}
+                {sendToArchive ? (
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        onClick={sendToArchive}
+                        sx={{
+                            color: '#1976d2',
+                            marginLeft: '1rem',
+                        }}
+                    >
+                        <ArchiveIcon />
+                    </IconButton>
+                ) : null}
+                {onDelete ? (
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        onClick={onDelete}
+                        sx={{
+                            color: '#1976d2',
+                            marginLeft: '1rem',
+                        }}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
+                ) : null}
             </AccordionSummary>
             <AccordionDetails
                 sx={{
@@ -125,7 +132,7 @@ export default function Accord({
                             updateData({ ...item, seniorites: data })
                         }}
                         items={item.seniorites}
-
+                        isDisabled={isDisabled}
                     />
                     <Item
                         label="Keywords"
@@ -133,6 +140,7 @@ export default function Accord({
                             updateData({ ...item, keywords: data })
                         }}
                         items={item.keywords}
+                        isDisabled={isDisabled}
                     />
                     <Item
                         label="Job Titles"
@@ -141,6 +149,7 @@ export default function Accord({
                         }}
                         items={item.jobTitles}
                         includeUpload
+                        isDisabled={isDisabled}
                     />
                 </Box>
                 <Box sx={{ flex: '40%', maxwidth: '40%' }}>
@@ -151,6 +160,7 @@ export default function Accord({
                         }}
                         items={item.companysList}
                         includeUpload
+                        isDisabled={isDisabled}
                     />
                 </Box>
             </AccordionDetails>

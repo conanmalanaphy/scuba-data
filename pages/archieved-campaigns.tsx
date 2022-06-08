@@ -9,6 +9,7 @@ import Wrapper from '../components/Wrapper/Wrapper'
 import Accord from '../components/Accord/Accord'
 import CircularProgress from '@mui/material/CircularProgress'
 import { supabase } from '../libs/initSupabase'
+import { useSWRConfig } from 'swr'
 
 import useSWR from 'swr'
 
@@ -21,14 +22,28 @@ const fetcher = async (url: string) => {
     return data
 }
 
+const archieveSetting = async (id: string) => {
+    await fetch(`/api/campaigns/archieve`, {
+        method: 'POST',
+        headers: new Headers({
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        }),
+        body: JSON.stringify({
+            id: id,
+            state: 'LIVE',
+        }),
+    })
+}
+
 function ArchivedCampaigns() {
     const [expanded, setExpanded] = useState('')
     const [state, setState] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const profile = supabase.auth.user()
-
     const result = useSWR(`/api/campaigns/${profile?.id}`, fetcher)
     const data = result.data
+    const { mutate } = useSWRConfig()
 
     const handleChange = (event: string) => {
         setExpanded((prevstate: string) => {
@@ -74,12 +89,24 @@ function ArchivedCampaigns() {
                             state.map((item: any) => (
                                 <Accord
                                     key={item.id}
-                                    updateData={() => { }}
+                                    updateData={() => {}}
                                     item={item}
                                     isExpanded={expanded == item.id?.toString()}
                                     handleChange={() => handleChange(item.id)}
-                                    sendToArchive={() => { }}
-                                    onDelete={() => { }}
+                                    isDisabled
+                                    sendToArchive={async () => {
+                                        const newData = data.filter(
+                                            (post: any) => post.id !== item.id
+                                        )
+                                        mutate(
+                                            `/api/campaigns/${profile?.id}`,
+                                            archieveSetting(item.id),
+                                            {
+                                                optimisticData: [...newData],
+                                                rollbackOnError: true,
+                                            }
+                                        )
+                                    }}
                                 />
                             ))
                         ) : (
@@ -100,4 +127,4 @@ function ArchivedCampaigns() {
     )
 }
 
-export default ArchivedCampaigns;
+export default ArchivedCampaigns

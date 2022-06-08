@@ -12,11 +12,21 @@ interface ListProps {
     newState: boolean
     setState: (items: item[]) => void
     colour: string
+    isDisabled: boolean
 }
 
-export default function List({ items, a, filterProp, newState, setState, colour }: ListProps) {
+export default function List({
+    items,
+    a,
+    filterProp,
+    newState,
+    setState,
+    colour,
+    isDisabled,
+}: ListProps) {
     return (
         <Chip
+            disabled={isDisabled}
             key={a.name}
             sx={{
                 bgcolor: `${colour}`,
@@ -44,4 +54,3 @@ export default function List({ items, a, filterProp, newState, setState, colour 
         />
     )
 }
-

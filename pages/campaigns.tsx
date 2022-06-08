@@ -67,10 +67,12 @@ const archieveSetting = async (id: string) => {
             'Content-Type': 'application/json',
             Accept: 'application/json',
         }),
-        body: id,
+        body: JSON.stringify({
+            id: id,
+            state: 'INACTIVE',
+        }),
     })
 }
-
 
 const deleteSetting = async (id: string) => {
     await fetch(`/api/campaigns/${id}`, {
@@ -182,6 +184,9 @@ function Campaigns() {
                                     return (
                                         <Accord
                                             key={item.id}
+                                            isDisabled={
+                                                item.state === 'INACTIVE'
+                                            }
                                             updateData={async (
                                                 updatedsetting
                                             ) => {

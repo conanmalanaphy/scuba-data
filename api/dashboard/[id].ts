@@ -18,7 +18,7 @@ const user: NextApiHandler = async (req, res) => {
 
         const { data, error } = await supabase
             .from('results')
-            .update({ deleted_at: (new Date()).toISOString() })
+            .update({ deleted_at: new Date().toISOString() })
             .eq('id', id)
 
         if (!error) {
@@ -32,23 +32,21 @@ const user: NextApiHandler = async (req, res) => {
     }
 
     if (req.method === 'GET') {
+        if (id) {
+            const { data, error } = await supabase
+                .from('results')
+                .select('*')
+                .eq('user', id)
+                .is('deleted_at', null)
 
-    if (id) {
-        const { data, error } = await supabase
-            .from('results')
-            .select('*')
-            .eq('user', id)
-            .is('deleted_at', null)
-
-
-        if (data) {
-            res.status(200).json(data)
-        } else {
-            res.status(404).end()
+            if (data) {
+                res.status(200).json(data)
+            } else {
+                res.status(404).end()
+            }
         }
+        res.status(404).end()
     }
-    res.status(404).end()
-}
 }
 
 export default user

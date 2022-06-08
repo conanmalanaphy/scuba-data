@@ -10,25 +10,22 @@ interface item {
     name: string
     isIncluded: boolean
 }
-interface campaign {
-    user: string
-    id: string
-    name: string
-    state: string
-    seniorites: item[]
-    keywords: item[]
-    companysList: item[]
-    jobTitles: item[]
-}
 
 interface ItemProps {
     items: item[]
     label: string
     updateData: (items: item[]) => void
     includeUpload?: boolean
+    isDisabled: boolean
 }
 
-export default function Item({ label, updateData, items, includeUpload = false }: ItemProps) {
+export default function Item({
+    label,
+    updateData,
+    items,
+    includeUpload = false,
+    isDisabled,
+}: ItemProps) {
     const [senority, setSenority] = useState<string>('')
     const { CSVReader } = useCSVReader()
 
@@ -48,6 +45,7 @@ export default function Item({ label, updateData, items, includeUpload = false }
                     label={label}
                     id="standard-basic"
                     variant="standard"
+                    disabled={isDisabled}
                     value={senority}
                     onChange={(event) => {
                         setSenority(event.target.value)
@@ -67,6 +65,7 @@ export default function Item({ label, updateData, items, includeUpload = false }
                     }}
                 />
                 <Button
+                    disabled={isDisabled}
                     onClick={() => {
                         updateData([
                             ...items,
@@ -103,6 +102,7 @@ export default function Item({ label, updateData, items, includeUpload = false }
                     >
                         {({ getRootProps }: any) => (
                             <Button
+                                disabled={isDisabled}
                                 variant="contained"
                                 component="span"
                                 {...getRootProps()}
@@ -126,6 +126,7 @@ export default function Item({ label, updateData, items, includeUpload = false }
                     .map((a: item) => (
                         <List
                             key={a.name}
+                            isDisabled={isDisabled}
                             a={a}
                             items={items}
                             filterProp="isIncluded"
@@ -140,6 +141,7 @@ export default function Item({ label, updateData, items, includeUpload = false }
                     .map((a: item) => (
                         <List
                             key={a.name}
+                            isDisabled={isDisabled}
                             a={a}
                             items={items}
                             filterProp="isIncluded"
@@ -152,5 +154,3 @@ export default function Item({ label, updateData, items, includeUpload = false }
         </Box>
     )
 }
-
-
