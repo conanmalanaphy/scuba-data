@@ -11,11 +11,35 @@ const user: NextApiHandler = async (req, res) => {
         return
     }
 
+    if (req.method === 'DELETE') {
+        // probs do some validation on this??
+        const { id } = req.query
+        console.log(id)
+
+        const { data, error } = await supabase
+            .from('results')
+            .update({ deleted_at: (new Date()).toISOString() })
+            .eq('id', id)
+
+        if (!error) {
+            res.status(200).json(data)
+        } else {
+            console.log(error)
+            res.status(404).end()
+        }
+
+        return
+    }
+
+    if (req.method === 'GET') {
+
     if (id) {
         const { data, error } = await supabase
             .from('results')
             .select('*')
             .eq('user', id)
+            .is('deleted_at', null)
+
 
         if (data) {
             res.status(200).json(data)
@@ -24,6 +48,7 @@ const user: NextApiHandler = async (req, res) => {
         }
     }
     res.status(404).end()
+}
 }
 
 export default user

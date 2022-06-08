@@ -2,6 +2,7 @@ import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
+import DeleteIcon from '@mui/icons-material/Delete'
 import CardContent from '@mui/material/CardContent';
 import TextField from '@mui/material/TextField';
 import Accordion from '@mui/material/Accordion'
@@ -19,6 +20,8 @@ import Wrapper from '../components/Wrapper/Wrapper'
 import CircularProgress from '@mui/material/CircularProgress'
 import useSWR, { useSWRConfig } from 'swr'
 import { supabase } from '../libs/initSupabase'
+import IconButton from '@mui/material/IconButton'
+
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 
 const baseURL = process.env.NEXT_PUBLIC_FUNCTIONS_BASE_URL
@@ -69,6 +72,16 @@ function filterlist(list: formPost[], name: string) {
         return s.name.match(name);
     });
 };
+
+const deleteResult = async (id?: number) => {
+    await fetch(`/api/dashboard/${id}`, {
+        method: 'DELETE',
+        headers: new Headers({
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        }),
+    })
+}
 
 function DashboardContent() {
     const [isOpen, setIsOpen] = useState(false)
@@ -402,6 +415,32 @@ function DashboardContent() {
                                                 >
                                                     Export
                                                 </Button>
+                                                <IconButton
+                                                    edge="start"
+                                                    color="inherit"
+                                                    onClick={async () => {
+                                                        const newData = data.filter(
+                                                            (post: any) =>
+                                                                post.id !== id
+                                                        )
+                                                        mutate(
+                                                            `/api/dashboard/${profile?.id}`,
+                                                            deleteResult(id),
+                                                            {
+                                                                optimisticData: [
+                                                                    ...newData,
+                                                                ],
+                                                                rollbackOnError: true,
+                                                            }
+                                                        )
+                                                    }}
+                                                    sx={{
+                                                        color: "#1976d2",
+                                                        marginLeft: '1rem',
+                                                    }}
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
                                             </AccordionSummary>
                                             <AccordionDetails
                                                 sx={{
