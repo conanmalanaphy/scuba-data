@@ -211,7 +211,7 @@ function Campaigns() {
                                     return (
                                         <Accord
                                             key={item.id}
-                                            isDisabled={false}
+                                            isDisabled={item.state === "LIVE"}
                                             updateData={async (
                                                 updatedsetting
                                             ) => {
