@@ -15,10 +15,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     const profile = supabase.auth.user()
     const router = useRouter()
 
-    if (profile) {
-        router.push('/dashboard')
-    }
-
     useEffect(() => {
         if (!profile && router.pathname !== "/") {
             router.push('/')
