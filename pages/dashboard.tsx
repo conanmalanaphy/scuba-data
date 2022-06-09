@@ -1,28 +1,26 @@
-import Avatar from '@mui/material/Avatar'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Card from '@mui/material/Card'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import DeleteIcon from '@mui/icons-material/Delete'
-import CardContent from '@mui/material/CardContent'
-import TextField from '@mui/material/TextField'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import CircularProgress from '@mui/material/CircularProgress'
 import CssBaseline from '@mui/material/CssBaseline'
+import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
+import TextField from '@mui/material/TextField'
 import Toolbar from '@mui/material/Toolbar'
-import Router from 'next/router'
 import Typography from '@mui/material/Typography'
+import Router from 'next/router'
 import { useEffect, useState } from 'react'
 import { usePapaParse } from 'react-papaparse'
+import useSWR, { useSWRConfig } from 'swr'
+import ExportModal from '../components/Modal/ExportModal'
 import Modal from '../components/Modal/Modal'
 import Wrapper from '../components/Wrapper/Wrapper'
-import CircularProgress from '@mui/material/CircularProgress'
-import useSWR, { useSWRConfig } from 'swr'
 import { supabase } from '../libs/initSupabase'
-import IconButton from '@mui/material/IconButton'
 
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 
 const baseURL = process.env.NEXT_PUBLIC_FUNCTIONS_BASE_URL
 
@@ -85,6 +83,12 @@ const deleteResult = async (id?: number) => {
 
 function DashboardContent() {
     const [isOpen, setIsOpen] = useState(false)
+    const [exportModal, setexportModal] = useState<any>({
+        isOpen: false,
+        exportId: null,
+        cost: null,
+        file: null
+    })
     const [expanded, setExpanded] = useState('')
     const [cards, setCards] = useState<formPost[]>([])
     const { jsonToCSV } = usePapaParse()
@@ -98,6 +102,23 @@ function DashboardContent() {
     }
     const handleClose = () => {
         setIsOpen(false)
+    }
+
+    const handleClickExportOpen = (id: number | undefined, cost: number, file: any) => {
+        setexportModal({
+            isOpen: true,
+            exportId: id,
+            file: file,
+            cost: cost
+        })
+    }
+    const handleExportClose = () => {
+        setexportModal({
+            isOpen: false,
+            exportId: null,
+            cost: null,
+            file: null
+        })
     }
 
     const handleChange = (event: string) => {
@@ -199,7 +220,7 @@ function DashboardContent() {
 
                             const fomattedData = await fetch(
                                 (baseURL ? baseURL + '/' : '') +
-                                    'api/updatedata',
+                                'api/updatedata',
                                 {
                                     method: 'POST',
                                     headers: new Headers({
@@ -313,6 +334,13 @@ function DashboardContent() {
                         }}
                     />
 
+                    <ExportModal
+                        isExportOpen={exportModal.isOpen}
+                        cost={exportModal.cost}
+                        exportId={exportModal.exportId}
+                        handleClose={handleExportClose}
+                        file={exportModal.file}
+                    />
                     {!isLoading ? (
                         <Paper
                             sx={{
@@ -388,28 +416,10 @@ function DashboardContent() {
                                                         color: 'blue',
                                                         flex: '1 1 0px',
                                                     }}
-                                                    onClick={() => {
-                                                        var csvData = new Blob(
-                                                            [file],
-                                                            {
-                                                                type: 'text/csv;charset=utf-8;',
-                                                            }
-                                                        )
-                                                        var csvURL =
-                                                            window.URL.createObjectURL(
-                                                                csvData
-                                                            )
-
-                                                        var tempLink =
-                                                            document.createElement(
-                                                                'a'
-                                                            )
-                                                        tempLink.href = csvURL
-                                                        tempLink.setAttribute(
-                                                            'download',
-                                                            'download.csv'
-                                                        )
-                                                        tempLink.click()
+                                                    onClick={(event: React.MouseEvent<HTMLElement>) => {
+                                                        event.preventDefault()
+                                                        event.stopPropagation()
+                                                        handleClickExportOpen(id, row_count, file)
                                                     }}
                                                 >
                                                     Export
