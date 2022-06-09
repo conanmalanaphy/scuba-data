@@ -5,10 +5,10 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import { useState } from 'react'
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 
 interface item {
     name: string
@@ -36,17 +36,17 @@ export default function CampaignModal({
     isOpen,
     handleClose,
     onSubmit,
-    campaigns
+    campaigns,
 }: CampaignModalProps) {
     const [name, setName] = useState('')
     const [campaign, setCampaign] = useState('')
 
     const handleChange = (event: SelectChangeEvent) => {
-        setCampaign(event.target.value as string);
-    };
+        setCampaign(event.target.value as string)
+    }
 
     return (
-        <Dialog open={isOpen} onClose={handleClose} >
+        <Dialog open={isOpen} onClose={handleClose}>
             <DialogTitle>Create a Campaign</DialogTitle>
             <DialogContent>
                 <TextField
@@ -66,21 +66,30 @@ export default function CampaignModal({
                             ev.preventDefault()
 
                             const foundCampaign = campaigns.find((a) => {
-                                return a.id == campaign;
+                                return a.id == campaign
                             })
                             onSubmit({ ...foundCampaign, id: '', name })
                         }
                     }}
                 />
                 <FormControl fullWidth sx={{ mt: 3 }}>
-                    <InputLabel id="demo-simple-select-label">Campaign</InputLabel>
+                    <InputLabel id="demo-simple-select-label">
+                        Campaign
+                    </InputLabel>
                     <Select
                         value={campaign}
                         label="Select Campaign"
                         onChange={handleChange}
                     >
                         {campaigns?.map((item) => {
-                            return <MenuItem key={item.id.toString()} value={item.id.toString()}>{item.name}</MenuItem>
+                            return (
+                                <MenuItem
+                                    key={item.id.toString()}
+                                    value={item.id.toString()}
+                                >
+                                    {item.name}
+                                </MenuItem>
+                            )
                         })}
                     </Select>
                 </FormControl>
@@ -90,10 +99,10 @@ export default function CampaignModal({
                 <Button
                     onClick={() => {
                         const foundCampaign = campaigns.find((a) => {
-                            return a.id == campaign;
+                            return a.id == campaign
                         })
 
-                        onSubmit({ ...foundCampaign, name, id: '', })
+                        onSubmit({ ...foundCampaign, name, id: '' })
                     }}
                     disabled={name.length === 0}
                 >

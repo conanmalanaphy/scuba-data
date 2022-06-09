@@ -56,8 +56,8 @@ interface formPost {
     comp_unique_count: number
 }
 
-const updateFn = async (newData: formPost) => {
-    await fetch('/api/dashboard/1', {
+const updateFn = async (newData: formPost, id?: string) => {
+    await fetch(`/api/dashboard/${id}`, {
         method: 'POST',
         headers: new Headers({
             'Content-Type': 'application/json',
@@ -304,7 +304,7 @@ function DashboardContent() {
 
                             mutate(
                                 `/api/dashboard/${profile?.id}`,
-                                updateFn(newTodo),
+                                updateFn(newTodo, profile?.id),
                                 {
                                     optimisticData: [...data, newTodo],
                                     rollbackOnError: true,

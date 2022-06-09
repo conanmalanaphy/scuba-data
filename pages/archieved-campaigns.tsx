@@ -11,7 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { supabase } from '../libs/initSupabase'
 import { useSWRConfig } from 'swr'
 import Link from '@mui/material/Link'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import useSWR from 'swr'
 
 const fetcher = async (url: string) => {
@@ -84,7 +84,8 @@ function ArchivedCampaigns() {
                     >
                         <Link href="/campaigns">
                             <Button variant="contained">
-                                <ArrowBackIcon sx={{ marginRight: 1 }} />   Back to Campaigns
+                                <ArrowBackIcon sx={{ marginRight: 1 }} /> Back
+                                to Campaigns
                             </Button>
                         </Link>
                     </Box>
@@ -102,7 +103,7 @@ function ArchivedCampaigns() {
                             state.map((item: any) => (
                                 <Accord
                                     key={item.id}
-                                    updateData={() => { }}
+                                    updateData={() => {}}
                                     item={item}
                                     isExpanded={expanded == item.id?.toString()}
                                     handleChange={() => handleChange(item.id)}

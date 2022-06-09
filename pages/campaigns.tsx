@@ -155,7 +155,6 @@ function Campaigns() {
                 handleClose={handleSaveAsClose}
                 campaigns={data}
                 onSubmit={(newTodo: any) => {
-
                     mutate(`/api/campaigns/${profile?.id}`, updateFn(newTodo), {
                         optimisticData: [...data, newTodo],
                         rollbackOnError: true,
@@ -182,12 +181,21 @@ function Campaigns() {
                             justifyContent: 'space-between',
                         }}
                     >
-                        <Box><Button variant="contained" onClick={handleClickOpen}>
-                            Create
-                        </Button>
-                            <Button variant="outlined" sx={{ ml: 2 }} onClick={handleClickSaveAsOpen}>
+                        <Box>
+                            <Button
+                                variant="contained"
+                                onClick={handleClickOpen}
+                            >
+                                Create
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                sx={{ ml: 2 }}
+                                onClick={handleClickSaveAsOpen}
+                            >
                                 Save As
-                            </Button></Box>
+                            </Button>
+                        </Box>
 
                         <Link href="/archieved-campaigns">
                             <Button variant="contained">
@@ -211,7 +219,7 @@ function Campaigns() {
                                     return (
                                         <Accord
                                             key={item.id}
-                                            isDisabled={item.state === "LIVE"}
+                                            isDisabled={item.state === 'LIVE'}
                                             updateData={async (
                                                 updatedsetting
                                             ) => {
@@ -285,7 +293,7 @@ function Campaigns() {
                                         width: '100%',
                                         justifyContent: 'center',
                                         margin: 'auto',
-                                        marginTop: "2rem"
+                                        marginTop: '2rem',
                                     }}
                                 >
                                     <AddCircleOutlineIcon

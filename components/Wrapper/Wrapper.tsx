@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import ScubaDivingIcon from '@mui/icons-material/ScubaDiving'
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications'
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange'
 import MuiAppBar from '@mui/material/AppBar'
 import Divider from '@mui/material/Divider'
 import MuiDrawer from '@mui/material/Drawer'
@@ -21,6 +22,20 @@ import Toolbar from '@mui/material/Toolbar'
 import React, { Fragment, useState } from 'react'
 import { supabase } from '../../libs/initSupabase'
 import { useRouter } from 'next/router'
+import Chip from '@mui/material/Chip'
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
+import { useSWRConfig } from 'swr'
+import CircularProgress from '@mui/material/CircularProgress'
+import useSWR from 'swr'
+
+const fetcher = async (url: string) => {
+    const res = await fetch(url)
+    if (!res.ok) {
+        throw Error("Yo that's NOT OK!!!")
+    }
+    const data = await res.json()
+    return data
+}
 
 const drawerWidth = 240
 
@@ -86,6 +101,14 @@ export const secondaryListItems = (
                 <ListItemText primary="Campaigns" />
             </ListItemButton>
         </Link>
+        <Link href="/credit-management" sx={{ textDecoration: 'none' }}>
+            <ListItemButton>
+                <ListItemIcon>
+                    <CurrencyExchangeIcon sx={{ color: '#1976d2' }} />
+                </ListItemIcon>
+                <ListItemText primary="Credit Management" />
+            </ListItemButton>
+        </Link>
         <Link href="/profile" sx={{ textDecoration: 'none' }}>
             <ListItemButton>
                 <ListItemIcon>
@@ -104,10 +127,13 @@ interface WrapperProps {
 export default function Wrapper({ pageName }: WrapperProps) {
     const [open, setOpen] = useState(false)
     const router = useRouter()
+    const profile = supabase.auth.user()
 
     const toggleDrawer = () => {
         setOpen(!open)
     }
+
+    const { data } = useSWR(`/api/credit-management/${profile?.id}`, fetcher)
 
     const handleLogOut = async (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -164,13 +190,23 @@ export default function Wrapper({ pageName }: WrapperProps) {
                             </Typography>
                         </Link>
                     </Box>
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        onClick={handleLogOut}
-                    >
-                        <LogoutIcon />
-                    </IconButton>
+                    <Box>
+                        <Chip
+                            sx={{
+                                backgroundColor: 'white',
+                                marginRight: '1rem',
+                            }}
+                            icon={<MonetizationOnIcon />}
+                            label={data?.credit_count || 0}
+                        />
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={handleLogOut}
+                        >
+                            <LogoutIcon />
+                        </IconButton>
+                    </Box>
                 </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>
