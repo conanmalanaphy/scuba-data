@@ -1,26 +1,20 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import DeleteIcon from '@mui/icons-material/Delete'
-import Accordion from '@mui/material/Accordion'
-import AccordionDetails from '@mui/material/AccordionDetails'
-import AccordionSummary from '@mui/material/AccordionSummary'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import CssBaseline from '@mui/material/CssBaseline'
-import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
 import Router from 'next/router'
 import { useEffect, useState } from 'react'
 import { usePapaParse } from 'react-papaparse'
 import useSWR, { useSWRConfig } from 'swr'
-import ExportModal from '../components/Modal/ExportModal'
-import Modal from '../components/Modal/Modal'
+import Modal from '../components/Dashboard/Modal'
+import Accordian from '../components/Dashboard/Accordian'
+
 import Wrapper from '../components/Wrapper/Wrapper'
 import { supabase } from '../libs/initSupabase'
-
 
 const baseURL = process.env.NEXT_PUBLIC_FUNCTIONS_BASE_URL
 
@@ -52,6 +46,7 @@ interface formPost {
     job_title_low: number
     job_title_unique_count: number
     comp_unique_count: number
+    created_at: string
 }
 
 const updateFn = async (newData: formPost, id?: string) => {
@@ -81,15 +76,21 @@ const deleteResult = async (id?: number) => {
     })
 }
 
+function isIncluded(data: any) {
+    return data
+        .filter((a: any) => a.isIncluded)
+        .map((a: any) => a.name)
+}
+
+function isNotIncluded(data: any) {
+    return data
+        .filter((a: any) => !a.isIncluded)
+        .map((a: any) => a.name)
+}
+
 function DashboardContent() {
     const [isOpen, setIsOpen] = useState(false)
-    const [exportModal, setexportModal] = useState<any>({
-        isOpen: false,
-        exportId: null,
-        cost: null,
-        file: null
-    })
-    const [expanded, setExpanded] = useState('')
+
     const [cards, setCards] = useState<formPost[]>([])
     const { jsonToCSV } = usePapaParse()
     const { mutate } = useSWRConfig()
@@ -102,29 +103,6 @@ function DashboardContent() {
     }
     const handleClose = () => {
         setIsOpen(false)
-    }
-
-    const handleClickExportOpen = (id: number | undefined, cost: number, file: any) => {
-        setexportModal({
-            isOpen: true,
-            exportId: id,
-            file: file,
-            cost: cost
-        })
-    }
-    const handleExportClose = () => {
-        setexportModal({
-            isOpen: false,
-            exportId: null,
-            cost: null,
-            file: null
-        })
-    }
-
-    const handleChange = (event: string) => {
-        setExpanded((prevstate: string) => {
-            return event == prevstate ? '' : event
-        })
     }
 
     useEffect(() => {
@@ -158,25 +136,33 @@ function DashboardContent() {
             >
                 <Toolbar />
                 <Box sx={{ m: 4 }}>
-                    <Button variant="contained" onClick={handleClickOpen}>
-                        Upload
-                    </Button>
-                    <TextField
-                        sx={{ width: 300, marginLeft: 20 }}
-                        autoFocus
-                        label="Filter Results"
-                        type="email"
-                        variant="standard"
-                        onChange={(event) => {
-                            setCards(filterlist(data, event.target.value))
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
                         }}
-                    />
+                    >
+                        <Button variant="contained" onClick={handleClickOpen}>
+                            Upload
+                        </Button>
+                        <TextField
+                            sx={{ width: 300 }}
+                            autoFocus
+                            label="Filter Results"
+                            type="email"
+                            variant="standard"
+                            onChange={(event) => {
+                                setCards(filterlist(data, event.target.value))
+                            }}
+                        />
+                    </Box>
                     <Modal
                         isOpen={isOpen}
                         handleClose={handleClose}
                         processfile={async (
                             newData: string[][],
-                            campaigns: any
+                            campaigns: any,
+                            fileName: string
                         ) => {
                             const processedfile = newData.reduce<any>(
                                 (memo, val: any) => {
@@ -192,32 +178,6 @@ function DashboardContent() {
                                 { jobTitles: [], compainies: [] }
                             )
 
-                            const kw = campaigns.keywords
-                                .filter((a: any) => a.isIncluded)
-                                .map((a: any) => a.name)
-                            const exclude_kw = campaigns.keywords
-                                .filter((a: any) => !a.isIncluded)
-                                .map((a: any) => a.name)
-                            const sen = campaigns.seniorites
-                                .filter((a: any) => a.isIncluded)
-                                .map((a: any) => a.name)
-                            const exclude_sen: string[] = campaigns.seniorites
-                                .filter((a: any) => !a.isIncluded)
-                                .map((a: any) => a.name)
-                            const jt: string[] = campaigns.jobTitles
-                                .filter((a: any) => a.isIncluded)
-                                .map((a: any) => a.name)
-                            const exclude_jt: string[] = campaigns.jobTitles
-                                .filter((a: any) => !a.isIncluded)
-                                .map((a: any) => a.name)
-                            const compainies: string[] = campaigns.companysList
-                                .filter((a: any) => a.isIncluded)
-                                .map((a: any) => a.name)
-                            const exclude_compaines: string[] =
-                                campaigns.companysList
-                                    .filter((a: any) => !a.isIncluded)
-                                    .map((a: any) => a.name)
-
                             const fomattedData = await fetch(
                                 (baseURL ? baseURL + '/' : '') +
                                 'api/updatedata',
@@ -230,20 +190,19 @@ function DashboardContent() {
                                     body: JSON.stringify({
                                         jobtitles: processedfile.jobTitles,
                                         companies: processedfile.compainies,
-                                        kw: kw,
-                                        exclude_kw: exclude_kw,
-                                        sen: sen,
-                                        exclude_sen: exclude_sen,
-                                        jt: jt,
-                                        exclude_jt: exclude_jt,
-                                        include_companies: compainies,
-                                        exclude_companies: exclude_compaines,
+                                        kw: isIncluded(campaigns.keywords),
+                                        exclude_kw: isNotIncluded(campaigns.keywords),
+                                        sen: isIncluded(campaigns.seniorites),
+                                        exclude_sen: isNotIncluded(campaigns.seniorites),
+                                        jt: isIncluded(campaigns.jobTitles),
+                                        exclude_jt: isNotIncluded(campaigns.jobTitles),
+                                        include_companies: isIncluded(campaigns.companysList),
+                                        exclude_companies: isNotIncluded(campaigns.companysList),
                                     }),
                                 }
                             )
                             const score = await fomattedData.json()
 
-                            console.log(score)
 
                             const {
                                 comp_report,
@@ -253,8 +212,6 @@ function DashboardContent() {
                                 jt_report_sum,
                                 jt_ucounts,
                             } = score
-                            console.log(comp_report)
-                            console.log(jt_report)
 
                             handleClose()
 
@@ -294,8 +251,9 @@ function DashboardContent() {
                                 job_title_medium: jt_report_sum.Medium,
                                 job_title_low: jt_report_sum.Low,
                                 user: profile?.id,
-                                name: newData[0][0],
+                                name: `${fileName} - ${campaigns.name}`,
                                 job_title_unique_count: jt_ucounts,
+                                created_at: new Date().toISOString(),
                                 comp_unique_count: comp_ucounts,
                                 row_count:
                                     processedfile.compainies.length +
@@ -334,13 +292,6 @@ function DashboardContent() {
                         }}
                     />
 
-                    <ExportModal
-                        isExportOpen={exportModal.isOpen}
-                        cost={exportModal.cost}
-                        exportId={exportModal.exportId}
-                        handleClose={handleExportClose}
-                        file={exportModal.file}
-                    />
                     {!isLoading ? (
                         <Paper
                             sx={{
@@ -354,228 +305,28 @@ function DashboardContent() {
                             }}
                         >
                             {cards.length > 0 ? (
-                                cards.map((cards: formPost, index: number) => {
-                                    const {
-                                        name,
-                                        row_count,
-                                        id,
-                                        file,
-                                        campaigns,
-                                        comp_high,
-                                        comp_medium,
-                                        comp_low,
-                                        job_title_high,
-                                        job_title_medium,
-                                        job_title_low,
-                                        job_title_unique_count,
-                                        comp_unique_count,
-                                    } = cards
-
-                                    return (
-                                        <Accordion
-                                            sx={{ pt: 1 }}
-                                            key={index}
-                                            expanded={
-                                                expanded == index?.toString()
-                                            }
-                                            onChange={() =>
-                                                handleChange(index.toString())
-                                            }
-                                        >
-                                            <AccordionSummary
-                                                aria-controls="panel1bh-content"
-                                                id="panel1bh-header"
-                                            >
-                                                <Typography
-                                                    sx={{
-                                                        fontWeight: 700,
-                                                        width: '33%',
-                                                        flexShrink: 0,
-                                                        fontSize: '125%',
-                                                        margin: 'auto',
-                                                        marginLeft: '1rem',
-                                                    }}
-                                                >
-                                                    Name: {name}
-                                                </Typography>
-                                                <Typography
-                                                    sx={{
-                                                        fontWeight: 700,
-                                                        width: '33%',
-                                                        flexShrink: 0,
-                                                        fontSize: '125%',
-                                                        margin: 'auto',
-                                                        marginLeft: '1rem',
-                                                    }}
-                                                >
-                                                    rows: {row_count}
-                                                </Typography>
-                                                <Button
-                                                    variant="outlined"
-                                                    sx={{
-                                                        color: 'blue',
-                                                        flex: '1 1 0px',
-                                                    }}
-                                                    onClick={(event: React.MouseEvent<HTMLElement>) => {
-                                                        event.preventDefault()
-                                                        event.stopPropagation()
-                                                        handleClickExportOpen(id, row_count, file)
-                                                    }}
-                                                >
-                                                    Export
-                                                </Button>
-                                                <IconButton
-                                                    edge="start"
-                                                    color="inherit"
-                                                    onClick={async () => {
-                                                        const newData =
-                                                            data.filter(
-                                                                (post: any) =>
-                                                                    post.id !==
-                                                                    id
-                                                            )
-                                                        mutate(
-                                                            `/api/dashboard/${profile?.id}`,
-                                                            deleteResult(id),
-                                                            {
-                                                                optimisticData:
-                                                                    [
-                                                                        ...newData,
-                                                                    ],
-                                                                rollbackOnError:
-                                                                    true,
-                                                            }
-                                                        )
-                                                    }}
-                                                    sx={{
-                                                        color: '#1976d2',
-                                                        marginLeft: '1rem',
-                                                    }}
-                                                >
-                                                    <DeleteIcon />
-                                                </IconButton>
-                                            </AccordionSummary>
-                                            <AccordionDetails
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'row',
-                                                    borderTop:
-                                                        'lightgray solid 1px',
-                                                }}
-                                            >
-                                                <Box
-                                                    sx={{
-                                                        flex: '50%',
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        color: 'grey',
-                                                    }}
-                                                >
-                                                    <Typography
-                                                        sx={{
-                                                            fontWeight: 700,
-                                                            flexShrink: 0,
-                                                            fontSize: '125%',
-                                                            margin: 'auto',
-                                                            marginLeft: '1rem',
-                                                            color: 'black',
-                                                        }}
-                                                    >
-                                                        Companies
-                                                    </Typography>
-                                                    <Typography
-                                                        sx={{
-                                                            flexShrink: 0,
-                                                            margin: 'auto',
-                                                            marginLeft: '1rem',
-                                                        }}
-                                                    >
-                                                        High:{comp_high}
-                                                    </Typography>
-                                                    <Typography
-                                                        sx={{
-                                                            flexShrink: 0,
-                                                            margin: 'auto',
-                                                            marginLeft: '1rem',
-                                                        }}
-                                                    >
-                                                        Medium:{comp_medium}
-                                                    </Typography>
-                                                    <Typography
-                                                        sx={{
-                                                            flexShrink: 0,
-                                                            margin: 'auto',
-                                                            marginLeft: '1rem',
-                                                        }}
-                                                    >
-                                                        Low:{comp_low}
-                                                    </Typography>
-                                                    <Typography
-                                                        sx={{
-                                                            flexShrink: 0,
-                                                            margin: 'auto',
-                                                            marginLeft: '1rem',
-                                                        }}
-                                                    >
-                                                        Unique:
-                                                        {comp_unique_count}
-                                                    </Typography>
-                                                </Box>
-                                                <Box sx={{ flex: '50%' }}>
-                                                    <Typography
-                                                        sx={{
-                                                            fontWeight: 700,
-                                                            flexShrink: 0,
-                                                            fontSize: '125%',
-                                                            margin: 'auto',
-                                                            marginLeft: '1rem',
-                                                        }}
-                                                    >
-                                                        Job titles
-                                                    </Typography>
-                                                    <Typography
-                                                        sx={{
-                                                            flexShrink: 0,
-                                                            margin: 'auto',
-                                                            marginLeft: '1rem',
-                                                        }}
-                                                    >
-                                                        High:{job_title_high}
-                                                    </Typography>
-                                                    <Typography
-                                                        sx={{
-                                                            flexShrink: 0,
-                                                            margin: 'auto',
-                                                            marginLeft: '1rem',
-                                                        }}
-                                                    >
-                                                        Medium:
-                                                        {job_title_medium}
-                                                    </Typography>
-                                                    <Typography
-                                                        sx={{
-                                                            flexShrink: 0,
-                                                            margin: 'auto',
-                                                            marginLeft: '1rem',
-                                                        }}
-                                                    >
-                                                        Low:{job_title_low}
-                                                    </Typography>
-                                                    <Typography
-                                                        sx={{
-                                                            flexShrink: 0,
-                                                            margin: 'auto',
-                                                            marginLeft: '1rem',
-                                                        }}
-                                                    >
-                                                        Unique:
-                                                        {job_title_unique_count}
-                                                    </Typography>
-                                                </Box>
-                                            </AccordionDetails>
-                                        </Accordion>
-                                    )
-                                })
+                                cards.map((formPost: formPost) => (
+                                    <Accordian
+                                        key={formPost.id}
+                                        formPost={formPost}
+                                        onDelete={async () => {
+                                            const newData = data.filter(
+                                                (post: any) =>
+                                                    post.id !== formPost.id
+                                            )
+                                            mutate(
+                                                `/api/dashboard/${profile?.id}`,
+                                                deleteResult(formPost.id),
+                                                {
+                                                    optimisticData: [
+                                                        ...newData,
+                                                    ],
+                                                    rollbackOnError: true,
+                                                }
+                                            )
+                                        }}
+                                    />
+                                ))
                             ) : (
                                 <Box
                                     sx={{

@@ -9,6 +9,7 @@ import { useCSVReader } from 'react-papaparse'
 import MultiSelect from '../MultiSelect/MultiSelect'
 import useSWR, { useSWRConfig } from 'swr'
 import { supabase } from '../../libs/initSupabase'
+import CSVUploader from './CSVUploader'
 
 const fetcher = async (url: string) => {
     const res = await fetch(url)
@@ -22,7 +23,7 @@ const fetcher = async (url: string) => {
 const steps = ['Upload file', 'Choose Campaign']
 
 interface StepperProps {
-    onClose: (data: string[][], campaigns: string[]) => void
+    onClose: (data: string[][], campaigns: string[], filename: string) => void
 }
 
 interface item {
@@ -33,6 +34,7 @@ interface item {
 export default function LineStepper({ onClose }: StepperProps) {
     const [activeStep, setActiveStep] = React.useState<number>(0)
     const [state, setState] = React.useState<string[][]>([])
+    const [filename, setFilename] = React.useState<string>('')
     const [campaigns, setCampaigns] = React.useState<string[]>([])
     const profile = supabase.auth.user()
 
@@ -62,7 +64,8 @@ export default function LineStepper({ onClose }: StepperProps) {
                             const campaignData = data.find((cam: any) => {
                                 return cam.id === campaigns[0]
                             })
-                            onClose(state, campaignData)
+
+                            onClose(state, campaignData, filename)
                         }}
                     >
                         Calculate
@@ -77,55 +80,16 @@ export default function LineStepper({ onClose }: StepperProps) {
                     <Stepper />
                 </Typography>
                 <Box>
-                    <CSVReader
-                        onUploadAccepted={(results: { data: string[][] }) => {
-                            setState(results.data)
+                    <CSVUploader
+                        onUploadAccepted={(data: string[][]) => {
+                            const fileName =
+                                document
+                                    .getElementById('filename')
+                                    ?.innerText.split('.')[0] || ''
+                            setFilename(fileName)
+                            setState(data)
                         }}
-                    >
-                        {({
-                            getRootProps,
-                            acceptedFile,
-                            ProgressBar,
-                            getRemoveFileProps,
-                        }: any) => (
-                            <>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        gap: '0.5rem',
-                                        paddingTop: '1rem',
-                                        paddingBottom: '0.5rem',
-                                    }}
-                                >
-                                    <Button
-                                        variant="contained"
-                                        component="span"
-                                        {...getRootProps()}
-                                    >
-                                        Upload
-                                    </Button>
-                                    <div
-                                        style={{
-                                            margin: 'auto',
-                                            marginLeft: '1rem',
-                                        }}
-                                    >
-                                        {acceptedFile && acceptedFile.name}
-                                    </div>
-                                    {acceptedFile && acceptedFile.name && (
-                                        <Button
-                                            variant="contained"
-                                            component="span"
-                                            {...getRemoveFileProps()}
-                                        >
-                                            Remove
-                                        </Button>
-                                    )}
-                                </div>
-                                <ProgressBar />
-                            </>
-                        )}
-                    </CSVReader>
+                    />
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 4 }}>
                         {activeStep !== 0 && (
                             <Button

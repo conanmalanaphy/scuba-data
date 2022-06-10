@@ -15,13 +15,12 @@ const fetcher = async (url: string) => {
 }
 
 interface ModalProps {
-    isExportOpen: boolean;
-    exportId: number;
-    cost: number;
-    file: any;
-    handleClose: () => void;
+    isExportOpen: boolean
+    exportId: number
+    cost: number
+    file: any
+    handleClose: () => void
 }
-
 
 export default function Modal({
     isExportOpen,
@@ -42,32 +41,26 @@ export default function Modal({
             maxWidth={'sm'}
         >
             <DialogTitle>Download file</DialogTitle>
-            <DialogContent sx={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+            <DialogContent
+                sx={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
+            >
                 Would you like to download the file it will cost {cost} credits?
-                <Button variant="contained" disabled={data?.credit_count < cost} onClick={() => {
-                    var csvData = new Blob(
-                        [file],
-                        {
+                <Button
+                    variant="contained"
+                    disabled={data?.credit_count < cost}
+                    onClick={() => {
+                        var csvData = new Blob([file], {
                             type: 'text/csv;charset=utf-8;',
-                        }
-                    )
-                    var csvURL =
-                        window.URL.createObjectURL(
-                            csvData
-                        )
+                        })
+                        var csvURL = window.URL.createObjectURL(csvData)
 
-                    var tempLink =
-                        document.createElement(
-                            'a'
-                        )
-                    tempLink.href = csvURL
-                    tempLink.setAttribute(
-                        'download',
-                        'download.csv'
-                    )
-                    tempLink.click()
-                    handleClose()
-                }}>
+                        var tempLink = document.createElement('a')
+                        tempLink.href = csvURL
+                        tempLink.setAttribute('download', 'download.csv')
+                        tempLink.click()
+                        handleClose()
+                    }}
+                >
                     Download
                 </Button>
             </DialogContent>

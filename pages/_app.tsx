@@ -1,28 +1,27 @@
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import type { AppProps } from 'next/app'
-import '../styles/globals.css'
-import { supabase } from '../libs/initSupabase'
-import CircularProgress from '@mui/material/CircularProgress'
-import Box from '@mui/material/Box'
 import { useRouter } from 'next/router'
-import { getRouteMatcher } from 'next/dist/shared/lib/router/utils'
+import { useEffect } from 'react'
+import { supabase } from '../libs/initSupabase'
+import '../styles/globals.css'
 const mdTheme = createTheme()
-import { useEffect, useState } from 'react'
 
-const unauthPages = ['/'];
+const unauthPages = ['/']
 
 function MyApp({ Component, pageProps }: AppProps) {
     const profile = supabase.auth.user()
     const router = useRouter()
 
     useEffect(() => {
-        if (!profile && router.pathname !== "/") {
+        if (!profile && router.pathname !== '/') {
             router.push('/')
         }
     }, [profile])
 
-    return (
-        !profile && router.pathname !== "/" ? <Box
+    return !profile && router.pathname !== '/' ? (
+        <Box
             sx={{
                 display: 'flex',
                 width: '100%',
@@ -30,10 +29,11 @@ function MyApp({ Component, pageProps }: AppProps) {
             }}
         >
             <CircularProgress />
-        </Box> :
-            <ThemeProvider theme={mdTheme}>
-                <Component {...pageProps} />
-            </ThemeProvider>
+        </Box>
+    ) : (
+        <ThemeProvider theme={mdTheme}>
+            <Component {...pageProps} />
+        </ThemeProvider>
     )
 }
 
