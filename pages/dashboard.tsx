@@ -281,14 +281,14 @@ function DashboardContent() {
                                 campaigns: [campaigns.id.toString()],
                             }
 
-                            mutate(
-                                `/api/dashboard/${profile?.id}`,
-                                updateFn(newTodo, profile?.id),
-                                {
-                                    optimisticData: [...data, newTodo],
-                                    rollbackOnError: true,
-                                }
-                            )
+                            // mutate(
+                            //     `/api/dashboard/${profile?.id}`,
+                            //     updateFn(newTodo, profile?.id),
+                            //     {
+                            //         optimisticData: [...data, newTodo],
+                            //         rollbackOnError: true,
+                            //     }
+                            // )
                         }}
                     />
 
