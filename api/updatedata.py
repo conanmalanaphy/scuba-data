@@ -6,7 +6,7 @@ import math
 import json
 import simplejson
 from unidecode import unidecode
-from supabase import create_client, Client
+from storage3 import create_client
 
 
 class JobTitleMatch:
@@ -448,13 +448,14 @@ class handler(BaseHTTPRequestHandler):
 
         unique_comps = len(set(data["companies"]))
 
-        url: str = os.environ.get("NEXT_PUBLIC_SUPABASE_URL")
-        key: str = os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY")
-        supabase: Client = create_client(url, key)
+        key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+        url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL") + "/storage/v1"
+        headers = {"apiKey": key, "Authorization": f"Bearer {key}"}
 
-        data = supabase.table('campaigns').select('*').execute()
+        # pass in is_async=True to create an async client
+        storage_client = create_client(url, headers, is_async=False)
 
-        print(data)
+        print(storage_client.list_buckets())
 
         self.wfile.write(json.dumps({"jt_report": a[0], "jt_report_sum": a[1], "jt_ucounts": unique_jts,
                                     "comp_report": b[0], "comp_report_sum": b[1], "comp_ucounts": unique_comps, "matched_companies": b[2]}).encode())
