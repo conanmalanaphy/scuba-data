@@ -8,7 +8,6 @@ const user: NextApiHandler = async (req, res) => {
         const credit_count = req.body.credit_count
         const row_id = req.body.row_id
 
-        console.log(id)
         console.log(credit_count)
         console.log(row_id)
         // probs do some validation on this??
@@ -27,26 +26,6 @@ const user: NextApiHandler = async (req, res) => {
         return
     }
 
-    if (req.method === 'DELETE') {
-        // probs do some validation on this??
-        const { id } = req.query
-        console.log(id)
-
-        const { data, error } = await supabase
-            .from('results')
-            .update({ deleted_at: new Date().toISOString() })
-            .eq('user_id', id)
-
-        if (!error) {
-            res.status(200).json(data)
-        } else {
-            console.log(error)
-            res.status(404).end()
-        }
-
-        return
-    }
-
     if (req.method === 'GET') {
         if (id) {
             const { data, error } = await supabase
@@ -55,17 +34,7 @@ const user: NextApiHandler = async (req, res) => {
                 .eq('user_id', id)
 
             if (!error) {
-                let item
-                if (data.length == 0) {
-                    item = {
-                        user_id: null,
-                        credit_count: 0,
-                    }
-                } else {
-                    item = data[0]
-                }
-
-                res.status(200).json(item)
+                res.status(200).json(data[0])
             } else {
                 console.log(error)
                 res.status(404).end()
