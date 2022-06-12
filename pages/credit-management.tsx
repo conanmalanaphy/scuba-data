@@ -12,6 +12,11 @@ import { useSWRConfig } from 'swr'
 import CircularProgress from '@mui/material/CircularProgress'
 import Slider from '@mui/material/Slider'
 import { Typography } from '@mui/material'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableFooter from '@mui/material/TableFooter'
+import TableRow from '@mui/material/TableRow'
 
 const marks = [
     {
@@ -98,7 +103,6 @@ function Profile() {
             <CssBaseline />
             <Wrapper pageName={'Credit Management'} />
             <Box
-                component="main"
                 sx={{
                     backgroundColor: (theme) =>
                         theme.palette.mode === 'light'
@@ -111,93 +115,150 @@ function Profile() {
             >
                 <Toolbar />
                 <Container sx={{ mt: 4, mb: 4, height: '70%' }}>
-                    <Paper
-                        sx={{
-                            p: 2,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            height: '100%',
-                            width: '100%',
-                            marginTop: 2,
-                        }}
-                    >
-                        {!isLoading ? (
+                    {!isLoading ? <Box sx={{ display: "flex", justifyContent: 'space-between', gap: "3rem", height: '25rem' }}>
+                        <Paper
+                            sx={{
+                                p: 2,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                height: '100%',
+                                flexBasis: '30%',
+                                marginTop: 2,
+                            }}
+                        >
+
                             <Box
                                 sx={{
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    justifyContent: 'space-evenly',
+                                    justifyContent: 'start',
                                     height: '100%',
                                 }}
                             >
-                                <Typography variant="h2">
-                                    Credit count: {state.credit_count}
+                                <Typography sx={{ color: "#1976d2", fontSize: "2rem" }}>
+                                    Pricing:
                                 </Typography>
-                                <Box sx={{ width: 300 }}>
-                                    <Typography variant="h3">
-                                        1-100: £1 per credit
-                                    </Typography>
-                                    <Typography variant="h3">
-                                        100-500: 50p per credit
-                                    </Typography>
-                                    <Typography variant="h3">
-                                        500-1000: 10p per credit
-                                    </Typography>
-                                </Box>
-                                <Box sx={{ width: 300 }}>
-                                    <Slider
-                                        aria-label="Always visible"
-                                        value={value}
-                                        onChange={(e: any) => {
-                                            setValue(e.target.value)
-                                        }}
-                                        getAriaValueText={valuetext}
-                                        step={1}
-                                        marks={marks}
-                                        valueLabelDisplay="on"
-                                        min={1}
-                                        max={1000}
-                                    />
-                                    cost: £{calc(value)}
-                                </Box>
-                                <Button
-                                    variant="contained"
-                                    sx={{ ml: 2 }}
-                                    onClick={async () => {
-                                        mutate(
-                                            `/api/credit-management/${profile?.id}`,
-
-                                            addMoreCredits(
-                                                profile?.id,
-                                                data.credit_count + value,
-                                                data.id
-                                            ),
-                                            {
-                                                optimisticData: {
-                                                    credit_count:
-                                                        data.credit_count +
-                                                        value,
-                                                },
-                                                rollbackOnError: true,
-                                            }
-                                        )
-                                    }}
-                                >
-                                    Add {value} more tokens
-                                </Button>
+                                <Table aria-label="simple table">
+                                    <TableBody>
+                                        <TableRow
+                                            sx={{
+                                                '&:last-child td, &:last-child th':
+                                                    { border: 0 },
+                                            }}
+                                        >
+                                            <TableCell
+                                                component="th"
+                                                scope="row"
+                                            >
+                                                1-100
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                £1 per credit
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow
+                                            sx={{
+                                                '&:last-child td, &:last-child th':
+                                                    { border: 0 },
+                                            }}
+                                        >
+                                            <TableCell
+                                                component="th"
+                                                scope="row"
+                                            >
+                                                100-500
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                50p per credit
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow
+                                            sx={{
+                                                '&:last-child td, &:last-child th':
+                                                    { border: 0 },
+                                            }}
+                                        >
+                                            <TableCell
+                                                component="th"
+                                                scope="row"
+                                            >
+                                                500-1000
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                10p per credit
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                    <TableFooter />
+                                </Table>
                             </Box>
-                        ) : (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    width: '100%',
-                                    justifyContent: 'center',
+                        </Paper>
+                        <Paper sx={{
+                            p: 2,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            height: '100%',
+                            flexBasis: '70%',
+                            marginTop: 2,
+                            justifyContent: 'space-between'
+                        }}>
+
+                            <Typography sx={{ color: "#1976d2", fontSize: "2rem" }}>
+                                Credit count:  {state.credit_count}
+                            </Typography>
+                            <Box sx={{ textAlign: "center" }}>
+                                <Slider
+                                    aria-label="Always visible"
+                                    value={value}
+                                    onChange={(e: any) => {
+                                        setValue(e.target.value)
+                                    }}
+                                    getAriaValueText={valuetext}
+                                    step={1}
+                                    marks={marks}
+                                    valueLabelDisplay="on"
+                                    min={1}
+                                    max={1000}
+                                />
+                                <b>£{calc(value)}</b>
+                            </Box>
+                            <Button
+                                variant="contained"
+                                sx={{ ml: 2 }}
+                                onClick={async () => {
+                                    mutate(
+                                        `/api/credit-management/${profile?.id}`,
+
+                                        addMoreCredits(
+                                            profile?.id,
+                                            data.credit_count + value,
+                                            data.id
+                                        ),
+                                        {
+                                            optimisticData: {
+                                                credit_count:
+                                                    data.credit_count +
+                                                    value,
+                                            },
+                                            rollbackOnError: true,
+                                        }
+                                    )
                                 }}
                             >
-                                <CircularProgress />
-                            </Box>
-                        )}
-                    </Paper>
+                                Add {value} more tokens
+                            </Button>
+                        </Paper>
+                    </Box> : (
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                width: '100%',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <CircularProgress />
+                        </Box>
+                    )}
                 </Container>
             </Box>
         </Box>

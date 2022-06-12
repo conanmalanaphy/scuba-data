@@ -190,18 +190,24 @@ export default function Wrapper({ pageName }: WrapperProps) {
                             </Typography>
                         </Link>
                     </Box>
-                    <Box>
-                        <Chip
+                    <Box sx={{ display: "flex" }}>
+                        {data?.credit_count ? <Chip
                             sx={{
                                 backgroundColor: 'white',
-                                marginRight: '1rem',
+                                margin: 'auto'
                             }}
                             icon={<MonetizationOnIcon />}
                             label={data?.credit_count || 0}
-                        />
+                        /> :
+
+                            <CircularProgress sx={{ color: "white" }} />
+                        }
                         <IconButton
                             edge="start"
                             color="inherit"
+                            sx={{
+                                marginLeft: '1rem',
+                            }}
                             onClick={handleLogOut}
                         >
                             <LogoutIcon />
