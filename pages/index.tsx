@@ -37,9 +37,14 @@ export default function SignInSide() {
 
     const profile = supabase.auth.user()
 
-    if (profile) {
-        router.push('/dashboard')
-    }
+    React.useEffect(() => {
+        // redirect to home if already logged in
+        if (profile) {
+            router.push('/dashboard');
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <Grid container component="main" sx={{ height: '100vh' }}>

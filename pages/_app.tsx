@@ -2,39 +2,20 @@ import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import type { AppProps } from 'next/app'
-import { useRouter } from 'next/router'
+import { RouteGuard } from '../components/RouteGuard/RouteGuard'
 import { useEffect } from 'react'
 import { supabase } from '../libs/initSupabase'
 import '../styles/globals.css'
 const mdTheme = createTheme()
 
-const unauthPages = ['/']
-
 function MyApp({ Component, pageProps }: AppProps) {
-    const profile = supabase.auth.user()
-    const router = useRouter()
 
-    useEffect(() => {
-        if (!profile && router.pathname !== '/') {
-            router.push('/')
-        }
-    }, [profile])
-
-    return !profile && router.pathname !== '/' ? (
-        <Box
-            sx={{
-                display: 'flex',
-                width: '100%',
-                justifyContent: 'center',
-            }}
-        >
-            <CircularProgress />
-        </Box>
-    ) : (
+    return (
         <ThemeProvider theme={mdTheme}>
-            <Component {...pageProps} />
-        </ThemeProvider>
-    )
+            <RouteGuard>
+                <Component {...pageProps} />
+            </RouteGuard>
+        </ThemeProvider>)
 }
 
 export default MyApp

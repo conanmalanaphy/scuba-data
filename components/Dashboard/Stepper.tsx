@@ -86,9 +86,9 @@ export default function LineStepper({ onClose }: StepperProps) {
     } else if (activeStep == 0) {
         stepContent = (
             <Box>
-                <Typography sx={{ mt: 2, mb: 1 }}>
+                <Box sx={{ mt: 2, mb: 1 }}>
                     <Stepper />
-                </Typography>
+                </Box>
                 <Box>
                     <CSVUploader
                         onUploadAccepted={(data: string[][]) => {
@@ -124,9 +124,9 @@ export default function LineStepper({ onClose }: StepperProps) {
     } else if (activeStep == 1) {
         stepContent = (
             <Box>
-                <Typography sx={{ mt: 2, mb: 1 }}>
+                <Box>
                     <Stepper />
-                </Typography>
+                </Box>
                 <Box>
                     <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                         <TextField
