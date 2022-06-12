@@ -7,6 +7,8 @@ import json
 import simplejson
 from unidecode import unidecode
 from storage3 import create_client
+import tempfile
+import time
 
 
 class JobTitleMatch:
@@ -448,14 +450,26 @@ class handler(BaseHTTPRequestHandler):
 
         unique_comps = len(set(data["companies"]))
 
+        # DB variables
         key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
         url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL") + "/storage/v1"
         headers = {"apiKey": key, "Authorization": f"Bearer {key}"}
 
-        # pass in is_async=True to create an async client
+        # open client connection
         storage_client = create_client(url, headers, is_async=False)
 
-        print(storage_client.list_buckets())
+        # make temp file
+        new_file, filename = tempfile.mkstemp()
+
+        timestamp = time.strftime('%Y-%m-%d-%H:%M:%S')
+
+        # make unique url for the file name
+        str = data["user_id"]+"/"+timestamp
+
+        # store new file on the db
+        storage_client.get_bucket("reports").upload(str, filename)
+
+        os.close(new_file)
 
         self.wfile.write(json.dumps({"jt_report": a[0], "jt_report_sum": a[1], "jt_ucounts": unique_jts,
                                     "comp_report": b[0], "comp_report_sum": b[1], "comp_ucounts": unique_comps, "matched_companies": b[2]}).encode())

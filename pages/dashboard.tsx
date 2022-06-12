@@ -188,6 +188,7 @@ function DashboardContent() {
                                         Accept: 'application/json',
                                     }),
                                     body: JSON.stringify({
+                                        user_id: profile?.id,
                                         jobtitles: processedfile.jobTitles,
                                         companies: processedfile.compainies,
                                         kw: isIncluded(campaigns.keywords),
