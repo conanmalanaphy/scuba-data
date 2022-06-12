@@ -1,20 +1,33 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
+import Collapse from '@mui/material/Collapse'
 import CssBaseline from '@mui/material/CssBaseline'
+import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import TableSortLabel from '@mui/material/TableSortLabel'
+import TableFooter from '@mui/material/TableFooter'
 import TextField from '@mui/material/TextField'
 import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
 import Router from 'next/router'
+import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { usePapaParse } from 'react-papaparse'
 import useSWR, { useSWRConfig } from 'swr'
-import Accordian from '../components/Dashboard/Accordian'
 import Modal from '../components/Dashboard/Modal'
-
+import Table from '../components/Dashboard/Table'
 import Wrapper from '../components/Wrapper/Wrapper'
 import { supabase } from '../libs/initSupabase'
+import ExportModal from '../components/Dashboard/ExportModal'
 
 const baseURL = process.env.NEXT_PUBLIC_FUNCTIONS_BASE_URL
 
@@ -77,26 +90,58 @@ const deleteResult = async (id?: number) => {
 }
 
 function isIncluded(data: any) {
-    return data
-        .filter((a: any) => a.isIncluded)
-        .map((a: any) => a.name)
+    return data.filter((a: any) => a.isIncluded).map((a: any) => a.name)
 }
 
 function isNotIncluded(data: any) {
-    return data
-        .filter((a: any) => !a.isIncluded)
-        .map((a: any) => a.name)
+    return data.filter((a: any) => !a.isIncluded).map((a: any) => a.name)
+}
+
+function sortData(data: any, sortBy: any) {
+    switch (sortBy.sortBy) {
+        case 'name':
+            return [...data].sort((i, j) => {
+                return sortBy.sortDirection === 'asc'
+                    ? ('' + i.name).localeCompare(j.name)
+                    : ('' + i.name).localeCompare(j.name) * -1
+            })
+        case 'createdDate':
+            return [...data].sort((i: any, j: any) => {
+                if (i.created_at < j.created_at) {
+                    return sortBy.sortDirection === 'asc' ? -1 : 1
+                } else {
+                    if (i.created_at > j.created_at) {
+                        return sortBy.sortDirection === 'asc' ? 1 : -1
+                    } else {
+                        return 0
+                    }
+                }
+            })
+        case 'uniqueRows':
+            return [...data].sort((i: any, j: any) => {
+                return sortBy.sortDirection === 'asc'
+                    ? i.row_count - j.row_count
+                    : j.row_count - i.row_count
+            })
+        default:
+            return data
+            break
+    }
 }
 
 function DashboardContent() {
     const [isOpen, setIsOpen] = useState(false)
-
     const [cards, setCards] = useState<formPost[]>([])
     const { jsonToCSV } = usePapaParse()
     const { mutate } = useSWRConfig()
     const [isLoading, setIsLoading] = useState(true)
     const profile = supabase.auth.user()
     const { data } = useSWR(`/api/dashboard/${profile?.id}`, fetcher)
+
+    const [sortBy, setSortBy] = React.useState({
+        sortBy: 'name',
+        sortDirection: 'asc',
+    })
 
     const handleClickOpen = () => {
         setIsOpen(true)
@@ -111,12 +156,56 @@ function DashboardContent() {
         }
     }, [profile])
 
+    const requestSort = (pSortBy: any) => {
+        let sortOrder = 'asc'
+        let sortByc = sortBy.sortBy
+
+        if (pSortBy === sortBy.sortBy) {
+            sortOrder = sortBy.sortDirection === 'asc' ? 'desc' : 'asc'
+        } else {
+            sortByc = pSortBy
+            sortOrder = 'asc'
+        }
+        setSortBy({
+            sortDirection: sortOrder,
+            sortBy: sortByc,
+        })
+    }
+
     useEffect(() => {
         if (data) {
-            setCards(data)
+            setCards(sortData(data, sortBy))
             setIsLoading(false)
         }
-    }, [data])
+    }, [data, sortBy])
+
+    const [exportModal, setexportModal] = useState<any>({
+        isOpen: false,
+        exportId: null,
+        cost: null,
+        file: null,
+    })
+
+    const handleClickExportOpen = (
+        id: number | undefined,
+        cost: number,
+        file: any
+    ) => {
+        setexportModal({
+            isOpen: true,
+            exportId: id,
+            file: file,
+            cost: cost,
+        })
+    }
+    const handleExportClose = () => {
+        setexportModal({
+            isOpen: false,
+            exportId: null,
+            cost: null,
+            file: null,
+        })
+    }
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -162,7 +251,8 @@ function DashboardContent() {
                         processfile={async (
                             newData: string[][],
                             campaigns: any,
-                            jobTitleCoumn: number, companyCoumn: number,
+                            jobTitleCoumn: number,
+                            companyCoumn: number,
                             fileName: string
                         ) => {
                             const processedfile = newData.reduce<any>(
@@ -181,7 +271,7 @@ function DashboardContent() {
 
                             const fomattedData = await fetch(
                                 (baseURL ? baseURL + '/' : '') +
-                                'api/updatedata',
+                                    'api/updatedata',
                                 {
                                     method: 'POST',
                                     headers: new Headers({
@@ -193,18 +283,27 @@ function DashboardContent() {
                                         jobtitles: processedfile.jobTitles,
                                         companies: processedfile.compainies,
                                         kw: isIncluded(campaigns.keywords),
-                                        exclude_kw: isNotIncluded(campaigns.keywords),
+                                        exclude_kw: isNotIncluded(
+                                            campaigns.keywords
+                                        ),
                                         sen: isIncluded(campaigns.seniorites),
-                                        exclude_sen: isNotIncluded(campaigns.seniorites),
+                                        exclude_sen: isNotIncluded(
+                                            campaigns.seniorites
+                                        ),
                                         jt: isIncluded(campaigns.jobTitles),
-                                        exclude_jt: isNotIncluded(campaigns.jobTitles),
-                                        include_companies: isIncluded(campaigns.companysList),
-                                        exclude_companies: isNotIncluded(campaigns.companysList),
+                                        exclude_jt: isNotIncluded(
+                                            campaigns.jobTitles
+                                        ),
+                                        include_companies: isIncluded(
+                                            campaigns.companysList
+                                        ),
+                                        exclude_companies: isNotIncluded(
+                                            campaigns.companysList
+                                        ),
                                     }),
                                 }
                             )
                             const score = await fomattedData.json()
-
 
                             const {
                                 comp_report,
@@ -306,29 +405,35 @@ function DashboardContent() {
                                 minHeight: '60vh',
                             }}
                         >
+                            <ExportModal
+                                isExportOpen={exportModal.isOpen}
+                                cost={exportModal.cost}
+                                exportId={exportModal.exportId}
+                                handleClose={handleExportClose}
+                                file={exportModal.file}
+                            />
                             {cards.length > 0 ? (
-                                cards.map((formPost: formPost) => (
-                                    <Accordian
-                                        key={formPost.id}
-                                        formPost={formPost}
-                                        onDelete={async () => {
-                                            const newData = data.filter(
-                                                (post: any) =>
-                                                    post.id !== formPost.id
-                                            )
-                                            mutate(
-                                                `/api/dashboard/${profile?.id}`,
-                                                deleteResult(formPost.id),
-                                                {
-                                                    optimisticData: [
-                                                        ...newData,
-                                                    ],
-                                                    rollbackOnError: true,
-                                                }
-                                            )
-                                        }}
-                                    />
-                                ))
+                                <Table
+                                    data={cards}
+                                    sortBy={sortBy}
+                                    requestSort={requestSort}
+                                    handleClickExportOpen={
+                                        handleClickExportOpen
+                                    }
+                                    onDelete={async (id: any) => {
+                                        const newData = data.filter(
+                                            (post: any) => post.id !== id
+                                        )
+                                        mutate(
+                                            `/api/dashboard/${profile?.id}`,
+                                            deleteResult(id),
+                                            {
+                                                optimisticData: [...newData],
+                                                rollbackOnError: true,
+                                            }
+                                        )
+                                    }}
+                                />
                             ) : (
                                 <Box
                                     sx={{

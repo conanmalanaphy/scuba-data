@@ -24,7 +24,13 @@ const fetcher = async (url: string) => {
 const steps = ['Upload file', 'File Mapping', 'Choose Campaign']
 
 interface StepperProps {
-    onClose: (data: string[][], campaigns: string[], jobTitleCoumn: number, companyCoumn: number, filename: string) => void
+    onClose: (
+        data: string[][],
+        campaigns: string[],
+        jobTitleCoumn: number,
+        companyCoumn: number,
+        filename: string
+    ) => void
 }
 
 interface item {
@@ -38,16 +44,16 @@ export default function LineStepper({ onClose }: StepperProps) {
     const [filename, setFilename] = React.useState<string>('')
     const [campaigns, setCampaigns] = React.useState<string[]>([])
     const profile = supabase.auth.user()
-    const [jobTitleCoumn, setJobTitleCoumn] = React.useState(1);
-    const [companyCoumn, setCompanyCoumn] = React.useState(2);
+    const [jobTitleCoumn, setJobTitleCoumn] = React.useState(1)
+    const [companyCoumn, setCompanyCoumn] = React.useState(2)
 
     const handleJobTitleCoumnChange = (event: any) => {
-        setJobTitleCoumn(event.target.value);
-    };
+        setJobTitleCoumn(event.target.value)
+    }
 
     const handleCompanyCoumnChange = (event: any) => {
-        setCompanyCoumn(event.target.value);
-    };
+        setCompanyCoumn(event.target.value)
+    }
 
     const { data } = useSWR(`/api/campaigns/${profile?.id}`, fetcher)
 
@@ -75,7 +81,13 @@ export default function LineStepper({ onClose }: StepperProps) {
                                 return cam.id === campaigns[0]
                             })
 
-                            onClose(state, campaignData, jobTitleCoumn - 1, companyCoumn - 1, filename)
+                            onClose(
+                                state,
+                                campaignData,
+                                jobTitleCoumn - 1,
+                                companyCoumn - 1,
+                                filename
+                            )
                         }}
                     >
                         Calculate
@@ -128,7 +140,13 @@ export default function LineStepper({ onClose }: StepperProps) {
                     <Stepper />
                 </Box>
                 <Box>
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '1rem',
+                        }}
+                    >
                         <TextField
                             id="filled-number"
                             label="Job Title column"
@@ -155,16 +173,27 @@ export default function LineStepper({ onClose }: StepperProps) {
                             Example of upload
                             <Divider />
                             {state.slice(0, 3).map((row, index) => {
-                                return <Box sx={{ display: "flex" }} key={index}>
-                                    {row.map((a, index) => {
-                                        return <Box key={index} sx={{
-                                            width: '7rem', whiteSpace: 'nowrap',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis'
-                                        }}> {a}</Box>
-                                    })}
-                                </Box>
-
+                                return (
+                                    <Box sx={{ display: 'flex' }} key={index}>
+                                        {row.map((a, index) => {
+                                            return (
+                                                <Box
+                                                    key={index}
+                                                    sx={{
+                                                        width: '7rem',
+                                                        whiteSpace: 'nowrap',
+                                                        overflow: 'hidden',
+                                                        textOverflow:
+                                                            'ellipsis',
+                                                    }}
+                                                >
+                                                    {' '}
+                                                    {a}
+                                                </Box>
+                                            )
+                                        })}
+                                    </Box>
+                                )
                             })}
                             <Divider />
                         </Box>

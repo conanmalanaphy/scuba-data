@@ -9,7 +9,8 @@ interface ModalProps {
     processfile: (
         data: string[][],
         campaigns: string[],
-        jobTitleCoumn: number, companyCoumn: number,
+        jobTitleCoumn: number,
+        companyCoumn: number,
         fileName: string
     ) => void
 }

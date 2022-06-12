@@ -9,13 +9,13 @@ import '../styles/globals.css'
 const mdTheme = createTheme()
 
 function MyApp({ Component, pageProps }: AppProps) {
-
     return (
         <ThemeProvider theme={mdTheme}>
             <RouteGuard>
                 <Component {...pageProps} />
             </RouteGuard>
-        </ThemeProvider>)
+        </ThemeProvider>
+    )
 }
 
 export default MyApp

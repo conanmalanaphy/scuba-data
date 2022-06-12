@@ -4,7 +4,7 @@ import { supabase } from '../../libs/initSupabase'
 const user: NextApiHandler = async (req, res) => {
     if (req.method === 'POST') {
         // probs do some validation on this??
-        const { user, error } = await supabase.auth.update({email: req.body})
+        const { user, error } = await supabase.auth.update({ email: req.body })
 
         if (!error) {
             res.status(200).json(user)

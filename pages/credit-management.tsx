@@ -10,7 +10,7 @@ import Wrapper from '../components/Wrapper/Wrapper'
 import { supabase } from '../libs/initSupabase'
 import { useSWRConfig } from 'swr'
 import CircularProgress from '@mui/material/CircularProgress'
-import Slider from '@mui/material/Slider';
+import Slider from '@mui/material/Slider'
 import { Typography } from '@mui/material'
 
 const marks = [
@@ -26,10 +26,10 @@ const marks = [
         value: 1000,
         label: '1000',
     },
-];
+]
 
 function valuetext(value: number) {
-    return `${value}°C`;
+    return `${value}°C`
 }
 
 const fetcher = async (url: string) => {
@@ -61,13 +61,13 @@ const addMoreCredits = async (
 
 function calc(c: number) {
     if (c < 100) {
-        return c * 1;
+        return c * 1
     } else if (c >= 100 && c < 500) {
-        const lower = c - 100;
-        return 100 + lower * 0.5;
+        const lower = c - 100
+        return 100 + lower * 0.5
     } else {
-        const lower = c - 500;
-        return 300 + lower * 0.1;
+        const lower = c - 500
+        return 300 + lower * 0.1
     }
 }
 
@@ -110,7 +110,7 @@ function Profile() {
                 }}
             >
                 <Toolbar />
-                <Container sx={{ mt: 4, mb: 4, height: "70%" }}>
+                <Container sx={{ mt: 4, mb: 4, height: '70%' }}>
                     <Paper
                         sx={{
                             p: 2,
@@ -122,12 +122,27 @@ function Profile() {
                         }}
                     >
                         {!isLoading ? (
-                            <Box sx={{ display: 'flex', flexDirection: "column", justifyContent: "space-evenly", height: "100%" }}>
-                                <Typography variant="h2">Credit count: {state.credit_count}</Typography>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-evenly',
+                                    height: '100%',
+                                }}
+                            >
+                                <Typography variant="h2">
+                                    Credit count: {state.credit_count}
+                                </Typography>
                                 <Box sx={{ width: 300 }}>
-                                    <Typography variant="h3">1-100: £1 per credit</Typography>
-                                    <Typography variant="h3">100-500: 50p per credit</Typography>
-                                    <Typography variant="h3">500-1000: 10p per credit</Typography>
+                                    <Typography variant="h3">
+                                        1-100: £1 per credit
+                                    </Typography>
+                                    <Typography variant="h3">
+                                        100-500: 50p per credit
+                                    </Typography>
+                                    <Typography variant="h3">
+                                        500-1000: 10p per credit
+                                    </Typography>
                                 </Box>
                                 <Box sx={{ width: 300 }}>
                                     <Slider
@@ -160,7 +175,8 @@ function Profile() {
                                             {
                                                 optimisticData: {
                                                     credit_count:
-                                                        data.credit_count + value,
+                                                        data.credit_count +
+                                                        value,
                                                 },
                                                 rollbackOnError: true,
                                             }

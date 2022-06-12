@@ -12,7 +12,6 @@ import * as React from 'react'
 import Wrapper from '../components/Wrapper/Wrapper'
 import { supabase } from '../libs/initSupabase'
 
-
 function Profile() {
     const profile = supabase.auth.user()
 
@@ -65,7 +64,7 @@ function Profile() {
                                     <TextField
                                         required
                                         fullWidth
-                                        value={profile?.email || ""}
+                                        value={profile?.email || ''}
                                         id="email"
                                         label="Current Email Address"
                                         name="email"

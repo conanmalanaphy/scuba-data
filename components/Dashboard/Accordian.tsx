@@ -91,7 +91,7 @@ export default function LineStepper({ formPost, onDelete }: AccordianProps) {
                 sx={{ marginBottom: '1rem' }}
                 key={id}
                 expanded={expanded}
-                onChange={() => setExpanded(prevState => !prevState)}
+                onChange={() => setExpanded((prevState) => !prevState)}
             >
                 <AccordionSummary
                     aria-controls="panel1bh-content"
