@@ -1,14 +1,15 @@
-import * as React from 'react'
 import Box from '@mui/material/Box'
-import Stepper from '@mui/material/Stepper'
+import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
 import Step from '@mui/material/Step'
 import StepLabel from '@mui/material/StepLabel'
-import Button from '@mui/material/Button'
+import Stepper from '@mui/material/Stepper'
+import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import { useCSVReader } from 'react-papaparse'
-import MultiSelect from '../MultiSelect/MultiSelect'
-import useSWR, { useSWRConfig } from 'swr'
+import * as React from 'react'
+import useSWR from 'swr'
 import { supabase } from '../../libs/initSupabase'
+import MultiSelect from '../MultiSelect/MultiSelect'
 import CSVUploader from './CSVUploader'
 
 const fetcher = async (url: string) => {
@@ -20,10 +21,10 @@ const fetcher = async (url: string) => {
     return data
 }
 
-const steps = ['Upload file', 'Choose Campaign']
+const steps = ['Upload file', 'File Mapping', 'Choose Campaign']
 
 interface StepperProps {
-    onClose: (data: string[][], campaigns: string[], filename: string) => void
+    onClose: (data: string[][], campaigns: string[], jobTitleCoumn: number, companyCoumn: number, filename: string) => void
 }
 
 interface item {
@@ -37,8 +38,17 @@ export default function LineStepper({ onClose }: StepperProps) {
     const [filename, setFilename] = React.useState<string>('')
     const [campaigns, setCampaigns] = React.useState<string[]>([])
     const profile = supabase.auth.user()
+    const [jobTitleCoumn, setJobTitleCoumn] = React.useState(1);
+    const [companyCoumn, setCompanyCoumn] = React.useState(2);
 
-    const { CSVReader } = useCSVReader()
+    const handleJobTitleCoumnChange = (event: any) => {
+        setJobTitleCoumn(event.target.value);
+    };
+
+    const handleCompanyCoumnChange = (event: any) => {
+        setCompanyCoumn(event.target.value);
+    };
+
     const { data } = useSWR(`/api/campaigns/${profile?.id}`, fetcher)
 
     const handleNext = () => {
@@ -65,7 +75,7 @@ export default function LineStepper({ onClose }: StepperProps) {
                                 return cam.id === campaigns[0]
                             })
 
-                            onClose(state, campaignData, filename)
+                            onClose(state, campaignData, jobTitleCoumn - 1, companyCoumn - 1, filename)
                         }}
                     >
                         Calculate
@@ -100,6 +110,74 @@ export default function LineStepper({ onClose }: StepperProps) {
                                 Back
                             </Button>
                         )}
+                        <Box sx={{ flex: '1 1 auto' }} />
+                        <Button
+                            onClick={handleNext}
+                            disabled={state.length === 0}
+                        >
+                            Next
+                        </Button>
+                    </Box>
+                </Box>
+            </Box>
+        )
+    } else if (activeStep == 1) {
+        stepContent = (
+            <Box>
+                <Typography sx={{ mt: 2, mb: 1 }}>
+                    <Stepper />
+                </Typography>
+                <Box>
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                        <TextField
+                            id="filled-number"
+                            label="Job Title column"
+                            type="number"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            variant="filled"
+                            value={jobTitleCoumn}
+                            onChange={handleJobTitleCoumnChange}
+                        />
+                        <TextField
+                            id="filled-number"
+                            label="Company column"
+                            type="number"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            variant="filled"
+                            value={companyCoumn}
+                            onChange={handleCompanyCoumnChange}
+                        />
+                        <Box>
+                            Example of upload
+                            <Divider />
+                            {state.slice(0, 3).map((row, index) => {
+                                return <Box sx={{ display: "flex" }} key={index}>
+                                    {row.map((a, index) => {
+                                        return <Box key={index} sx={{
+                                            width: '7rem', whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'
+                                        }}> {a}</Box>
+                                    })}
+                                </Box>
+
+                            })}
+                            <Divider />
+                        </Box>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 4 }}>
+                        <Button
+                            color="inherit"
+                            onClick={handleBack}
+                            sx={{ mr: 1 }}
+                        >
+                            Back
+                        </Button>
                         <Box sx={{ flex: '1 1 auto' }} />
                         <Button
                             onClick={handleNext}
@@ -155,7 +233,7 @@ export default function LineStepper({ onClose }: StepperProps) {
         <Box
             sx={{
                 width: '100%',
-                height: '30vh',
+                height: '40vh',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',

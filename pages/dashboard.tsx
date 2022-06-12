@@ -10,8 +10,8 @@ import Router from 'next/router'
 import { useEffect, useState } from 'react'
 import { usePapaParse } from 'react-papaparse'
 import useSWR, { useSWRConfig } from 'swr'
-import Modal from '../components/Dashboard/Modal'
 import Accordian from '../components/Dashboard/Accordian'
+import Modal from '../components/Dashboard/Modal'
 
 import Wrapper from '../components/Wrapper/Wrapper'
 import { supabase } from '../libs/initSupabase'
@@ -162,16 +162,17 @@ function DashboardContent() {
                         processfile={async (
                             newData: string[][],
                             campaigns: any,
+                            jobTitleCoumn: number, companyCoumn: number,
                             fileName: string
                         ) => {
                             const processedfile = newData.reduce<any>(
                                 (memo, val: any) => {
                                     if (val[0]) {
-                                        memo.jobTitles.push(val[0])
+                                        memo.jobTitles.push(val[jobTitleCoumn])
                                     }
 
                                     if (val[1]) {
-                                        memo.compainies.push(val[1])
+                                        memo.compainies.push(val[companyCoumn])
                                     }
                                     return memo
                                 },
