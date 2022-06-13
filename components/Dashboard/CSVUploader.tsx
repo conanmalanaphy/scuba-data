@@ -24,7 +24,7 @@ const styles = {
         borderRadius: 20,
         display: 'flex',
         flexDirection: 'column',
-        height: '11rem',
+        height: '17rem',
         justifyContent: 'center',
         padding: 20,
     } as CSSProperties,

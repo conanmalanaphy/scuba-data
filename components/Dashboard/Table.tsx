@@ -56,7 +56,6 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                 </TableCell>
                 <TableCell>{row_count}</TableCell>
                 <TableCell>
-                    {' '}
                     {new Date(created_at).toLocaleDateString('en-UK', {
                         weekday: 'long',
                         year: 'numeric',
@@ -64,7 +63,7 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                         day: 'numeric',
                     })}
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ textAlign: "right" }}>
                     <Button
                         variant="outlined"
                         sx={{
@@ -80,8 +79,6 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                     >
                         Export
                     </Button>
-                </TableCell>
-                <TableCell>
                     <IconButton
                         edge="start"
                         color="inherit"
@@ -107,6 +104,7 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                                 width: '100%',
                                 padding: '1rem',
                                 paddingLeft: '3rem',
+                                gap: "5rem"
                             }}
                         >
                             <Box
@@ -117,18 +115,23 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                                     color: 'grey',
                                 }}
                             >
-                                <Typography
-                                    sx={{
-                                        fontWeight: 700,
-                                        flexShrink: 0,
-                                        fontSize: '125%',
-                                        margin: 'auto',
-                                        marginLeft: '1rem',
-                                        color: 'grey',
-                                    }}
-                                >
-                                    Companies
-                                </Typography>
+                                <Box sx={{ display: "flex" }}>
+                                    <Typography
+                                        sx={{
+                                            fontWeight: 700,
+                                            flexShrink: 0,
+                                            fontSize: '125%',
+                                            margin: 'auto',
+                                            marginLeft: '0rem',
+                                        }}
+                                    >
+                                        Companies
+                                    </Typography>
+                                    <Typography
+                                    >
+                                        Unique Rows: {comp_unique_count}
+                                    </Typography>
+                                </Box>
                                 <Table aria-label="simple table">
                                     <TableBody>
                                         <TableRow
@@ -179,37 +182,27 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                                                 {comp_low}
                                             </TableCell>
                                         </TableRow>
-                                        <TableRow
-                                            sx={{
-                                                '&:last-child td, &:last-child th':
-                                                    { border: 0 },
-                                            }}
-                                        >
-                                            <TableCell
-                                                component="th"
-                                                scope="row"
-                                            >
-                                                Unique rows
-                                            </TableCell>
-                                            <TableCell align="right">
-                                                {comp_unique_count}
-                                            </TableCell>
-                                        </TableRow>
                                     </TableBody>
                                 </Table>
                             </Box>
                             <Box sx={{ flex: '50%' }}>
-                                <Typography
-                                    sx={{
-                                        fontWeight: 700,
-                                        flexShrink: 0,
-                                        fontSize: '125%',
-                                        margin: 'auto',
-                                        marginLeft: '1rem',
-                                    }}
-                                >
-                                    Job titles
-                                </Typography>
+                                <Box sx={{ display: "flex" }}>
+                                    <Typography
+                                        sx={{
+                                            fontWeight: 700,
+                                            flexShrink: 0,
+                                            fontSize: '125%',
+                                            margin: 'auto',
+                                            marginLeft: '0rem',
+                                        }}
+                                    >
+                                        Job titles
+                                    </Typography>
+                                    <Typography
+                                    >
+                                        Unique Rows: {job_title_unique_count}
+                                    </Typography>
+                                </Box>
                                 <Table aria-label="simple table">
                                     <TableBody>
                                         <TableRow
@@ -260,22 +253,6 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                                                 {job_title_low}
                                             </TableCell>
                                         </TableRow>
-                                        <TableRow
-                                            sx={{
-                                                '&:last-child td, &:last-child th':
-                                                    { border: 0 },
-                                            }}
-                                        >
-                                            <TableCell
-                                                component="th"
-                                                scope="row"
-                                            >
-                                                Unique rows
-                                            </TableCell>
-                                            <TableCell align="right">
-                                                {job_title_unique_count}
-                                            </TableCell>
-                                        </TableRow>
                                     </TableBody>
                                 </Table>
                             </Box>
@@ -296,10 +273,9 @@ export default function TableC({
     return (
         <Table>
             <TableHead>
-                <TableRow>
+                <TableRow >
                     <TableCell sx={{ width: '1rem' }}></TableCell>
-                    <TableCell>
-                        {' '}
+                    <TableCell sx={{ fontWeight: "700" }}>
                         <TableSortLabel
                             active={sortBy.sortBy === 'name'}
                             direction={sortBy.sortDirection}
@@ -308,7 +284,7 @@ export default function TableC({
                             Name
                         </TableSortLabel>
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ fontWeight: "700" }}>
                         <TableSortLabel
                             active={sortBy.sortBy === 'uniqueRows'}
                             direction={sortBy.sortDirection}
@@ -317,7 +293,7 @@ export default function TableC({
                             Unique Rows
                         </TableSortLabel>
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ fontWeight: "700" }}>
                         <TableSortLabel
                             active={sortBy.sortBy === 'Created Date'}
                             direction={sortBy.sortDirection}
@@ -326,7 +302,6 @@ export default function TableC({
                             Created date
                         </TableSortLabel>
                     </TableCell>
-                    <TableCell></TableCell>
                     <TableCell></TableCell>
                 </TableRow>
             </TableHead>

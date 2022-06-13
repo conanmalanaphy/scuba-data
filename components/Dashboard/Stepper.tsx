@@ -8,6 +8,12 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import useSWR from 'swr'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableFooter from '@mui/material/TableFooter'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
 import { supabase } from '../../libs/initSupabase'
 import MultiSelect from '../MultiSelect/MultiSelect'
 import CSVUploader from './CSVUploader'
@@ -144,57 +150,59 @@ export default function LineStepper({ onClose }: StepperProps) {
                         sx={{
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '1rem',
+                            gap: '4rem',
                         }}
                     >
-                        <TextField
-                            id="filled-number"
-                            label="Job Title column"
-                            type="number"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            variant="filled"
-                            value={jobTitleCoumn}
-                            onChange={handleJobTitleCoumnChange}
-                        />
-                        <TextField
-                            id="filled-number"
-                            label="Company column"
-                            type="number"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            variant="filled"
-                            value={companyCoumn}
-                            onChange={handleCompanyCoumnChange}
-                        />
+                        <Box sx={{
+                            display: 'flex',
+                            gap: '2rem',
+                        }}>
+                            <TextField
+                                id="filled-number"
+                                label="Job Title column"
+                                type="number"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                variant="filled"
+                                value={jobTitleCoumn}
+                                onChange={handleJobTitleCoumnChange}
+                            />
+                            <TextField
+                                id="filled-number"
+                                label="Company column"
+                                type="number"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                variant="filled"
+                                value={companyCoumn}
+                                onChange={handleCompanyCoumnChange}
+                            />
+                        </Box>
+
                         <Box>
                             Example of upload
                             <Divider />
-                            {state.slice(0, 3).map((row, index) => {
-                                return (
-                                    <Box sx={{ display: 'flex' }} key={index}>
-                                        {row.map((a, index) => {
-                                            return (
-                                                <Box
-                                                    key={index}
+                            <Table size="small">
+                                <TableBody>
+                                    {state.slice(0, 3).map((row, index) => {
+                                        return (<TableRow key={index} >
+                                            {row.map((a, index) => {
+                                                return (<TableCell key={index}
                                                     sx={{
                                                         width: '7rem',
                                                         whiteSpace: 'nowrap',
                                                         overflow: 'hidden',
                                                         textOverflow:
                                                             'ellipsis',
-                                                    }}
-                                                >
-                                                    {' '}
-                                                    {a}
-                                                </Box>
-                                            )
-                                        })}
-                                    </Box>
-                                )
-                            })}
+                                                    }}> {a}</TableCell>)
+                                            })}
+                                        </TableRow>)
+                                    })}
+                                </TableBody>
+                                <TableFooter />
+                            </Table>
                             <Divider />
                         </Box>
                     </Box>
@@ -221,11 +229,12 @@ export default function LineStepper({ onClose }: StepperProps) {
     } else {
         stepContent = (
             <>
-                <Typography sx={{ mt: 2, mb: 1 }}>
-                    Choose the Campaign to run on
-                </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column', pt: 2 }}>
-                    <Box sx={{ flex: '1 1 auto', pb: '1rem' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', pt: 2, height: "100%" }}>
+                    <Box sx={{
+                        flex: '1 1 auto', pb: '1rem', height: "100%", flexDirection: "column",
+                        justifyContent: "space-around",
+                        display: "flex"
+                    }} >
                         <MultiSelect
                             items={data.map(({ id, name }: item) => {
                                 return { id, name }
