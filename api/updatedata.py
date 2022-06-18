@@ -73,38 +73,42 @@ class JobTitleMatch:
         
     def add_extra_titles(self):
         
-        extra_kw = {
-            'it':['information technology', 'ict'],
-            'technology':['tech', 'technical'],
-            'information':['info'],
-            'hr':['human resources'],
-            'esg':['environmental social and governance'],
-            'sdg':['sustainable development goals']
-            }
+        extra_kw = [
+            ['it','information technology', 'ict'],
+            ['technology', 'tech', 'technical'],
+            ['information', 'info'],
+            ['hr', 'human resources'],
+            ['esg', 'environmental social and governance'],
+            ['sdg', 'sustainable development goals'],
+            ['application', 'app'],
+            ['cyber security', 'cybersecurity']
+            ]
         
-        extra_sen = {
-            'manager':['mgr'],
-            'svp':['senior vice president', 'sr vp', 'sr vice president', 'snr vp', 'snr vice president', 'senior vp'],
-            'vp':['vice president']
-            }
+        extra_sen = [
+            ['manager', 'mgr'],
+            ['svp','senior vice president', 'sr vp', 'sr vice president', 'snr vp', 'snr vice president', 'senior vp'],
+            ['vp','vice president']
+            ]
         
-        def check(dic, include, exclude):
+        def check(lst, include, exclude):
             
-            for i in dic:
-                if i in include:
-                    for j in dic[i]:
-                        if j not in exclude and j not in include:
-                            include.append(j)
-            
+            for i in lst:
+                for j in i:
+                    if j in include:
+                        include.extend([k for k in i if k not in include and k not in exclude])
+                        break
+                            
             return include
         
         self.kw_clean = check(extra_kw, self.kw_clean, self.exclude_kw_clean)
         self.sen_clean = check(extra_sen, self.sen_clean, self.exclude_sen_clean)
         self.kw_clean.extend([f'{i}s' for i in self.kw_clean if f'{i}s' not in self.kw_clean and i[-1] != 's'])
+        self.kw_clean.extend([i[:-1] for i in self.kw_clean if i[:-1] not in self.kw_clean and i[-1] == 's'])
         
         self.exclude_kw_clean = check(extra_kw, self.exclude_kw_clean, self.kw_clean)
         self.exclude_sen_clean = check(extra_sen, self.exclude_sen_clean, self.sen_clean)
         self.exclude_kw_clean.extend([f'{i}s' for i in self.exclude_kw_clean if f'{i}s' not in self.exclude_kw_clean and i[-1] != 's'])
+        self.exclude_kw_clean.extend([i[:-1] for i in self.exclude_kw_clean if i[:-1] not in self.exclude_kw_clean and i[-1] == 's'])
                         
     def get_cosine(self, vec1, vec2):
         intersection = set(vec1.keys()) & set(vec2.keys())
