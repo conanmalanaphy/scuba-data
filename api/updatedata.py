@@ -100,9 +100,11 @@ class JobTitleMatch:
         
         self.kw_clean = check(extra_kw, self.kw_clean, self.exclude_kw_clean)
         self.sen_clean = check(extra_sen, self.sen_clean, self.exclude_sen_clean)
+        self.kw_clean.extend([f'{i}s' for i in self.kw_clean if f'{i}s' not in self.kw_clean and i[-1] != 's'])
         
         self.exclude_kw_clean = check(extra_kw, self.exclude_kw_clean, self.kw_clean)
         self.exclude_sen_clean = check(extra_sen, self.exclude_sen_clean, self.sen_clean)
+        self.exclude_kw_clean.extend([f'{i}s' for i in self.exclude_kw_clean if f'{i}s' not in self.exclude_kw_clean and i[-1] != 's'])
                         
     def get_cosine(self, vec1, vec2):
         intersection = set(vec1.keys()) & set(vec2.keys())
