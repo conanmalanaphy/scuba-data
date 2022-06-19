@@ -374,6 +374,8 @@ class CompanyMatch(JobTitleMatch):
         report = {}
         report_counts = {'High': 0, 'Medium': 0, 'Low': 0}
         matched_companies = {}
+
+        # Error when these were placed in the for loop below
         key = ''
         value = ''
 
@@ -521,16 +523,18 @@ class handler(BaseHTTPRequestHandler):
 
         unique_comps = len(set(data["companies"]))
 
-        # DB variables
+        # DB variables to login
         key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
         url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL") 
         supabase: Client = supa_create_client(url, key)
 
         comp_report_sum = b[1]
         jt_report_sum = a[1]
-        # make unique url for the file name
+        
+        # make unique url for the file name to be stored at
         str = data["user_id"]+"/"+data["id"]+"/"+data["file_name"]+".csv"
 
+        # update the row in the db with a completed row with results
         supabase.table("results").update(
             {   
                 "comp_high": comp_report_sum["High"],
@@ -545,18 +549,22 @@ class handler(BaseHTTPRequestHandler):
                 "row_count": 6,
                 "file": str}).eq("id", data["id"]).execute()
         
-        # open client connection
+        # open client connection from file storage
         storage_client = create_client(url+ "/storage/v1", {"apiKey": key, "Authorization": f"Bearer {key}"}, is_async=False)
+
         # make temp file
         new_file, filename = tempfile.mkstemp(suffix='.csv')
 
+        # write in temp file from the results
         with open(filename, 'w', encoding='UTF8', newline='') as csv_file:
             writer = csv.writer(csv_file)
             for key, value in a[0].items():
                 writer.writerow([key, value])
 
+            # a bit of spacing to make the file more readable
             writer.writerow(["", ""])
             writer.writerow(["", ""])
+
             for key, value in b[0].items():
                 writer.writerow([key, value])
 
