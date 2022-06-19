@@ -41,12 +41,7 @@ export default function Modal({
                             .getPublicUrl(fileUrl)
 
                         if (data) {
-                            var link = document.createElement('a')
-                            link.download = 'employees.json'
-                            link.href = data.publicURL
-                            document.body.appendChild(link)
-                            link.click()
-                            document.body.removeChild(link)
+                            window.open(data.publicURL, '_blank', 'noopener,noreferrer');
                         }
                     }}
                 >
