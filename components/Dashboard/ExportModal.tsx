@@ -35,19 +35,18 @@ export default function Modal({
                 <Button
                     variant="contained"
                     disabled={data?.credit_count < cost}
-                    onClick={async() => {
-                        const { data, error } = await supabase
-                            .storage
+                    onClick={async () => {
+                        const { data, error } = await supabase.storage
                             .from('reports')
                             .getPublicUrl(fileUrl)
-                        
-                        if(data){
-                            var link = document.createElement("a");
-                            link.download = 'employees.json';
-                            link.href = data.publicURL;
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
+
+                        if (data) {
+                            var link = document.createElement('a')
+                            link.download = 'employees.json'
+                            link.href = data.publicURL
+                            document.body.appendChild(link)
+                            link.click()
+                            document.body.removeChild(link)
                         }
                     }}
                 >

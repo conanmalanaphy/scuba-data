@@ -17,7 +17,7 @@ async function pythonScript(
     jobTitleCoumn: number,
     companyCoumn: number,
     fileName: string,
-    id:number,
+    id: number,
     fetcher: any
 ) {
     const processedfile = newData.reduce<any>(
@@ -36,8 +36,8 @@ async function pythonScript(
 
     fetcher('api/updatedata', {
         user_id: '5',
-        file_name: fileName, 
-        id:id.toString(),
+        file_name: fileName,
+        id: id.toString(),
         jobtitles: processedfile.jobTitles,
         companies: processedfile.compainies,
         kw: isIncluded(campaigns.keywords),
@@ -66,7 +66,9 @@ function isNotIncluded(data: any) {
 function DashboardContent() {
     const [isOpen, setIsOpen] = useState(false)
     const { fetcher, mutate } = useSWRConfig()
-    const { data, error } = useSWR(`/api/dashboard/main`, { refreshInterval: 1000 })
+    const { data, error } = useSWR(`/api/dashboard/main`, {
+        refreshInterval: 1000,
+    })
 
     const handleClickOpen = () => {
         setIsOpen(true)
@@ -77,29 +79,26 @@ function DashboardContent() {
 
     const [exportModal, setexportModal] = useState<any>({
         isOpen: false,
-        exportId: null,
         cost: null,
-        file: null,
+        fileUrl: null,
     })
 
     const handleClickExportOpen = (
         id: number | undefined,
         cost: number,
-        file: any
+        fileUrl: any
     ) => {
         setexportModal({
             isOpen: true,
-            exportId: id,
-            file: file,
+            fileUrl: fileUrl,
             cost: cost,
         })
     }
     const handleExportClose = () => {
         setexportModal({
             isOpen: false,
-            exportId: null,
             cost: null,
-            file: null,
+            fileUrl: null,
         })
     }
 
@@ -154,14 +153,14 @@ function DashboardContent() {
                                 handleClose()
 
                                 if (fetcher) {
-                                    result =  await mutate(
+                                    result = await mutate(
                                         '/api/dashboard/main',
                                         fetcher(
                                             `/api/dashboard/main`,
                                             newCampaign
-                                        )                                        
+                                        )
                                     )
-                                    result = result[result.length-1];
+                                    result = result[result.length - 1]
                                 }
 
                                 pythonScript(
@@ -175,7 +174,7 @@ function DashboardContent() {
                                 )
                             } catch (error) {
                                 // Handle an error while updating the user here
-                                debugger;
+                                debugger
                             }
                         }}
                     />
@@ -185,7 +184,7 @@ function DashboardContent() {
                             <ExportModal
                                 isExportOpen={exportModal.isOpen}
                                 cost={exportModal.cost}
-                                fileUrl={exportModal.file}
+                                fileUrl={exportModal.fileUrl}
                                 handleClose={handleExportClose}
                             />
                             {data.length > 0 ? (

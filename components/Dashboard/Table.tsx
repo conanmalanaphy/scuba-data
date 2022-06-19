@@ -37,7 +37,7 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
         job_title_unique_count,
         comp_unique_count,
         is_processing,
-        expected_completion_time
+        expected_completion_time,
     } = row
 
     return is_processing ? (

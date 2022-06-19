@@ -52,30 +52,27 @@ export default function LineStepper({ formPost, onDelete }: AccordianProps) {
 
     const [exportModal, setexportModal] = useState<any>({
         isOpen: false,
-        exportId: null,
         cost: null,
-        file: null,
+        fileUrl: null,
     })
     const [expanded, setExpanded] = useState(false)
 
     const handleClickExportOpen = (
         id: number | undefined,
         cost: number,
-        file: any
+        fileUrl: any
     ) => {
         setexportModal({
             isOpen: true,
-            exportId: id,
-            file: file,
+            fileUrl: fileUrl,
             cost: cost,
         })
     }
     const handleExportClose = () => {
         setexportModal({
             isOpen: false,
-            exportId: null,
             cost: null,
-            file: null,
+            fileUrl: null,
         })
     }
     return (
@@ -83,9 +80,8 @@ export default function LineStepper({ formPost, onDelete }: AccordianProps) {
             <ExportModal
                 isExportOpen={exportModal.isOpen}
                 cost={exportModal.cost}
-                exportId={exportModal.exportId}
                 handleClose={handleExportClose}
-                file={exportModal.file}
+                fileUrl={exportModal.fileUrl}
             />
             <Accordion
                 sx={{ marginBottom: '1rem' }}
