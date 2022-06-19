@@ -65,7 +65,7 @@ export default function CampaignModal({
                         if (ev.key === 'Enter') {
                             ev.preventDefault()
 
-                            const foundCampaign = campaigns.find((a) => {
+                            const foundCampaign = campaigns?.find((a) => {
                                 return a.id == campaign
                             })
                             onSubmit({ ...foundCampaign, id: '', name })
@@ -98,7 +98,7 @@ export default function CampaignModal({
                 <Button onClick={handleClose}>Cancel</Button>
                 <Button
                     onClick={() => {
-                        const foundCampaign = campaigns.find((a) => {
+                        const foundCampaign = campaigns?.find((a) => {
                             return a.id == campaign
                         })
 

@@ -4,28 +4,17 @@ import Divider from '@mui/material/Divider'
 import Step from '@mui/material/Step'
 import StepLabel from '@mui/material/StepLabel'
 import Stepper from '@mui/material/Stepper'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
-import * as React from 'react'
-import useSWR from 'swr'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableFooter from '@mui/material/TableFooter'
-import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import { supabase } from '../../libs/initSupabase'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+import * as React from 'react'
+import useSWR from 'swr'
 import MultiSelect from '../MultiSelect/MultiSelect'
 import CSVUploader from './CSVUploader'
-
-const fetcher = async (url: string) => {
-    const res = await fetch(url)
-    if (!res.ok) {
-        throw Error("Yo that's NOT OK!!!")
-    }
-    const data = await res.json()
-    return data
-}
 
 const steps = ['Upload file', 'File Mapping', 'Choose Campaign']
 
@@ -49,7 +38,6 @@ export default function LineStepper({ onClose }: StepperProps) {
     const [state, setState] = React.useState<string[][]>([])
     const [filename, setFilename] = React.useState<string>('')
     const [campaigns, setCampaigns] = React.useState<string[]>([])
-    const profile = supabase.auth.user()
     const [jobTitleCoumn, setJobTitleCoumn] = React.useState(1)
     const [companyCoumn, setCompanyCoumn] = React.useState(2)
 
@@ -61,7 +49,7 @@ export default function LineStepper({ onClose }: StepperProps) {
         setCompanyCoumn(event.target.value)
     }
 
-    const { data } = useSWR(`/api/campaigns/${profile?.id}`, fetcher)
+    const { data, error } = useSWR(`/api/campaigns/main`)
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1)
@@ -153,10 +141,12 @@ export default function LineStepper({ onClose }: StepperProps) {
                             gap: '4rem',
                         }}
                     >
-                        <Box sx={{
-                            display: 'flex',
-                            gap: '2rem',
-                        }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                gap: '2rem',
+                            }}
+                        >
                             <TextField
                                 id="filled-number"
                                 label="Job Title column"
@@ -187,18 +177,29 @@ export default function LineStepper({ onClose }: StepperProps) {
                             <Table size="small">
                                 <TableBody>
                                     {state.slice(0, 3).map((row, index) => {
-                                        return (<TableRow key={index} >
-                                            {row.map((a, index) => {
-                                                return (<TableCell key={index}
-                                                    sx={{
-                                                        width: '7rem',
-                                                        whiteSpace: 'nowrap',
-                                                        overflow: 'hidden',
-                                                        textOverflow:
-                                                            'ellipsis',
-                                                    }}> {a}</TableCell>)
-                                            })}
-                                        </TableRow>)
+                                        return (
+                                            <TableRow key={index}>
+                                                {row.map((a, index) => {
+                                                    return (
+                                                        <TableCell
+                                                            key={index}
+                                                            sx={{
+                                                                width: '7rem',
+                                                                whiteSpace:
+                                                                    'nowrap',
+                                                                overflow:
+                                                                    'hidden',
+                                                                textOverflow:
+                                                                    'ellipsis',
+                                                            }}
+                                                        >
+                                                            {' '}
+                                                            {a}
+                                                        </TableCell>
+                                                    )
+                                                })}
+                                            </TableRow>
+                                        )
                                     })}
                                 </TableBody>
                                 <TableFooter />
@@ -229,12 +230,24 @@ export default function LineStepper({ onClose }: StepperProps) {
     } else {
         stepContent = (
             <>
-                <Box sx={{ display: 'flex', flexDirection: 'column', pt: 2, height: "100%" }}>
-                    <Box sx={{
-                        flex: '1 1 auto', pb: '1rem', height: "100%", flexDirection: "column",
-                        justifyContent: "space-around",
-                        display: "flex"
-                    }} >
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        pt: 2,
+                        height: '100%',
+                    }}
+                >
+                    <Box
+                        sx={{
+                            flex: '1 1 auto',
+                            pb: '1rem',
+                            height: '100%',
+                            flexDirection: 'column',
+                            justifyContent: 'space-around',
+                            display: 'flex',
+                        }}
+                    >
                         <MultiSelect
                             items={data.map(({ id, name }: item) => {
                                 return { id, name }

@@ -29,9 +29,7 @@ export default function Modal({
     cost,
     exportId,
 }: ModalProps) {
-    const profile = supabase.auth.user()
-
-    const { data } = useSWR(`/api/credit-management/${profile?.id}`, fetcher)
+    const { data } = useSWR(`/api/credit-management/add-credits`)
 
     return (
         <Dialog

@@ -127,13 +127,12 @@ interface WrapperProps {
 export default function Wrapper({ pageName }: WrapperProps) {
     const [open, setOpen] = useState(false)
     const router = useRouter()
-    const profile = supabase.auth.user()
+    const { fetcher, mutate } = useSWRConfig()
+    const { data, error } = useSWR(`/api/credit-management/add-credits`)
 
     const toggleDrawer = () => {
         setOpen(!open)
     }
-
-    const { data } = useSWR(`/api/credit-management/${profile?.id}`, fetcher)
 
     const handleLogOut = async (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -190,18 +189,19 @@ export default function Wrapper({ pageName }: WrapperProps) {
                             </Typography>
                         </Link>
                     </Box>
-                    <Box sx={{ display: "flex" }}>
-                        {data?.credit_count ? <Chip
-                            sx={{
-                                backgroundColor: 'white',
-                                margin: 'auto'
-                            }}
-                            icon={<MonetizationOnIcon />}
-                            label={data?.credit_count || 0}
-                        /> :
-
-                            <CircularProgress sx={{ color: "white" }} />
-                        }
+                    <Box sx={{ display: 'flex' }}>
+                        {data ? (
+                            <Chip
+                                sx={{
+                                    backgroundColor: 'white',
+                                    margin: 'auto',
+                                }}
+                                icon={<MonetizationOnIcon />}
+                                label={data || 0}
+                            />
+                        ) : (
+                            <CircularProgress sx={{ color: 'white' }} />
+                        )}
                         <IconButton
                             edge="start"
                             color="inherit"

@@ -1,50 +1,67 @@
-import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
-import { createTheme, ThemeProvider } from '@mui/material/styles'
-import type { AppProps } from 'next/app'
-import { RouteGuard } from '../components/RouteGuard/RouteGuard'
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
+import { SWRConfig } from 'swr'
+import Login from '../components/Login/Login'
 import { supabase } from '../libs/initSupabase'
 import '../styles/globals.css'
-const mdTheme = createTheme()
 
-function MyApp({ Component, pageProps }: AppProps) {
-    return (
-        <ThemeProvider theme={mdTheme}>
-            <RouteGuard>
-                <Component {...pageProps} />
-            </RouteGuard>
-        </ThemeProvider>
+const MyApp = ({ Component, pageProps }: any) => {
+    const router = useRouter()
+    const [session, setSession] = useState<any>(null)
+
+    useEffect(() => {
+        if (!router.asPath.includes('#access_token')) {
+            sessionStorage.removeItem('AUTH')
+        }
+        setSession(supabase.auth.session())
+
+        const { data: authListener } = supabase.auth.onAuthStateChange(
+            (_event: any, session: any) => {
+                setSession(session)
+            }
+        )
+        const handleRouteChange = () => {}
+
+        router.events.on('routeChangeStart', handleRouteChange)
+
+        return () => {
+            authListener?.unsubscribe()
+            router.events.off('routeChangeStart', handleRouteChange)
+        }
+    }, [router])
+
+    const fetcher = (url: any, data: any, method: any) => {
+        const options: any = {
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                token: session?.access_token,
+            }),
+            credentials: 'same-origin',
+        }
+
+        if (data) {
+            options.method = 'POST'
+            options.body = JSON.stringify(data)
+        }
+
+        if (method) {
+            options.method = 'DELETE'
+        }
+
+        return fetch(url, options).then((res) => {
+            if (!res.ok) {
+                // global error handling
+            }
+            return res.json()
+        })
+    }
+
+    return session ? (
+        <SWRConfig value={{ fetcher }}>
+            <Component {...pageProps} />
+        </SWRConfig>
+    ) : (
+        <Login {...pageProps} />
     )
 }
-
 export default MyApp
-
-/*
-2) search box 
-3) delete after 30 days 
-4) modal on export saying how many credits
-5) credit management saying how much you have
-6) delete button
-7) stage in upload for columns setting
-
-
-8) change to make them accordians (little text next to it)
-    - name 
-    - campaign 
-    - how many rows
-    - export button/ colour if paid for already
-
-        2 sides jobs titles/ companies
-        - unique job titles - the 3 circles
-        - unique companies - the 3 circles
-
-
-9) campaign deletiong
-10) starts as inactive 
-11) can't edit an active campaign
-12) disable archive campaigns
-13) copy campaign next to copy button
-1) update email and password page
-
-*/

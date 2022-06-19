@@ -3,14 +3,13 @@ import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
 import Link from '@mui/material/Link'
 import Toolbar from '@mui/material/Toolbar'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import CampaignModal from '../components/CampaignModal/CampaignModal'
 import CampaignCopyModal from '../components/CampaignModal/CampaignCopyModal'
 import Wrapper from '../components/Wrapper/Wrapper'
 import Accord from '../components/Accord/Accord'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useSWRConfig } from 'swr'
-import { supabase } from '../libs/initSupabase'
 import useSWR from 'swr'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 
@@ -30,108 +29,23 @@ interface campaign {
     jobTitles: item[]
 }
 
-const fetcher = async (url: string) => {
-    const res = await fetch(url)
-    if (!res.ok) {
-        throw Error("Yo that's NOT OK!!!")
-    }
-    const data = await res.json()
-    return data
-}
-
-const updateData = async (newData: campaign) => {
-    await fetch(`/api/campaigns/update`, {
-        method: 'POST',
-        headers: new Headers({
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        }),
-        body: JSON.stringify(newData),
-    })
-}
-
-const updateFn = async (newData: campaign) => {
-    await fetch(`/api/campaigns/${newData.user}`, {
-        method: 'POST',
-        headers: new Headers({
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        }),
-        body: JSON.stringify(newData),
-    })
-}
-
-const archieveSetting = async (id: string) => {
-    await fetch(`/api/campaigns/archieve`, {
-        method: 'POST',
-        headers: new Headers({
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        }),
-        body: JSON.stringify({
-            id: id,
-            state: 'ARCHIVED',
-        }),
-    })
-}
-
-const deleteSetting = async (id: string) => {
-    await fetch(`/api/campaigns/${id}`, {
-        method: 'DELETE',
-        headers: new Headers({
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        }),
-    })
-}
-
 function Campaigns() {
     const [expanded, setExpanded] = useState('')
-    const [state, setState] = useState<campaign[]>([])
     const [isOpen, setIsOpen] = useState(false)
     const [isSaveAsOpen, setIsSaveAsOpen] = useState(false)
-    const [isLoading, setIsLoading] = useState(true)
-    const profile = supabase.auth.user()
 
-    const result = useSWR(`/api/campaigns/${profile?.id}`, fetcher)
-    const data = result.data
-
-    const { mutate } = useSWRConfig()
-
-    const handleClickOpen = () => {
-        setIsOpen(true)
-    }
-    const handleClose = () => {
-        setIsOpen(false)
-    }
-
-    const handleClickSaveAsOpen = () => {
-        setIsSaveAsOpen(true)
-    }
-    const handleSaveAsClose = () => {
-        setIsSaveAsOpen(false)
-    }
-
-    const handleChange = (event: string) => {
-        setExpanded((prevstate: string) => {
-            return event == prevstate ? '' : event
-        })
-    }
-
-    useEffect(() => {
-        if (data) {
-            setState(data.filter((a: campaign) => a.state !== 'ARCHIVED'))
-            setIsLoading(false)
-        }
-    }, [data])
+    const { fetcher, mutate } = useSWRConfig()
+    const { data, error } = useSWR(`/api/campaigns/main`)
 
     return (
         <Box sx={{ display: 'flex' }}>
             <CampaignModal
                 isOpen={isOpen}
-                handleClose={handleClose}
-                onSubmit={(name: string) => {
-                    const newTodo = {
+                handleClose={() => {
+                    setIsOpen(false)
+                }}
+                onSubmit={async (name: string) => {
+                    const newCampaign = {
                         id: '',
                         name: name,
                         state: 'INACTIVE',
@@ -139,28 +53,39 @@ function Campaigns() {
                         keywords: [],
                         companysList: [],
                         jobTitles: [],
-                        user: profile?.id || '',
+                        user: '',
                     }
 
-                    mutate(`/api/campaigns/${profile?.id}`, updateFn(newTodo), {
-                        optimisticData: [...data, newTodo],
-                        rollbackOnError: true,
-                    })
+                    setIsOpen(false)
 
-                    handleClose()
+                    if (fetcher) {
+                        await mutate(
+                            `/api/campaigns/main`,
+                            fetcher(`/api/campaigns/main`, newCampaign),
+                            {
+                                optimisticData: [...data, newCampaign],
+                                rollbackOnError: true,
+                            }
+                        )
+                    }
                 }}
             />
             <CampaignCopyModal
                 isOpen={isSaveAsOpen}
-                handleClose={handleSaveAsClose}
+                handleClose={() => setIsSaveAsOpen(false)}
                 campaigns={data}
-                onSubmit={(newTodo: any) => {
-                    mutate(`/api/campaigns/${profile?.id}`, updateFn(newTodo), {
-                        optimisticData: [...data, newTodo],
-                        rollbackOnError: true,
-                    })
-
-                    handleSaveAsClose()
+                onSubmit={(newCampaign: any) => {
+                    if (fetcher) {
+                        mutate(
+                            `/api/campaigns/main`,
+                            fetcher(`/api/campaigns/main`, newCampaign),
+                            {
+                                optimisticData: [...data, newCampaign],
+                                rollbackOnError: true,
+                            }
+                        )
+                    }
+                    setIsSaveAsOpen(false)
                 }}
             />
             <CssBaseline />
@@ -184,22 +109,26 @@ function Campaigns() {
                         <Box>
                             <Button
                                 variant="contained"
-                                onClick={handleClickOpen}
+                                onClick={() => {
+                                    setIsOpen(true)
+                                }}
                             >
                                 Create
                             </Button>
                             <Button
                                 variant="outlined"
                                 sx={{ ml: 2 }}
-                                onClick={handleClickSaveAsOpen}
+                                onClick={() => {
+                                    setIsSaveAsOpen(true)
+                                }}
                             >
                                 Save As
                             </Button>
                         </Box>
 
-                        <Link href="/archieved-campaigns">
+                        <Link href="/archived-campaigns">
                             <Button variant="contained">
-                                View Archieved Campaigns
+                                View Archived Campaigns
                             </Button>
                         </Link>
                     </Box>
@@ -213,9 +142,9 @@ function Campaigns() {
                             gap: '2rem',
                         }}
                     >
-                        {!isLoading ? (
-                            state.length > 0 ? (
-                                state.map((item: campaign) => {
+                        {!error && data ? (
+                            data.length > 0 ? (
+                                data.map((item: campaign) => {
                                     return (
                                         <Accord
                                             key={item.id}
@@ -223,65 +152,96 @@ function Campaigns() {
                                             updateData={async (
                                                 updatedsetting
                                             ) => {
-                                                const newData = state.map(
-                                                    (post: campaign) => {
-                                                        if (
-                                                            post.id === item.id
-                                                        ) {
-                                                            return updatedsetting
+                                                if (fetcher) {
+                                                    await mutate(
+                                                        `/api/campaigns/main`,
+                                                        fetcher(
+                                                            `/api/campaigns/update`,
+                                                            updatedsetting
+                                                        ),
+                                                        {
+                                                            optimisticData: [
+                                                                ...data.map(
+                                                                    (
+                                                                        post: campaign
+                                                                    ) => {
+                                                                        if (
+                                                                            post.id ===
+                                                                            item.id
+                                                                        ) {
+                                                                            return updatedsetting
+                                                                        }
+                                                                        return post
+                                                                    }
+                                                                ),
+                                                            ],
+                                                            rollbackOnError:
+                                                                true,
                                                         }
-                                                        return post
-                                                    }
-                                                )
-                                                mutate(
-                                                    `/api/campaigns/${profile?.id}`,
-                                                    updateData(updatedsetting),
-                                                    {
-                                                        optimisticData: [
-                                                            ...newData,
-                                                        ],
-                                                        rollbackOnError: true,
-                                                    }
-                                                )
+                                                    )
+                                                }
                                             }}
                                             item={item}
                                             isExpanded={
                                                 expanded == item.id?.toString()
                                             }
                                             handleChange={() =>
-                                                handleChange(item.id)
+                                                setExpanded(
+                                                    (prevstate: string) => {
+                                                        return item.id ==
+                                                            prevstate
+                                                            ? ''
+                                                            : item.id
+                                                    }
+                                                )
                                             }
                                             sendToArchive={async () => {
                                                 const newData = data.filter(
                                                     (post: campaign) =>
                                                         post.id !== item.id
                                                 )
-                                                mutate(
-                                                    `/api/campaigns/${profile?.id}`,
-                                                    archieveSetting(item.id),
-                                                    {
-                                                        optimisticData: [
-                                                            ...newData,
-                                                        ],
-                                                        rollbackOnError: true,
-                                                    }
-                                                )
+                                                if (fetcher) {
+                                                    mutate(
+                                                        `/api/campaigns/main`,
+                                                        fetcher(
+                                                            `/api/campaigns/archive`,
+                                                            {
+                                                                id: item.id,
+                                                                state: 'ARCHIVED',
+                                                            }
+                                                        ),
+                                                        {
+                                                            optimisticData: [
+                                                                ...newData,
+                                                            ],
+                                                            rollbackOnError:
+                                                                true,
+                                                        }
+                                                    )
+                                                }
                                             }}
                                             onDelete={async () => {
                                                 const newData = data.filter(
                                                     (post: campaign) =>
                                                         post.id !== item.id
                                                 )
-                                                mutate(
-                                                    `/api/campaigns/${profile?.id}`,
-                                                    deleteSetting(item.id),
-                                                    {
-                                                        optimisticData: [
-                                                            ...newData,
-                                                        ],
-                                                        rollbackOnError: true,
-                                                    }
-                                                )
+                                                if (fetcher) {
+                                                    mutate(
+                                                        `/api/campaigns/main`,
+                                                        fetcher(
+                                                            `/api/campaigns/main`,
+                                                            { id: item.id },
+                                                            'DELETE'
+                                                        ),
+                                                        {
+                                                            optimisticData: [
+                                                                ...newData,
+                                                            ],
+                                                            rollbackOnError:
+                                                                true,
+                                                        }
+                                                    )
+                                                }
                                             }}
                                         />
                                     )

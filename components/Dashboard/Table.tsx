@@ -6,6 +6,7 @@ import Button from '@mui/material/Button'
 import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import Table from '@mui/material/Table'
+import Paper from '@mui/material/Paper'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableFooter from '@mui/material/TableFooter'
@@ -14,6 +15,7 @@ import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
+import TextField from '@mui/material/TextField'
 
 function Row({ row, handleClickExportOpen, onDelete }: any) {
     const [open, setOpen] = React.useState(false)
@@ -63,7 +65,7 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                         day: 'numeric',
                     })}
                 </TableCell>
-                <TableCell sx={{ textAlign: "right" }}>
+                <TableCell sx={{ textAlign: 'right' }}>
                     <Button
                         variant="outlined"
                         sx={{
@@ -104,7 +106,7 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                                 width: '100%',
                                 padding: '1rem',
                                 paddingLeft: '3rem',
-                                gap: "5rem"
+                                gap: '5rem',
                             }}
                         >
                             <Box
@@ -115,7 +117,7 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                                     color: 'grey',
                                 }}
                             >
-                                <Box sx={{ display: "flex" }}>
+                                <Box sx={{ display: 'flex' }}>
                                     <Typography
                                         sx={{
                                             fontWeight: 700,
@@ -127,8 +129,7 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                                     >
                                         Companies
                                     </Typography>
-                                    <Typography
-                                    >
+                                    <Typography>
                                         Unique Rows: {comp_unique_count}
                                     </Typography>
                                 </Box>
@@ -186,7 +187,7 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                                 </Table>
                             </Box>
                             <Box sx={{ flex: '50%' }}>
-                                <Box sx={{ display: "flex" }}>
+                                <Box sx={{ display: 'flex' }}>
                                     <Typography
                                         sx={{
                                             fontWeight: 700,
@@ -198,8 +199,7 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                                     >
                                         Job titles
                                     </Typography>
-                                    <Typography
-                                    >
+                                    <Typography>
                                         Unique Rows: {job_title_unique_count}
                                     </Typography>
                                 </Box>
@@ -263,59 +263,165 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
         </React.Fragment>
     )
 }
-export default function TableC({
-    data,
-    sortBy,
-    handleClickExportOpen,
-    onDelete,
-    requestSort,
-}: any) {
+
+function sortData(data: any, sortBy: any) {
+    switch (sortBy.sortBy) {
+        case 'name':
+            return [...data].sort((i, j) => {
+                return sortBy.sortDirection === 'asc'
+                    ? ('' + i.name).localeCompare(j.name)
+                    : ('' + i.name).localeCompare(j.name) * -1
+            })
+        case 'createdDate':
+            return [...data].sort((i: any, j: any) => {
+                if (i.created_at < j.created_at) {
+                    return sortBy.sortDirection === 'asc' ? -1 : 1
+                } else {
+                    if (i.created_at > j.created_at) {
+                        return sortBy.sortDirection === 'asc' ? 1 : -1
+                    } else {
+                        return 0
+                    }
+                }
+            })
+        case 'uniqueRows':
+            return [...data].sort((i: any, j: any) => {
+                return sortBy.sortDirection === 'asc'
+                    ? i.row_count - j.row_count
+                    : j.row_count - i.row_count
+            })
+        default:
+            return data
+            break
+    }
+}
+
+interface formPost {
+    id?: number
+    user?: string
+    name: string
+    row_count: number
+    file: string
+    campaigns: string[]
+    comp_high: number
+    comp_medium: number
+    comp_low: number
+    job_title_high: number
+    job_title_medium: number
+    job_title_low: number
+    job_title_unique_count: number
+    comp_unique_count: number
+    created_at: string
+}
+
+function filterlist(list: formPost[], name: string) {
+    return list.filter(function (s: formPost) {
+        return s.name.match(name)
+    })
+}
+
+type SortDirection = 'asc' | 'desc'
+interface sortBy {
+    sortBy: string
+    sortDirection: SortDirection
+}
+export default function TableC({ data, handleClickExportOpen, onDelete }: any) {
+    const [sortBy, setSortBy] = React.useState<sortBy>({
+        sortBy: 'name',
+        sortDirection: 'asc',
+    })
+    const [sortedData, setSortedData] = React.useState<any>([])
+
+    const requestSort = (pSortBy: any) => {
+        let sortOrder: SortDirection = 'asc'
+        let sortByc = sortBy.sortBy
+
+        if (pSortBy === sortBy.sortBy) {
+            sortOrder = sortBy.sortDirection === 'asc' ? 'desc' : 'asc'
+        } else {
+            sortByc = pSortBy
+            sortOrder = 'asc'
+        }
+        setSortBy({
+            sortDirection: sortOrder,
+            sortBy: sortByc,
+        })
+    }
+
+    React.useEffect(() => {
+        setSortedData(sortData(data, sortBy))
+    }, [data])
+
     return (
-        <Table>
-            <TableHead>
-                <TableRow >
-                    <TableCell sx={{ width: '1rem' }}></TableCell>
-                    <TableCell sx={{ fontWeight: "700" }}>
-                        <TableSortLabel
-                            active={sortBy.sortBy === 'name'}
-                            direction={sortBy.sortDirection}
-                            onClick={() => requestSort('name')}
-                        >
-                            Name
-                        </TableSortLabel>
-                    </TableCell>
-                    <TableCell sx={{ fontWeight: "700" }}>
-                        <TableSortLabel
-                            active={sortBy.sortBy === 'uniqueRows'}
-                            direction={sortBy.sortDirection}
-                            onClick={() => requestSort('uniqueRows')}
-                        >
-                            Unique Rows
-                        </TableSortLabel>
-                    </TableCell>
-                    <TableCell sx={{ fontWeight: "700" }}>
-                        <TableSortLabel
-                            active={sortBy.sortBy === 'Created Date'}
-                            direction={sortBy.sortDirection}
-                            onClick={() => requestSort('createdDate')}
-                        >
-                            Created date
-                        </TableSortLabel>
-                    </TableCell>
-                    <TableCell></TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {data.map((item: any, indx: number) => (
-                    <Row
-                        row={item}
-                        key={indx}
-                        handleClickExportOpen={handleClickExportOpen}
-                        onDelete={onDelete}
-                    />
-                ))}
-            </TableBody>
-            <TableFooter />
-        </Table>
+        <>
+            <TextField
+                sx={{ width: 300 }}
+                autoFocus
+                label="Filter Results"
+                type="email"
+                variant="standard"
+                onChange={(event: any) => {
+                    setSortedData(filterlist(data, event.target.value))
+                }}
+            />
+            <Paper
+                sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%',
+                    width: '100%',
+                    marginTop: 2,
+                    minHeight: '60vh',
+                }}
+            >
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell sx={{ width: '1rem' }}></TableCell>
+                            <TableCell sx={{ fontWeight: '700' }}>
+                                <TableSortLabel
+                                    active={sortBy.sortBy === 'name'}
+                                    direction={sortBy.sortDirection}
+                                    onClick={() => requestSort('name')}
+                                >
+                                    Name
+                                </TableSortLabel>
+                            </TableCell>
+                            <TableCell sx={{ fontWeight: '700' }}>
+                                <TableSortLabel
+                                    active={sortBy.sortBy === 'uniqueRows'}
+                                    direction={sortBy.sortDirection}
+                                    onClick={() => requestSort('uniqueRows')}
+                                >
+                                    Unique Rows
+                                </TableSortLabel>
+                            </TableCell>
+                            <TableCell sx={{ fontWeight: '700' }}>
+                                <TableSortLabel
+                                    active={sortBy.sortBy === 'Created Date'}
+                                    direction={sortBy.sortDirection}
+                                    onClick={() => requestSort('createdDate')}
+                                >
+                                    Created date
+                                </TableSortLabel>
+                            </TableCell>
+                            <TableCell></TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {sortedData.map((item: any, indx: number) => (
+                            <Row
+                                row={item}
+                                key={indx}
+                                handleClickExportOpen={handleClickExportOpen}
+                                onDelete={onDelete}
+                            />
+                        ))}
+                    </TableBody>
+                    <TableFooter />
+                </Table>
+            </Paper>
+        </>
     )
 }
