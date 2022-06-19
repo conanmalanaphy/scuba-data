@@ -5,29 +5,18 @@ import DialogTitle from '@mui/material/DialogTitle'
 import useSWR from 'swr'
 import { supabase } from '../../libs/initSupabase'
 
-const fetcher = async (url: string) => {
-    const res = await fetch(url)
-    if (!res.ok) {
-        throw Error("Yo that's NOT OK!!!")
-    }
-    const data = await res.json()
-    return data
-}
-
 interface ModalProps {
     isExportOpen: boolean
-    exportId: number
     cost: number
-    file: any
+    fileUrl: string
     handleClose: () => void
 }
 
 export default function Modal({
     isExportOpen,
     handleClose,
-    file,
+    fileUrl,
     cost,
-    exportId,
 }: ModalProps) {
     const { data } = useSWR(`/api/credit-management/add-credits`)
 
@@ -46,17 +35,20 @@ export default function Modal({
                 <Button
                     variant="contained"
                     disabled={data?.credit_count < cost}
-                    onClick={() => {
-                        var csvData = new Blob([file], {
-                            type: 'text/csv;charset=utf-8;',
-                        })
-                        var csvURL = window.URL.createObjectURL(csvData)
-
-                        var tempLink = document.createElement('a')
-                        tempLink.href = csvURL
-                        tempLink.setAttribute('download', 'download.csv')
-                        tempLink.click()
-                        handleClose()
+                    onClick={async() => {
+                        const { data, error } = await supabase
+                            .storage
+                            .from('reports')
+                            .getPublicUrl(fileUrl)
+                        
+                        if(data){
+                            var link = document.createElement("a");
+                            link.download = 'employees.json';
+                            link.href = data.publicURL;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                        }
                     }}
                 >
                     Download

@@ -7,8 +7,10 @@ import json
 import simplejson
 from unidecode import unidecode
 from storage3 import create_client
+from supabase import create_client as supa_create_client, Client
 import tempfile
 import time
+import csv
 
 
 class JobTitleMatch:
@@ -372,6 +374,8 @@ class CompanyMatch(JobTitleMatch):
         report = {}
         report_counts = {'High': 0, 'Medium': 0, 'Low': 0}
         matched_companies = {}
+        key = ''
+        value = ''
 
         for index, comp in enumerate(self.companies_clean):
 
@@ -396,9 +400,6 @@ class CompanyMatch(JobTitleMatch):
             if high_perc == 0.00:
 
                 for index2, i in enumerate(self.targets_clean):
-
-                    key = ''
-                    value = ''
 
                     if ':' in i:
                         temp = i[:i.index(':')]
@@ -522,25 +523,46 @@ class handler(BaseHTTPRequestHandler):
 
         # DB variables
         key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
-        url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL") + "/storage/v1"
-        headers = {"apiKey": key, "Authorization": f"Bearer {key}"}
+        url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL") 
+        supabase: Client = supa_create_client(url, key)
 
-        # open client connection
-        storage_client = create_client(url, headers, is_async=False)
-
-        # make temp file
-        new_file, filename = tempfile.mkstemp()
-
-        timestamp = time.strftime('%Y-%m-%d-%H:%M:%S')
-
+        comp_report_sum = b[1]
+        jt_report_sum = a[1]
         # make unique url for the file name
-        str = data["user_id"]+"/"+timestamp
+        str = data["user_id"]+"/"+data["id"]+"/"+data["file_name"]+".csv"
+
+        supabase.table("results").update(
+            {   
+                "comp_high": comp_report_sum["High"],
+                "comp_medium": comp_report_sum["Medium"],
+                "comp_low": comp_report_sum["Low"],
+                "job_title_high": jt_report_sum["High"],
+                "job_title_medium": jt_report_sum["Medium"],
+                "job_title_low": jt_report_sum["Low"],
+                "job_title_unique_count": unique_jts,
+                "comp_unique_count": unique_comps,
+                "is_processing": False,
+                "row_count": 6,
+                "file": str}).eq("id", data["id"]).execute()
+        
+        # open client connection
+        storage_client = create_client(url+ "/storage/v1", {"apiKey": key, "Authorization": f"Bearer {key}"}, is_async=False)
+        # make temp file
+        new_file, filename = tempfile.mkstemp(suffix='.csv')
+
+        with open(filename, 'w', encoding='UTF8', newline='') as csv_file:
+            writer = csv.writer(csv_file)
+            for key, value in a[0].items():
+                writer.writerow([key, value])
+
+            writer.writerow(["", ""])
+            writer.writerow(["", ""])
+            for key, value in b[0].items():
+                writer.writerow([key, value])
 
         # store new file on the db
-        storage_client.get_bucket("reports").upload(str, filename)
+        storage_client.get_bucket("reports").upload(str, new_file)
 
         os.close(new_file)
 
-        self.wfile.write(json.dumps({"jt_report": a[0], "jt_report_sum": a[1], "jt_ucounts": unique_jts,
-                                    "comp_report": b[0], "comp_report_sum": b[1], "comp_ucounts": unique_comps, "matched_companies": b[2]}).encode())
         return

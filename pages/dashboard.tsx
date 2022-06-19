@@ -3,17 +3,13 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import CssBaseline from '@mui/material/CssBaseline'
-import Paper from '@mui/material/Paper'
 import Toolbar from '@mui/material/Toolbar'
 import { useState } from 'react'
-import { usePapaParse } from 'react-papaparse'
 import useSWR, { useSWRConfig } from 'swr'
 import ExportModal from '../components/Dashboard/ExportModal'
 import Modal from '../components/Dashboard/Modal'
 import Table from '../components/Dashboard/Table'
 import Wrapper from '../components/Wrapper/Wrapper'
-
-const baseURL = process.env.NEXT_PUBLIC_FUNCTIONS_BASE_URL
 
 async function pythonScript(
     newData: string[][],
@@ -21,8 +17,8 @@ async function pythonScript(
     jobTitleCoumn: number,
     companyCoumn: number,
     fileName: string,
-    handleClose: any,
-    jsonToCSV: any
+    id:number,
+    fetcher: any
 ) {
     const processedfile = newData.reduce<any>(
         (memo, val: any) => {
@@ -38,98 +34,21 @@ async function pythonScript(
         { jobTitles: [], compainies: [] }
     )
 
-    const fomattedData = await fetch(
-        (baseURL ? baseURL + '/' : '') + 'api/updatedata',
-        {
-            method: 'POST',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            }),
-            body: JSON.stringify({
-                user_id: '5',
-                jobtitles: processedfile.jobTitles,
-                companies: processedfile.compainies,
-                kw: isIncluded(campaigns.keywords),
-                exclude_kw: isNotIncluded(campaigns.keywords),
-                sen: isIncluded(campaigns.seniorites),
-                exclude_sen: isNotIncluded(campaigns.seniorites),
-                jt: isIncluded(campaigns.jobTitles),
-                exclude_jt: isNotIncluded(campaigns.jobTitles),
-                include_companies: isIncluded(campaigns.companysList),
-                exclude_companies: isNotIncluded(campaigns.companysList),
-            }),
-        }
-    )
-    const score = await fomattedData.json()
-
-    const {
-        comp_report,
-        comp_report_sum,
-        comp_ucounts,
-        jt_report,
-        jt_report_sum,
-        jt_ucounts,
-    } = score
-
-    handleClose()
-
-    const jt_report_file = Object.entries(jt_report).map((item: any) => {
-        const b: obje = {}
-
-        item.forEach((element: string, index: number) => {
-            b[`Column ${index + 1}`] = element
-        })
-
-        return b
+    fetcher('api/updatedata', {
+        user_id: '5',
+        file_name: fileName, 
+        id:id.toString(),
+        jobtitles: processedfile.jobTitles,
+        companies: processedfile.compainies,
+        kw: isIncluded(campaigns.keywords),
+        exclude_kw: isNotIncluded(campaigns.keywords),
+        sen: isIncluded(campaigns.seniorites),
+        exclude_sen: isNotIncluded(campaigns.seniorites),
+        jt: isIncluded(campaigns.jobTitles),
+        exclude_jt: isNotIncluded(campaigns.jobTitles),
+        include_companies: isIncluded(campaigns.companysList),
+        exclude_companies: isNotIncluded(campaigns.companysList),
     })
-
-    const comp_report_file = Object.entries(comp_report).map((item: any) => {
-        const b: obje = {}
-
-        item.forEach((element: string, index: number) => {
-            b[`Column ${index + 1}`] = element
-        })
-
-        return b
-    })
-
-    return {
-        comp_high: comp_report_sum.High,
-        comp_medium: comp_report_sum.Medium,
-        comp_low: comp_report_sum.Low,
-        job_title_high: jt_report_sum.High,
-        job_title_medium: jt_report_sum.Medium,
-        job_title_low: jt_report_sum.Low,
-        user: null,
-        name: `${fileName} - ${campaigns.name}`,
-        job_title_unique_count: jt_ucounts,
-        created_at: new Date().toISOString(),
-        comp_unique_count: comp_ucounts,
-        row_count:
-            processedfile.compainies.length + processedfile.jobTitles.length,
-        file: jsonToCSV([
-            {
-                'Column 1': 'Job Report',
-                'Column 2': '',
-            },
-            ...jt_report_file,
-            {
-                'Column 1': '',
-                'Column 2': '',
-            },
-            {
-                'Column 1': '',
-                'Column 2': '',
-            },
-            {
-                'Column 1': 'Company Report',
-                'Column 2': '',
-            },
-            ...comp_report_file,
-        ]),
-        campaigns: [campaigns.id.toString()],
-    }
 }
 
 interface obje {
@@ -146,9 +65,8 @@ function isNotIncluded(data: any) {
 
 function DashboardContent() {
     const [isOpen, setIsOpen] = useState(false)
-    const { jsonToCSV } = usePapaParse()
     const { fetcher, mutate } = useSWRConfig()
-    const { data, error } = useSWR(`/api/dashboard/main`)
+    const { data, error } = useSWR(`/api/dashboard/main`, { refreshInterval: 1000 })
 
     const handleClickOpen = () => {
         setIsOpen(true)
@@ -223,25 +141,41 @@ function DashboardContent() {
                             companyCoumn: number,
                             fileName: string
                         ) => {
-                            const newTodo = await pythonScript(
-                                newData,
-                                campaigns,
-                                jobTitleCoumn,
-                                companyCoumn,
-                                fileName,
-                                handleClose,
-                                jsonToCSV
-                            )
+                            try {
+                                const newCampaign = {
+                                    name: `${fileName} - ${campaigns.name}`,
+                                    campaigns: [campaigns.id.toString()],
+                                    is_processing: true,
+                                    expected_completion_time: newData.length,
+                                    created_at: new Date().toISOString(),
+                                }
+                                let result
 
-                            if (fetcher) {
-                                mutate(
-                                    `/api/dashboard/main`,
-                                    fetcher(`/api/dashboard/main`, newTodo),
-                                    {
-                                        optimisticData: [...data, newTodo],
-                                        rollbackOnError: true,
-                                    }
+                                handleClose()
+
+                                if (fetcher) {
+                                    result =  await mutate(
+                                        '/api/dashboard/main',
+                                        fetcher(
+                                            `/api/dashboard/main`,
+                                            newCampaign
+                                        )                                        
+                                    )
+                                    result = result[result.length-1];
+                                }
+
+                                pythonScript(
+                                    newData,
+                                    campaigns,
+                                    jobTitleCoumn,
+                                    companyCoumn,
+                                    fileName,
+                                    result.id,
+                                    fetcher
                                 )
+                            } catch (error) {
+                                // Handle an error while updating the user here
+                                debugger;
                             }
                         }}
                     />
@@ -251,9 +185,8 @@ function DashboardContent() {
                             <ExportModal
                                 isExportOpen={exportModal.isOpen}
                                 cost={exportModal.cost}
-                                exportId={exportModal.exportId}
+                                fileUrl={exportModal.file}
                                 handleClose={handleExportClose}
-                                file={exportModal.file}
                             />
                             {data.length > 0 ? (
                                 <Table

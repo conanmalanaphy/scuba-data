@@ -16,6 +16,7 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import TextField from '@mui/material/TextField'
+import CircularProgress from '@mui/material/CircularProgress'
 
 function Row({ row, handleClickExportOpen, onDelete }: any) {
     const [open, setOpen] = React.useState(false)
@@ -35,9 +36,33 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
         job_title_low,
         job_title_unique_count,
         comp_unique_count,
+        is_processing,
+        expected_completion_time
     } = row
 
-    return (
+    return is_processing ? (
+        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+            <TableCell component="th" scope="row" sx={{ width: '1rem' }}>
+                <IconButton
+                    aria-label="expand row"
+                    size="small"
+                    onClick={() => setOpen(!open)}
+                >
+                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                </IconButton>
+            </TableCell>
+            <TableCell component="th" scope="row">
+                {name}
+            </TableCell>
+            <TableCell>{row_count}</TableCell>
+            <TableCell>
+                Expected Completion: {expected_completion_time}s
+            </TableCell>
+            <TableCell>
+                <CircularProgress sx={{ color: '#1976d2' }} />
+            </TableCell>
+        </TableRow>
+    ) : (
         <React.Fragment>
             <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
                 <TableCell component="th" scope="row" sx={{ width: '1rem' }}>
