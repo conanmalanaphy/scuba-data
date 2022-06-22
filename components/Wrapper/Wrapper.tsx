@@ -88,7 +88,7 @@ export const secondaryListItems = (
         <Link href="/dashboard" sx={{ textDecoration: 'none' }}>
             <ListItemButton>
                 <ListItemIcon>
-                    <DashboardIcon sx={{ color: '#1976d2' }} />
+                    <DashboardIcon />
                 </ListItemIcon>
                 <ListItemText primary="Dashboard" />
             </ListItemButton>
@@ -96,7 +96,7 @@ export const secondaryListItems = (
         <Link href="/campaigns" sx={{ textDecoration: 'none' }}>
             <ListItemButton>
                 <ListItemIcon>
-                    <SettingsApplicationsIcon sx={{ color: '#1976d2' }} />
+                    <SettingsApplicationsIcon />
                 </ListItemIcon>
                 <ListItemText primary="Campaigns" />
             </ListItemButton>
@@ -104,7 +104,7 @@ export const secondaryListItems = (
         <Link href="/credit-management" sx={{ textDecoration: 'none' }}>
             <ListItemButton>
                 <ListItemIcon>
-                    <CurrencyExchangeIcon sx={{ color: '#1976d2' }} />
+                    <CurrencyExchangeIcon />
                 </ListItemIcon>
                 <ListItemText primary="Credit Management" />
             </ListItemButton>
@@ -112,7 +112,7 @@ export const secondaryListItems = (
         <Link href="/profile" sx={{ textDecoration: 'none' }}>
             <ListItemButton>
                 <ListItemIcon>
-                    <AccountCircleIcon sx={{ color: '#1976d2' }} />
+                    <AccountCircleIcon />
                 </ListItemIcon>
                 <ListItemText primary="Profile" />
             </ListItemButton>

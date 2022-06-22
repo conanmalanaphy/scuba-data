@@ -59,7 +59,7 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                 Expected Completion: {expected_completion_time}s
             </TableCell>
             <TableCell>
-                <CircularProgress sx={{ color: '#1976d2' }} />
+                <CircularProgress />
             </TableCell>
         </TableRow>
     ) : (
@@ -95,7 +95,6 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                         variant="outlined"
                         sx={{
                             marginLeft: '1rem',
-                            color: '#1565c0',
                             flex: '1 1 0px',
                         }}
                         onClick={(event: React.MouseEvent<HTMLElement>) => {
@@ -111,7 +110,6 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                         color="inherit"
                         onClick={() => onDelete(id)}
                         sx={{
-                            color: '#1976d2',
                             marginLeft: '1rem',
                         }}
                     >

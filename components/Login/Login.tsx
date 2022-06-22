@@ -44,12 +44,9 @@ export default function SignInSide() {
                 sm={4}
                 md={7}
                 sx={{
-                    backgroundImage: 'url(/scuba.webp)',
+                    backgroundImage: 'url(/card.svg)',
                     backgroundRepeat: 'no-repeat',
-                    backgroundColor: (t) =>
-                        t.palette.mode === 'light'
-                            ? t.palette.grey[50]
-                            : t.palette.grey[900],
+                    backgroundColor: '#A2D4DE',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     verticalAlign: 'middle',
@@ -57,16 +54,7 @@ export default function SignInSide() {
                     flexDirection: 'column',
                     justifyContent: 'center',
                 }}
-            >
-                <Typography
-                    component="h2"
-                    variant="h2"
-                    color="inherit"
-                    sx={{ color: 'white', opacity: 1 }}
-                >
-                    Welcome to ScubaData
-                </Typography>
-            </Grid>
+            ></Grid>
             <Grid
                 item
                 xs={12}
@@ -85,7 +73,7 @@ export default function SignInSide() {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: '#1976d2' }}>
+                    <Avatar sx={{ m: 1 }}>
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
@@ -141,7 +129,6 @@ export default function SignInSide() {
                         />
                         <Link
                             sx={{
-                                color: '#FFFFFF',
                                 textDecoration: 'none',
                             }}
                         >

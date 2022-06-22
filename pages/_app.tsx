@@ -4,6 +4,8 @@ import { SWRConfig } from 'swr'
 import Login from '../components/Login/Login'
 import { supabase } from '../libs/initSupabase'
 import '../styles/globals.css'
+import { ThemeProvider } from '@mui/material/styles'
+import theme from '../theme'
 
 const MyApp = ({ Component, pageProps }: any) => {
     const router = useRouter()
@@ -58,10 +60,14 @@ const MyApp = ({ Component, pageProps }: any) => {
 
     return session ? (
         <SWRConfig value={{ fetcher }}>
-            <Component {...pageProps} />
+            <ThemeProvider theme={theme}>
+                <Component {...pageProps} />
+            </ThemeProvider>
         </SWRConfig>
     ) : (
-        <Login {...pageProps} />
+        <ThemeProvider theme={theme}>
+            <Login {...pageProps} />
+        </ThemeProvider>
     )
 }
 export default MyApp

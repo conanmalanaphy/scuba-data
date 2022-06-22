@@ -41,7 +41,11 @@ export default function Modal({
                             .getPublicUrl(fileUrl)
 
                         if (data) {
-                            window.open(data.publicURL, '_blank', 'noopener,noreferrer');
+                            window.open(
+                                data.publicURL,
+                                '_blank',
+                                'noopener,noreferrer'
+                            )
                         }
                     }}
                 >

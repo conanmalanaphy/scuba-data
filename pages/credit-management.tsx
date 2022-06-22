@@ -106,7 +106,6 @@ function Profile() {
                                 >
                                     <Typography
                                         sx={{
-                                            color: '#1976d2',
                                             fontSize: '2rem',
                                         }}
                                     >
@@ -178,9 +177,7 @@ function Profile() {
                                     justifyContent: 'space-between',
                                 }}
                             >
-                                <Typography
-                                    sx={{ color: '#1976d2', fontSize: '2rem' }}
-                                >
+                                <Typography sx={{ fontSize: '2rem' }}>
                                     Credit count: {data}
                                 </Typography>
                                 <Box sx={{ textAlign: 'center' }}>

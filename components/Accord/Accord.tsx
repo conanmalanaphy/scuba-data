@@ -87,7 +87,6 @@ export default function Accord({
                         color="inherit"
                         onClick={sendToArchive}
                         sx={{
-                            color: '#1976d2',
                             marginLeft: '1rem',
                         }}
                     >
@@ -100,7 +99,6 @@ export default function Accord({
                         color="inherit"
                         onClick={onDelete}
                         sx={{
-                            color: '#1976d2',
                             marginLeft: '1rem',
                         }}
                     >

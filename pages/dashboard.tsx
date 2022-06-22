@@ -225,11 +225,7 @@ function DashboardContent() {
                                         margin: 'auto',
                                     }}
                                 >
-                                    <AddCircleOutlineIcon
-                                        sx={{
-                                            color: '#1976d2',
-                                        }}
-                                    />{' '}
+                                    <AddCircleOutlineIcon />
                                     Please upload some results
                                 </Box>
                             )}
