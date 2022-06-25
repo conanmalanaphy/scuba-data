@@ -581,6 +581,7 @@ class handler(BaseHTTPRequestHandler):
         # write in temp file from the results
         with open(filename, 'w', encoding='UTF8', newline='') as csv_file:
             writer = csv.writer(csv_file)
+            writer.writerow(headers)
             
             if data["jobtitles"] != [] and data["companies"] != []:
                 for index, i in enumerate(data["jobtitles"]):
