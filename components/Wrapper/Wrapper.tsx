@@ -190,7 +190,7 @@ export default function Wrapper({ pageName }: WrapperProps) {
                         </Link>
                     </Box>
                     <Box sx={{ display: 'flex' }}>
-                        {data ? (
+                        {data || data === 0 ? (
                             <Chip
                                 sx={{
                                     backgroundColor: 'white',

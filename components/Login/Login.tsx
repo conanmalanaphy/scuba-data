@@ -150,12 +150,6 @@ export default function SignInSide() {
                                 Create Account
                             </Button>
                         </Link>
-                        <br />
-                        <br />
-                        <br />
-                        Test User <br />
-                        User: conanmalanaphy@gmail.com <br />
-                        Password: conan1 <br />
                     </Box>
                 </Box>
             </Grid>
