@@ -58,7 +58,7 @@ const newResult: any = async (res: any, body: any, jwt: any) => {
     if (error) {
         return res.status(500).json({ error: error.message })
     } else if (data) {
-        return res.status(200).json(data)
+        return getResults(res, jwt)
     }
 
     return res.status(500).json({ error: 'Something bad happened' })

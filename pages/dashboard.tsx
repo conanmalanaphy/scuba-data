@@ -161,6 +161,7 @@ function DashboardContent() {
                                             newCampaign
                                         )
                                     )
+                                    debugger;
                                     result = result[result.length - 1]
                                 }
 
