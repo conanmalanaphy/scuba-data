@@ -7,7 +7,7 @@ import '../styles/globals.css'
 import { ThemeProvider } from '@mui/material/styles'
 import theme from '../theme'
 
-const allowedPaths = ["/", "/sign-up", "/login-page"];
+const allowedPaths = ['/', '/sign-up', '/login-page']
 const MyApp = ({ Component, pageProps }: any) => {
     const router = useRouter()
     const [session, setSession] = useState<any>(null)

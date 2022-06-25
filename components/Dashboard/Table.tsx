@@ -376,7 +376,7 @@ export default function TableC({ data, handleClickExportOpen, onDelete }: any) {
     }, [data])
 
     return (
-        <>
+        <Box sx={{ marginTop: '-3rem' }}>
             <TextField
                 sx={{ width: 300 }}
                 autoFocus
@@ -445,6 +445,6 @@ export default function TableC({ data, handleClickExportOpen, onDelete }: any) {
                     <TableFooter />
                 </Table>
             </Paper>
-        </>
+        </Box>
     )
 }

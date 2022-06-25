@@ -123,7 +123,7 @@ function DashboardContent() {
                     <Box
                         sx={{
                             display: 'flex',
-                            justifyContent: 'space-between',
+                            justifyContent: 'flex-end',
                         }}
                     >
                         <Button variant="contained" onClick={handleClickOpen}>

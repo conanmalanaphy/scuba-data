@@ -38,6 +38,7 @@ export default function Item({
                 display: 'flex',
                 gap: '1rem',
                 flexDirection: 'column',
+                mt: '1rem',
             }}
         >
             <div style={{ display: 'flex' }}>
