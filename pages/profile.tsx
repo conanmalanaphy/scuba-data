@@ -11,17 +11,35 @@ import * as React from 'react'
 import Wrapper from '../components/Wrapper/Wrapper'
 import { supabase } from '../libs/initSupabase'
 import WithProtection from '../libs/WithProtection'
+import { useState } from 'react'
 
 function Profile() {
     const profile = supabase.auth.user()
+    const [newPassword1, setNewPassword1] = useState("")
+    const [newPassword2, setNewPassword2] = useState("")
+    const [email, setEmail] = useState("")
 
-    const handleSubmit = (
+    const handleResetPassword = async(
         event?: React.SyntheticEvent | Event,
         reason?: string
     ) => {
+        debugger;
+
         console.log(profile)
+        if(newPassword1 === newPassword2){
+            const { user, error } = await supabase.auth.update({password: newPassword1})
+            console.log(user)
+            console.log(error)
+        }
     }
 
+
+    const handleResetEmail = async(
+        event?: React.SyntheticEvent | Event,
+        reason?: string
+    ) => {
+        const { user, error } = await supabase.auth.update({email: email})
+    }
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -56,7 +74,6 @@ function Profile() {
                         <Box
                             component="form"
                             noValidate
-                            onSubmit={handleSubmit}
                             sx={{ mt: 3 }}
                         >
                             <Grid container spacing={2}>
@@ -80,13 +97,16 @@ function Profile() {
                                         label="New Email Address"
                                         id="password"
                                         autoComplete="new-password"
+                                        value={email}
+                                        onChange={(e)=>{setEmail(e.currentTarget.value)}}
                                     />
                                 </Grid>
                             </Grid>
                             <Button
-                                type="submit"
                                 fullWidth
                                 variant="contained"
+                            onClick={handleResetEmail}
+
                                 sx={{ mt: 3, mb: 2 }}
                             >
                                 Confirm
@@ -109,20 +129,9 @@ function Profile() {
                         <Box
                             component="form"
                             noValidate
-                            onSubmit={handleSubmit}
                             sx={{ mt: 3 }}
                         >
                             <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        id="email"
-                                        label="Current Password"
-                                        name="email"
-                                        autoComplete="email"
-                                    />
-                                </Grid>
                                 <Grid item xs={12}>
                                     <TextField
                                         required
@@ -132,6 +141,8 @@ function Profile() {
                                         type="password"
                                         id="password1"
                                         autoComplete="new-password"
+                                        value={newPassword1}
+                                        onChange={(e)=>{setNewPassword1(e.currentTarget.value)}}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -143,14 +154,17 @@ function Profile() {
                                         type="password"
                                         id="password2"
                                         autoComplete="new-password"
+                                        onChange={(e)=>{setNewPassword2(e.currentTarget.value)}}
+                                        value={newPassword2}
                                     />
                                 </Grid>
                             </Grid>
                             <Button
-                                type="submit"
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
+                            onClick={handleResetPassword}
+
                             >
                                 Confirm
                             </Button>
