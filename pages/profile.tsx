@@ -23,13 +23,8 @@ function Profile() {
         event?: React.SyntheticEvent | Event,
         reason?: string
     ) => {
-        debugger;
-
-        console.log(profile)
         if(newPassword1 === newPassword2){
             const { user, error } = await supabase.auth.update({password: newPassword1})
-            console.log(user)
-            console.log(error)
         }
     }
 
