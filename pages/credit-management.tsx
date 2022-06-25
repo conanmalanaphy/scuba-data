@@ -78,7 +78,7 @@ function Profile() {
             >
                 <Toolbar />
                 <Container sx={{ mt: 4, mb: 4, height: '70%' }}>
-                    {!error && data ? (
+                    {!error && (data || data === 0) ? (
                         <Box
                             sx={{
                                 display: 'flex',
