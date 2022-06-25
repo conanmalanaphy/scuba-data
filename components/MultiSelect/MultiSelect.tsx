@@ -35,7 +35,7 @@ export default function MultiSelect({
     setCampaigns,
 }: MultiSelectProps) {
     const handleChange = ({ target: { value } }: SelectChangeEvent) => {
-        setCampaigns(value as unknown as string[])
+        setCampaigns([value] as unknown as string[])
     }
 
     return (
@@ -43,8 +43,7 @@ export default function MultiSelect({
             <FormControl sx={{ m: 1, width: 300 }}>
                 <InputLabel id="demo-multiple-chip-label">Campaign</InputLabel>
                 <Select
-                    multiple
-                    value={campaigns as unknown as string}
+                    value={campaigns[0]}
                     onChange={handleChange}
                     input={
                         <OutlinedInput
