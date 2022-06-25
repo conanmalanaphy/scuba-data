@@ -516,7 +516,7 @@ class handler(BaseHTTPRequestHandler):
             companies=data["companies"],
             targets=data["include_companies"],
             exclude=data["exclude_companies"])
-
+        
         test2.remove_company_extensions()
 
         b = test2.check_percentage_match()
@@ -554,19 +554,43 @@ class handler(BaseHTTPRequestHandler):
 
         # make temp file
         new_file, filename = tempfile.mkstemp(suffix='.csv')
+        
+        # write in temp file from the results
+        jobtitle_match = [a[0][j] for j in data["jobtitles"]]
+        company_match = [b[0][j] for j in data["companies"]]
+        company_targets = []
+        for i in data["companies"]:
+            if i in b[2]:
+                company_targets.append(b[2][i])
+            else:
+                company_targets.append('')
 
+        if len(data["jobtitles"]) > len(data["companies"]) and data["jobtitles"] != [] and data["companies"] != []:
+            for i in range(len(company_match), len(jobtitle_match) + 1):
+                company_match.append('')
+                company_targets.append('')
+                companies.append('')
+
+        if data["jobtitles"] != [] and data["companies"] != []:
+            headers = ['Jobtitles', 'Jobtitles group', 'Companies', 'Companies group', 'Companies match']
+        elif data["jobtitles"] != [] and data["companies"] == []:
+            headers = ['Jobtitles', 'Jobtitles group']
+        elif data["jobtitles"] == [] and data["companies"] != []:
+            headers = ['Companies', 'Companies group', 'Companies match']
+            
         # write in temp file from the results
         with open(filename, 'w', encoding='UTF8', newline='') as csv_file:
             writer = csv.writer(csv_file)
-            for key, value in a[0].items():
-                writer.writerow([key, value])
-
-            # a bit of spacing to make the file more readable
-            writer.writerow(["", ""])
-            writer.writerow(["", ""])
-
-            for key, value in b[0].items():
-                writer.writerow([key, value])
+            
+            if data["jobtitles"] != [] and data["companies"] != []:
+                for index, i in enumerate(data["jobtitles"]):
+                    writer.writerow([i, jobtitle_match[index], data["companies"][index], company_match[index], company_targets[index]])
+            elif data["jobtitles"] != [] and data["companies"] == []:
+                for index, i in enumerate(data["jobtitles"]):
+                    writer.writerow([i, jobtitle_match[index]])
+            elif data["jobtitles"] == [] and data["companies"] != []:
+                for index, i in enumerate(data["companies"]):
+                    writer.writerow([i, company_match[index], company_targets[index]])
 
         # store new file on the db
         storage_client.get_bucket("reports").upload(str, new_file)
