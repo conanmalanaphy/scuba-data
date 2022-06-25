@@ -97,7 +97,8 @@ class JobTitleMatch:
             ['esg', 'environmental social and governance'],
             ['sdg', 'sustainable development goals'],
             ['application', 'app'],
-            ['cyber security', 'cybersecurity']
+            ['cyber security', 'cybersecurity'],
+            ['finance', 'financial']
         ]
 
         extra_sen = [
