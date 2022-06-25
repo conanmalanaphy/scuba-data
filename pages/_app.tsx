@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { SWRConfig } from 'swr'
-import Login from '../components/Login/Login'
 import { supabase } from '../libs/initSupabase'
 import '../styles/globals.css'
 import { ThemeProvider } from '@mui/material/styles'
 import theme from '../theme'
 
-const allowedPaths = ['/', '/sign-up', '/login-page']
 const MyApp = ({ Component, pageProps }: any) => {
     const router = useRouter()
     const [session, setSession] = useState<any>(null)
@@ -59,16 +57,12 @@ const MyApp = ({ Component, pageProps }: any) => {
         })
     }
 
-    return session || allowedPaths.includes(router.asPath) ? (
+    return (
         <SWRConfig value={{ fetcher }}>
             <ThemeProvider theme={theme}>
                 <Component {...pageProps} />
             </ThemeProvider>
         </SWRConfig>
-    ) : (
-        <ThemeProvider theme={theme}>
-            <Login {...pageProps} />
-        </ThemeProvider>
     )
 }
 export default MyApp

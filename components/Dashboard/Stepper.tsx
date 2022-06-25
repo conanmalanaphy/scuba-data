@@ -249,9 +249,11 @@ export default function LineStepper({ onClose }: StepperProps) {
                         }}
                     >
                         <MultiSelect
-                            items={data.filter((c:any)=> c.state ==="LIVE").map(({ id, name }: item) => {
-                                return { id, name }
-                            })}
+                            items={data
+                                .filter((c: any) => c.state === 'LIVE')
+                                .map(({ id, name }: item) => {
+                                    return { id, name }
+                                })}
                             campaigns={campaigns}
                             setCampaigns={(val: string[]) => {
                                 setCampaigns(val)

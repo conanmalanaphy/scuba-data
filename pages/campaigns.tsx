@@ -12,6 +12,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { useSWRConfig } from 'swr'
 import useSWR from 'swr'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import WithProtection from '../libs/WithProtection'
 
 interface item {
     name: string
@@ -278,4 +279,4 @@ function Campaigns() {
     )
 }
 
-export default Campaigns
+export default WithProtection(Campaigns)

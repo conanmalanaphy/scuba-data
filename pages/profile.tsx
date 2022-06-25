@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import Wrapper from '../components/Wrapper/Wrapper'
 import { supabase } from '../libs/initSupabase'
+import WithProtection from '../libs/WithProtection'
 
 function Profile() {
     const profile = supabase.auth.user()
@@ -161,4 +162,4 @@ function Profile() {
     )
 }
 
-export default Profile
+export default WithProtection(Profile)

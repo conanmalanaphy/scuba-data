@@ -9,6 +9,7 @@ import { useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
 import Accord from '../components/Accord/Accord'
 import Wrapper from '../components/Wrapper/Wrapper'
+import WithProtection from '../libs/WithProtection'
 
 function ArchivedCampaigns() {
     const [expanded, setExpanded] = useState('')
@@ -114,4 +115,4 @@ function ArchivedCampaigns() {
     )
 }
 
-export default ArchivedCampaigns
+export default WithProtection(ArchivedCampaigns)

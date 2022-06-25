@@ -15,6 +15,7 @@ import Toolbar from '@mui/material/Toolbar'
 import { useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
 import Wrapper from '../components/Wrapper/Wrapper'
+import WithProtection from '../libs/WithProtection'
 
 const marks = [
     {
@@ -221,4 +222,4 @@ function Profile() {
     )
 }
 
-export default Profile
+export default WithProtection(Profile)

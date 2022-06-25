@@ -10,6 +10,7 @@ import ExportModal from '../components/Dashboard/ExportModal'
 import Modal from '../components/Dashboard/Modal'
 import Table from '../components/Dashboard/Table'
 import Wrapper from '../components/Wrapper/Wrapper'
+import WithProtection from '../libs/WithProtection'
 
 async function pythonScript(
     newData: string[][],
@@ -247,4 +248,4 @@ function DashboardContent() {
     )
 }
 
-export default DashboardContent
+export default WithProtection(DashboardContent)
