@@ -97,8 +97,8 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                         sx={{
                             marginLeft: '1rem',
                             flex: '1 1 0px',
-                            backgroundColor: paid_for ? "green": "inherit",
-                            color: paid_for ? "white": "inherit"
+                            backgroundColor: paid_for ? 'green' : 'inherit',
+                            color: paid_for ? 'white' : 'inherit',
                         }}
                         onClick={(event: React.MouseEvent<HTMLElement>) => {
                             event.preventDefault()

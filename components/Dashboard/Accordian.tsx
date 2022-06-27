@@ -29,8 +29,8 @@ interface formPost {
     job_title_low: number
     job_title_unique_count: number
     comp_unique_count: number
-    created_at: string;
-    paid_for:any;
+    created_at: string
+    paid_for: any
 }
 
 export default function LineStepper({ formPost, onDelete }: AccordianProps) {
@@ -62,15 +62,15 @@ export default function LineStepper({ formPost, onDelete }: AccordianProps) {
     const handleClickExportOpen = (
         id: number | undefined,
         cost: number,
-        fileUrl: any, 
-        paid_for:any
+        fileUrl: any,
+        paid_for: any
     ) => {
         setexportModal({
             isOpen: true,
             fileUrl: fileUrl,
             cost: cost,
-            id:id, 
-            paid_for: paid_for
+            id: id,
+            paid_for: paid_for,
         })
     }
     const handleExportClose = () => {
@@ -146,7 +146,12 @@ export default function LineStepper({ formPost, onDelete }: AccordianProps) {
                             onClick={(event: React.MouseEvent<HTMLElement>) => {
                                 event.preventDefault()
                                 event.stopPropagation()
-                                handleClickExportOpen(id, row_count, file, paid_for)
+                                handleClickExportOpen(
+                                    id,
+                                    row_count,
+                                    file,
+                                    paid_for
+                                )
                             }}
                         >
                             Export

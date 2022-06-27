@@ -5,7 +5,10 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 import CssBaseline from '@mui/material/CssBaseline'
 import Paper from '@mui/material/Paper'
-import Slider from '@mui/material/Slider'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -16,6 +19,7 @@ import { useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
 import Wrapper from '../components/Wrapper/Wrapper'
 import WithProtection from '../libs/WithProtection'
+import TableHead from '@mui/material/TableHead'
 
 const marks = [
     {
@@ -44,19 +48,38 @@ function calc(c: number) {
     }
 }
 
+const priceMap: any = {
+    '20': 1000,
+    '100': 5000,
+    '150': 10000,
+    '300': 25000,
+    '500': 50000,
+    '800': 100000,
+    '1750': 250000,
+    '3000': 500000,
+    '5000': 1000000,
+}
+
 function Profile() {
     const { fetcher, mutate } = useSWRConfig()
     const { data, error } = useSWR(`/api/credit-management/add-credits`)
-    const [value, setValue] = useState(100)
+    const [value, setValue] = useState(20)
+
+    const handleChange = (event: SelectChangeEvent) => {
+        setValue(parseInt(event.target.value, 10))
+    }
 
     const handleAdd = async () => {
         if (fetcher) {
             await mutate(
                 `/api/credit-management/add-credits`,
                 fetcher(`/api/credit-management/add-credits`, {
-                    credit_count: value + data,
+                    credit_count: priceMap[value.toString() as any] + data,
                 }),
-                { optimisticData: value + data, rollbackOnError: true }
+                {
+                    optimisticData: priceMap[value.toString() as any] + data,
+                    rollbackOnError: true,
+                }
             )
         }
     }
@@ -77,14 +100,14 @@ function Profile() {
                 }}
             >
                 <Toolbar />
-                <Container sx={{ mt: 4, mb: 4, height: '70%' }}>
+                <Container sx={{ mt: 1, mb: 1, height: '70%' }}>
                     {!error && (data || data === 0) ? (
                         <Box
                             sx={{
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 gap: '3rem',
-                                height: '25rem',
+                                height: '100%',
                             }}
                         >
                             <Paper
@@ -93,7 +116,7 @@ function Profile() {
                                     display: 'flex',
                                     flexDirection: 'column',
                                     height: '100%',
-                                    flexBasis: '30%',
+                                    flexBasis: '60%',
                                     marginTop: 2,
                                 }}
                             >
@@ -103,16 +126,31 @@ function Profile() {
                                         flexDirection: 'column',
                                         justifyContent: 'start',
                                         height: '100%',
+                                        width: '100%',
                                     }}
                                 >
-                                    <Typography
-                                        sx={{
-                                            fontSize: '2rem',
-                                        }}
-                                    >
-                                        Pricing:
-                                    </Typography>
                                     <Table aria-label="simple table">
+                                        <TableHead>
+                                            <TableRow
+                                                sx={{
+                                                    '&:last-child td, &:last-child th':
+                                                        { border: 0 },
+                                                }}
+                                            >
+                                                <TableCell
+                                                    component="th"
+                                                    scope="row"
+                                                >
+                                                    Credits
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    Price per credit (p)
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    Total (£)
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableHead>
                                         <TableBody>
                                             <TableRow
                                                 sx={{
@@ -124,10 +162,13 @@ function Profile() {
                                                     component="th"
                                                     scope="row"
                                                 >
-                                                    1-100
+                                                    1000
                                                 </TableCell>
                                                 <TableCell align="right">
-                                                    £1 per credit
+                                                    0.02
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    20
                                                 </TableCell>
                                             </TableRow>
                                             <TableRow
@@ -140,10 +181,13 @@ function Profile() {
                                                     component="th"
                                                     scope="row"
                                                 >
-                                                    100-500
+                                                    5000
                                                 </TableCell>
                                                 <TableCell align="right">
-                                                    50p per credit
+                                                    0.02
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    100
                                                 </TableCell>
                                             </TableRow>
                                             <TableRow
@@ -156,10 +200,146 @@ function Profile() {
                                                     component="th"
                                                     scope="row"
                                                 >
-                                                    500-1000
+                                                    10000
                                                 </TableCell>
                                                 <TableCell align="right">
-                                                    10p per credit
+                                                    0.015
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    150
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow
+                                                sx={{
+                                                    '&:last-child td, &:last-child th':
+                                                        { border: 0 },
+                                                }}
+                                            >
+                                                <TableCell
+                                                    component="th"
+                                                    scope="row"
+                                                >
+                                                    10000
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    0.015
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    150
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow
+                                                sx={{
+                                                    '&:last-child td, &:last-child th':
+                                                        { border: 0 },
+                                                }}
+                                            >
+                                                <TableCell
+                                                    component="th"
+                                                    scope="row"
+                                                >
+                                                    25000
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    0.012
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    300
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow
+                                                sx={{
+                                                    '&:last-child td, &:last-child th':
+                                                        { border: 0 },
+                                                }}
+                                            >
+                                                <TableCell
+                                                    component="th"
+                                                    scope="row"
+                                                >
+                                                    50000
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    0.01
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    500
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow
+                                                sx={{
+                                                    '&:last-child td, &:last-child th':
+                                                        { border: 0 },
+                                                }}
+                                            >
+                                                <TableCell
+                                                    component="th"
+                                                    scope="row"
+                                                >
+                                                    100000
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    0.008
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    800
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow
+                                                sx={{
+                                                    '&:last-child td, &:last-child th':
+                                                        { border: 0 },
+                                                }}
+                                            >
+                                                <TableCell
+                                                    component="th"
+                                                    scope="row"
+                                                >
+                                                    250000
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    0.007
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    1750
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow
+                                                sx={{
+                                                    '&:last-child td, &:last-child th':
+                                                        { border: 0 },
+                                                }}
+                                            >
+                                                <TableCell
+                                                    component="th"
+                                                    scope="row"
+                                                >
+                                                    500000
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    0.006
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    3000
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow
+                                                sx={{
+                                                    '&:last-child td, &:last-child th':
+                                                        { border: 0 },
+                                                }}
+                                            >
+                                                <TableCell
+                                                    component="th"
+                                                    scope="row"
+                                                >
+                                                    1000000
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    0.005
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    5000
                                                 </TableCell>
                                             </TableRow>
                                         </TableBody>
@@ -172,36 +352,44 @@ function Profile() {
                                     p: 2,
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    height: '100%',
-                                    flexBasis: '70%',
+                                    height: '20rem',
                                     marginTop: 2,
+                                    flexBasis: '40%',
+
                                     justifyContent: 'space-between',
                                 }}
                             >
-                                <Typography sx={{ fontSize: '2rem' }}>
-                                    Credit count: {data}
+                                <Typography sx={{ fontSize: '1.5rem' }}>
+                                    Current credit count: {data}
                                 </Typography>
                                 <Box sx={{ textAlign: 'center' }}>
-                                    <Slider
-                                        aria-label="Always visible"
-                                        value={value}
-                                        onChange={(e: any) => {
-                                            setValue(e.target.value)
-                                        }}
-                                        step={1}
-                                        marks={marks}
-                                        valueLabelDisplay="on"
-                                        min={1}
-                                        max={1000}
-                                    />
-                                    <b>£{calc(value)}</b>
+                                    <Select
+                                        value={value.toString()}
+                                        onChange={handleChange}
+                                    >
+                                        <MenuItem value={20}>1000</MenuItem>
+                                        <MenuItem value={100}>5000</MenuItem>
+                                        <MenuItem value={150}>10,000</MenuItem>
+                                        <MenuItem value={300}>25,000</MenuItem>
+                                        <MenuItem value={500}>50,000</MenuItem>
+                                        <MenuItem value={800}>100,000</MenuItem>
+                                        <MenuItem value={1750}>
+                                            250,000
+                                        </MenuItem>
+                                        <MenuItem value={3000}>
+                                            500,000
+                                        </MenuItem>
+                                        <MenuItem value={5000}>
+                                            1,000,000
+                                        </MenuItem>
+                                    </Select>
                                 </Box>
                                 <Button
                                     variant="contained"
                                     sx={{ ml: 2 }}
                                     onClick={handleAdd}
                                 >
-                                    Add {value} more tokens
+                                    Pay £{value}
                                 </Button>
                             </Paper>
                         </Box>

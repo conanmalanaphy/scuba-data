@@ -15,25 +15,26 @@ import { useState } from 'react'
 
 function Profile() {
     const profile = supabase.auth.user()
-    const [newPassword1, setNewPassword1] = useState("")
-    const [newPassword2, setNewPassword2] = useState("")
-    const [email, setEmail] = useState("")
+    const [newPassword1, setNewPassword1] = useState('')
+    const [newPassword2, setNewPassword2] = useState('')
+    const [email, setEmail] = useState('')
 
-    const handleResetPassword = async(
+    const handleResetPassword = async (
         event?: React.SyntheticEvent | Event,
         reason?: string
     ) => {
-        if(newPassword1 === newPassword2){
-            const { user, error } = await supabase.auth.update({password: newPassword1})
+        if (newPassword1 === newPassword2) {
+            const { user, error } = await supabase.auth.update({
+                password: newPassword1,
+            })
         }
     }
 
-
-    const handleResetEmail = async(
+    const handleResetEmail = async (
         event?: React.SyntheticEvent | Event,
         reason?: string
     ) => {
-        const { user, error } = await supabase.auth.update({email: email})
+        const { user, error } = await supabase.auth.update({ email: email })
     }
     return (
         <Box sx={{ display: 'flex' }}>
@@ -66,11 +67,7 @@ function Profile() {
                         <Typography component="h1" variant="h5">
                             Update Email
                         </Typography>
-                        <Box
-                            component="form"
-                            noValidate
-                            sx={{ mt: 3 }}
-                        >
+                        <Box component="form" noValidate sx={{ mt: 3 }}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <TextField
@@ -93,15 +90,16 @@ function Profile() {
                                         id="password"
                                         autoComplete="new-password"
                                         value={email}
-                                        onChange={(e)=>{setEmail(e.currentTarget.value)}}
+                                        onChange={(e) => {
+                                            setEmail(e.currentTarget.value)
+                                        }}
                                     />
                                 </Grid>
                             </Grid>
                             <Button
                                 fullWidth
                                 variant="contained"
-                            onClick={handleResetEmail}
-
+                                onClick={handleResetEmail}
                                 sx={{ mt: 3, mb: 2 }}
                             >
                                 Confirm
@@ -121,11 +119,7 @@ function Profile() {
                         <Typography component="h1" variant="h5">
                             Update Password
                         </Typography>
-                        <Box
-                            component="form"
-                            noValidate
-                            sx={{ mt: 3 }}
-                        >
+                        <Box component="form" noValidate sx={{ mt: 3 }}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <TextField
@@ -137,7 +131,11 @@ function Profile() {
                                         id="password1"
                                         autoComplete="new-password"
                                         value={newPassword1}
-                                        onChange={(e)=>{setNewPassword1(e.currentTarget.value)}}
+                                        onChange={(e) => {
+                                            setNewPassword1(
+                                                e.currentTarget.value
+                                            )
+                                        }}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -149,7 +147,11 @@ function Profile() {
                                         type="password"
                                         id="password2"
                                         autoComplete="new-password"
-                                        onChange={(e)=>{setNewPassword2(e.currentTarget.value)}}
+                                        onChange={(e) => {
+                                            setNewPassword2(
+                                                e.currentTarget.value
+                                            )
+                                        }}
                                         value={newPassword2}
                                     />
                                 </Grid>
@@ -158,8 +160,7 @@ function Profile() {
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
-                            onClick={handleResetPassword}
-
+                                onClick={handleResetPassword}
                             >
                                 Confirm
                             </Button>

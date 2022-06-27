@@ -13,7 +13,6 @@ import Wrapper from '../components/Wrapper/Wrapper'
 import WithProtection from '../libs/WithProtection'
 import { supabase } from '../libs/initSupabase'
 
-
 async function pythonScript(
     newData: string[][],
     campaigns: any,
@@ -86,21 +85,21 @@ function DashboardContent() {
         isOpen: false,
         cost: null,
         fileUrl: null,
-        id:null
+        id: null,
     })
 
     const handleClickExportOpen = (
         id: number | undefined,
         cost: number,
         fileUrl: any,
-        paid_for:any
+        paid_for: any
     ) => {
         setexportModal({
             isOpen: true,
             fileUrl: fileUrl,
             cost: cost,
-            id:id,
-            paid_for:paid_for
+            id: id,
+            paid_for: paid_for,
         })
     }
     const handleExportClose = () => {
