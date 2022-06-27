@@ -149,11 +149,13 @@ function DashboardContent() {
                             fileName: string
                         ) => {
                             try {
+                                const expected_completion_time = new Date()
+                                expected_completion_time.setSeconds(expected_completion_time.getSeconds() + newData.length*2);
                                 const newCampaign = {
                                     name: `${fileName} - ${campaigns.name}`,
                                     campaigns: [campaigns.id.toString()],
                                     is_processing: true,
-                                    expected_completion_time: newData.length,
+                                    expected_completion_time: expected_completion_time.toISOString(),
                                     created_at: new Date().toISOString(),
                                 }
                                 let result

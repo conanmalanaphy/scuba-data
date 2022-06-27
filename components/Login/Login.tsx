@@ -121,12 +121,6 @@ export default function SignInSide() {
                                 setPassword(event?.target.value)
                             }}
                         />
-                        <FormControlLabel
-                            control={
-                                <Checkbox value="remember" color="primary" />
-                            }
-                            label="Remember me"
-                        />
                         <Link
                             sx={{
                                 textDecoration: 'none',
