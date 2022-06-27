@@ -56,11 +56,12 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                 {name}
             </TableCell>
             <TableCell>{row_count}</TableCell>
-            <TableCell sx={{fontWeight:"500", fontStyle:"italic"}}>
-                Expected Completion:  {
-                
-                new Intl.DateTimeFormat('en-GB', { timeStyle: 'medium' ,dateStyle: 'medium'}).format(new Date(expected_completion_time))}
-                    
+            <TableCell sx={{ fontWeight: '500', fontStyle: 'italic' }}>
+                Expected Completion:{' '}
+                {new Intl.DateTimeFormat('en-GB', {
+                    timeStyle: 'medium',
+                    dateStyle: 'medium',
+                }).format(new Date(expected_completion_time))}
             </TableCell>
             <TableCell>
                 <CircularProgress />
@@ -87,7 +88,10 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                 </TableCell>
                 <TableCell>{row_count}</TableCell>
                 <TableCell>
-                {new Intl.DateTimeFormat('en-GB', { timeStyle: 'medium' ,dateStyle: 'medium'}).format(new Date(created_at))}     
+                    {new Intl.DateTimeFormat('en-GB', {
+                        timeStyle: 'medium',
+                        dateStyle: 'medium',
+                    }).format(new Date(created_at))}
                 </TableCell>
                 <TableCell sx={{ textAlign: 'right' }}>
                     <Button
