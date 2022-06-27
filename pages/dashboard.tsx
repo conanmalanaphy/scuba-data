@@ -11,6 +11,8 @@ import Modal from '../components/Dashboard/Modal'
 import Table from '../components/Dashboard/Table'
 import Wrapper from '../components/Wrapper/Wrapper'
 import WithProtection from '../libs/WithProtection'
+import { supabase } from '../libs/initSupabase'
+
 
 async function pythonScript(
     newData: string[][],
@@ -35,8 +37,10 @@ async function pythonScript(
         { jobTitles: [], compainies: [] }
     )
 
+    const user = supabase.auth.user()
+
     fetcher('api/updatedata', {
-        user_id: '5',
+        user_id: user?.id.toString(),
         file_name: fileName,
         id: id.toString(),
         jobtitles: processedfile.jobTitles,
@@ -82,17 +86,21 @@ function DashboardContent() {
         isOpen: false,
         cost: null,
         fileUrl: null,
+        id:null
     })
 
     const handleClickExportOpen = (
         id: number | undefined,
         cost: number,
-        fileUrl: any
+        fileUrl: any,
+        paid_for:any
     ) => {
         setexportModal({
             isOpen: true,
             fileUrl: fileUrl,
             cost: cost,
+            id:id,
+            paid_for:paid_for
         })
     }
     const handleExportClose = () => {
@@ -185,7 +193,9 @@ function DashboardContent() {
                             <ExportModal
                                 isExportOpen={exportModal.isOpen}
                                 cost={exportModal.cost}
+                                id={exportModal.id}
                                 fileUrl={exportModal.fileUrl}
+                                paid_for={exportModal.paid_for}
                                 handleClose={handleExportClose}
                             />
                             {data.length > 0 ? (

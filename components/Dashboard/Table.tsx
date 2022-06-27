@@ -28,6 +28,7 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
         id,
         file,
         campaigns,
+        paid_for,
         comp_high,
         comp_medium,
         comp_low,
@@ -96,11 +97,13 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                         sx={{
                             marginLeft: '1rem',
                             flex: '1 1 0px',
+                            backgroundColor: paid_for ? "green": "inherit",
+                            color: paid_for ? "white": "inherit"
                         }}
                         onClick={(event: React.MouseEvent<HTMLElement>) => {
                             event.preventDefault()
                             event.stopPropagation()
-                            handleClickExportOpen(id, row_count, file)
+                            handleClickExportOpen(id, row_count, file, paid_for)
                         }}
                     >
                         Export
