@@ -376,7 +376,7 @@ export default function TableC({ data, handleClickExportOpen, onDelete }: any) {
 
     React.useEffect(() => {
         setSortedData(sortData(data, sortBy))
-    }, [data])
+    }, [data, sortBy, setSortedData])
 
     return (
         <Box sx={{ marginTop: '-3rem' }}>
