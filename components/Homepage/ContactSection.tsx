@@ -11,6 +11,7 @@ export default function ContactSection(): JSX.Element {
                     borderRadius: 4,
                     p: 2,
                 }}
+                id="contact-us"
             >
                 <Grid container alignItems="center" spacing={4}>
                     <Grid item xs={12} sm={6}>
