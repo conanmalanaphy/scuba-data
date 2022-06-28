@@ -566,7 +566,7 @@ class handler(BaseHTTPRequestHandler):
                 for i in range(len(company_match), len(jobtitle_match) + 1):
                     company_match.append('')
                     company_targets.append('')
-                    companies.append('')
+                    data["companies"].append('')
 
             if data["jobtitles"] != [] and data["companies"] != []:
                 headers = ['Jobtitles', 'Jobtitles group', 'Companies', 'Companies group', 'Companies match']
