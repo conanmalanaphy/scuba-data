@@ -250,7 +250,6 @@ export default function Pricing(): JSX.Element {
                     </Table>
                 </Box>
             </Paper>
-          </Box>
         </Layout>
     )
 }
