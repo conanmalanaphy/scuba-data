@@ -20,6 +20,8 @@ export default function Pricing(): JSX.Element {
                     flexDirection: 'column',
                     height: '100%',
                     flexBasis: '60%',
+                    width:'700px',
+                    margin:'auto',
                     marginTop: 2,
                 }}
             >
