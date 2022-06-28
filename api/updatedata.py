@@ -485,6 +485,11 @@ class handler(BaseHTTPRequestHandler):
         data = simplejson.loads(self.data_string)
         print(data)
         
+        # DB variables to login
+        key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+        url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL") 
+        supabase: Client = supa_create_client(url, key)
+ 
         try:
             test = JobTitleMatch(
                 jobtitles=data["jobtitles"],
@@ -516,11 +521,6 @@ class handler(BaseHTTPRequestHandler):
             b = test2.check_percentage_match()
 
             unique_comps = len(set(data["companies"]))
-
-            # DB variables to login
-            key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
-            url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL") 
-            supabase: Client = supa_create_client(url, key)
 
             comp_report_sum = b[1]
             jt_report_sum = a[1]
