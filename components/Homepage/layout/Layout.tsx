@@ -4,7 +4,7 @@ import Header from './Header'
 
 type Props = {
     children: React.ReactNode
-    isAlt: boolean
+    isAlt?: boolean
 }
 
 export default function Layout({
