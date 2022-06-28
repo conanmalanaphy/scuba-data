@@ -540,7 +540,7 @@ class handler(BaseHTTPRequestHandler):
                     "job_title_unique_count": unique_jts,
                     "comp_unique_count": unique_comps,
                     "is_processing": False,
-                    "row_count": 6,
+                    "row_count": unique_comps + unique_jts ,
                     "file": str}).eq("id", data["id"]).execute()
 
             # open client connection from file storage
@@ -600,7 +600,8 @@ class handler(BaseHTTPRequestHandler):
             
             supabase.table("results").update(
             { 
-                "error": "failed to upload results"
+                "error": "failed to upload results",
+                "is_processing": False
             }).eq("id", data["id"]).execute()
             
             return 
