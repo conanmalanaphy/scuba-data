@@ -593,7 +593,11 @@ class handler(BaseHTTPRequestHandler):
             os.close(new_file)
 
             return
-        except:
+        
+        except Exception as e:
+            print("has error")
+            print(e)
+            
             supabase.table("results").update(
             { 
                 "error": "failed to upload results"
