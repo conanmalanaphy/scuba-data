@@ -8,6 +8,7 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableFooter from '@mui/material/TableFooter'
 import TableRow from '@mui/material/TableRow'
+import Paper from '@mui/material/Paper'
 
 export default function Pricing(): JSX.Element {
     return (
