@@ -595,6 +595,8 @@ class handler(BaseHTTPRequestHandler):
 
             os.close(new_file)
 
+            self.wfile.write(json.dumps({'received': 'ok'}).encode())
+
             return
         
         except Exception as e:
@@ -607,4 +609,6 @@ class handler(BaseHTTPRequestHandler):
                 "is_processing": False
             }).eq("id", data["id"]).execute()
             
+            self.wfile.write(json.dumps({'received': 'no'}).encode())
+
             return 

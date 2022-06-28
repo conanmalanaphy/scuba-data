@@ -58,7 +58,7 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                 {name}
             </TableCell>
             {is_processing ? (
-                <TableCell sx={{ fontWeight: '500', fontStyle: 'italic' }}>
+                <TableCell sx={{ fontWeight: '500', fontStyle: 'italic' }} colSpan={3}>
                     Expected Completion:{' '}
                     {new Intl.DateTimeFormat('en-GB', {
                         timeStyle: 'medium',
