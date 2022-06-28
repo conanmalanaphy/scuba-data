@@ -39,9 +39,10 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
         comp_unique_count,
         is_processing,
         expected_completion_time,
+        error
     } = row
 
-    return is_processing ? (
+    return is_processing || error  ? (
         <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
             <TableCell component="th" scope="row" sx={{ width: '1rem' }}>
                 <IconButton
@@ -55,17 +56,16 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
             <TableCell component="th" scope="row">
                 {name}
             </TableCell>
-            <TableCell>{row_count}</TableCell>
-            <TableCell sx={{ fontWeight: '500', fontStyle: 'italic' }}>
-                Expected Completion:{' '}
+            {is_processing ? <TableCell sx={{ fontWeight: '500', fontStyle: 'italic' }}>
+                    Expected Completion:{' '}
                 {new Intl.DateTimeFormat('en-GB', {
                     timeStyle: 'medium',
                     dateStyle: 'medium',
                 }).format(new Date(expected_completion_time))}
-            </TableCell>
-            <TableCell>
+            </TableCell> : <TableCell sx={{color:"red"}}>{error}</TableCell>
+        {is_processing ? <TableCell>
                 <CircularProgress />
-            </TableCell>
+            </TableCell> : null}
         </TableRow>
     ) : (
         <React.Fragment>
