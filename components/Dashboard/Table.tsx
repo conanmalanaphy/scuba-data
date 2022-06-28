@@ -58,7 +58,10 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                 {name}
             </TableCell>
             {is_processing ? (
-                <TableCell sx={{ fontWeight: '500', fontStyle: 'italic' }} colSpan={3}>
+                <TableCell
+                    sx={{ fontWeight: '500', fontStyle: 'italic' }}
+                    colSpan={3}
+                >
                     Expected Completion:{' '}
                     {new Intl.DateTimeFormat('en-GB', {
                         timeStyle: 'medium',
@@ -67,7 +70,11 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                 </TableCell>
             ) : (
                 <TableCell sx={{ color: 'red', fontWeight: '700' }} colSpan={4}>
-                    <Typography sx={{display:"flex", gap:"1rem"}}> <ErrorIcon></ErrorIcon>{error}</Typography>
+                    <Typography sx={{ display: 'flex', gap: '1rem' }}>
+                        {' '}
+                        <ErrorIcon></ErrorIcon>
+                        {error}
+                    </Typography>
                 </TableCell>
             )}
             {is_processing ? (

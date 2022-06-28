@@ -37,7 +37,7 @@ const fetcher = async (url: string) => {
     return data
 }
 
-const drawerWidth = 240
+const drawerWidth = 260
 
 const AppBar: any = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',

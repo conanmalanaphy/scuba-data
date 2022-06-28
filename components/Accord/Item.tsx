@@ -105,7 +105,11 @@ export default function Item({
                             <Button
                                 disabled={isDisabled}
                                 variant="contained"
-                                component="span"
+                                sx={{
+                                    mt: 'auto',
+                                    mb: 'auto',
+                                    height: '2.4rem',
+                                }}
                                 {...getRootProps()}
                             >
                                 <AddIcon />

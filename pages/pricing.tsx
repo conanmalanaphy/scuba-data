@@ -2,7 +2,6 @@ import Box from '@mui/material/Box'
 import React from 'react'
 import TableHead from '@mui/material/TableHead'
 import Layout from '../components/Homepage/layout/Layout'
-import Link from '@mui/material/Link'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -12,7 +11,7 @@ import Paper from '@mui/material/Paper'
 
 export default function Pricing(): JSX.Element {
     return (
-        <Layout>
+        <Layout isAlt>
             <Paper
                 sx={{
                     p: 2,
@@ -22,7 +21,8 @@ export default function Pricing(): JSX.Element {
                     flexBasis: '60%',
                     width: '700px',
                     margin: 'auto',
-                    marginTop: 2,
+                    marginTop: 10,
+                    marginBottom: 10,
                 }}
             >
                 <Box

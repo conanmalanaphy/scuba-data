@@ -53,7 +53,7 @@ function Profile() {
                 }}
             >
                 <Toolbar />
-                <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
                     <Paper
                         sx={{
                             p: 2,
@@ -61,7 +61,7 @@ function Profile() {
                             flexDirection: 'column',
                             height: '100%',
                             width: '100%',
-                            marginTop: 2,
+                            marginTop: 4,
                         }}
                     >
                         <Typography component="h1" variant="h5">
@@ -113,7 +113,7 @@ function Profile() {
                             flexDirection: 'column',
                             height: '100%',
                             width: '100%',
-                            marginTop: 2,
+                            marginTop: 4,
                         }}
                     >
                         <Typography component="h1" variant="h5">

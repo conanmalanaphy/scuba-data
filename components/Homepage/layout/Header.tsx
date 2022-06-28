@@ -25,7 +25,7 @@ export default function Header(): JSX.Element {
                             <Typography
                                 variant="body1"
                                 align="center"
-                                sx={{ fontWeight: 600 }}
+                                sx={{ fontWeight: 600, cursor: 'pointer' }}
                             >
                                 ScubaData
                             </Typography>
@@ -33,28 +33,10 @@ export default function Header(): JSX.Element {
                     </Grid>
                     <Grid container item xs={10} justifyContent="flex-end">
                         <Link href="/pricing" passHref>
-                            <Button
-                                sx={{ mr: 2 }}
-                                color={
-                                    router.pathname === '/'
-                                        ? 'primary'
-                                        : 'secondary'
-                                }
-                            >
-                                Pricing
-                            </Button>
+                            <Button sx={{ mr: 2 }}>Pricing</Button>
                         </Link>
                         <Link href="/login-page" passHref>
-                            <Button
-                                sx={{ mr: 2 }}
-                                color={
-                                    router.pathname === '/'
-                                        ? 'primary'
-                                        : 'secondary'
-                                }
-                            >
-                                Login
-                            </Button>
+                            <Button sx={{ mr: 2 }}>Login</Button>
                         </Link>
                     </Grid>
                 </Grid>
