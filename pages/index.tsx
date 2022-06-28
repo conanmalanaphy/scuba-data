@@ -34,7 +34,7 @@ export default function HomePage(): JSX.Element {
                             Sign up
                         </Button>
                     </Link>
-                    <Link href="/contact-us">
+                    <Link href="#contact-us">
                         <Button disableElevation sx={{ mr: 2, mt: 2 }}>
                             Contact us
                         </Button>
