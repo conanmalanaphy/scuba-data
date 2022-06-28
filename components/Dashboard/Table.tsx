@@ -62,7 +62,7 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                     timeStyle: 'medium',
                     dateStyle: 'medium',
                 }).format(new Date(expected_completion_time))}
-            </TableCell> : <TableCell sx={{color:"red"}}>{error}</TableCell>
+            </TableCell> : <TableCell sx={{color:"red"}}>{error}</TableCell>}
         {is_processing ? <TableCell>
                 <CircularProgress />
             </TableCell> : null}
