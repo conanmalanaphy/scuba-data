@@ -64,7 +64,7 @@ function Campaigns() {
                             `/api/campaigns/main`,
                             fetcher(`/api/campaigns/main`, newCampaign),
                             {
-                                optimisticData: [newCampaign, ...data],
+                                optimisticData: [...data, newCampaign],
                                 rollbackOnError: true,
                             }
                         )
@@ -81,7 +81,7 @@ function Campaigns() {
                             `/api/campaigns/main`,
                             fetcher(`/api/campaigns/main`, newCampaign),
                             {
-                                optimisticData: [newCampaign, ...data],
+                                optimisticData: [...data, newCampaign],
                                 rollbackOnError: true,
                             }
                         )
