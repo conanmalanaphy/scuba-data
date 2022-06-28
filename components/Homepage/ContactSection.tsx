@@ -20,7 +20,7 @@ export default function ContactSection(): JSX.Element {
                         </Typography>
                         <Button
                             variant="contained"
-                            href="mailto:hello@example.com"
+                            href="mailto:conanmalanaphy@gmail.com"
                         >
                             Send an email
                         </Button>
