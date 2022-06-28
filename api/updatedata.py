@@ -370,6 +370,9 @@ class CompanyMatch(JobTitleMatch):
             
             high_perc = 0.00
             
+            key = ''
+            value = ''
+            
             for index1, i in enumerate(self.exclude_clean):
                 
                 if ':' in i:
