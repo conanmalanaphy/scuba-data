@@ -484,111 +484,119 @@ class handler(BaseHTTPRequestHandler):
 
         data = simplejson.loads(self.data_string)
         print(data)
-
-        test = JobTitleMatch(
-            jobtitles=data["jobtitles"],
-            kw=data["kw"],
-            exclude_kw=data["exclude_kw"],
-            sen=data["sen"],
-            exclude_sen=data["exclude_sen"],
-            jt=data["jt"],
-            exclude_jt=data["exclude_jt"]
-        )
-
-        test.remove_filler_words_from_jts()
-
-        test.add_extra_titles()
-
-        a = test.check_percentage_match()
-
-        unique_jts = len(set(data["jobtitles"]))
-
-        test2 = CompanyMatch(
-            companies=data["companies"],
-            targets=data["include_companies"],
-            exclude=data["exclude_companies"])
         
-        test2.remove_company_extensions()
-        
-        test2.add_other_variations()
+        try:
+            test = JobTitleMatch(
+                jobtitles=data["jobtitles"],
+                kw=data["kw"],
+                exclude_kw=data["exclude_kw"],
+                sen=data["sen"],
+                exclude_sen=data["exclude_sen"],
+                jt=data["jt"],
+                exclude_jt=data["exclude_jt"]
+            )
 
-        b = test2.check_percentage_match()
+            test.remove_filler_words_from_jts()
 
-        unique_comps = len(set(data["companies"]))
+            test.add_extra_titles()
 
-        # DB variables to login
-        key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
-        url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL") 
-        supabase: Client = supa_create_client(url, key)
+            a = test.check_percentage_match()
 
-        comp_report_sum = b[1]
-        jt_report_sum = a[1]
-        
-        # make unique url for the file name to be stored at
-        str = data["user_id"]+"/"+data["id"]+"/"+data["file_name"]+".csv"
+            unique_jts = len(set(data["jobtitles"]))
 
-        # update the row in the db with a completed row with results
-        supabase.table("results").update(
-            {   
-                "comp_high": comp_report_sum["High"],
-                "comp_medium": comp_report_sum["Medium"],
-                "comp_low": comp_report_sum["Low"],
-                "job_title_high": jt_report_sum["High"],
-                "job_title_medium": jt_report_sum["Medium"],
-                "job_title_low": jt_report_sum["Low"],
-                "job_title_unique_count": unique_jts,
-                "comp_unique_count": unique_comps,
-                "is_processing": False,
-                "row_count": 6,
-                "file": str}).eq("id", data["id"]).execute()
-        
-        # open client connection from file storage
-        storage_client = create_client(url+ "/storage/v1", {"apiKey": key, "Authorization": f"Bearer {key}"}, is_async=False)
+            test2 = CompanyMatch(
+                companies=data["companies"],
+                targets=data["include_companies"],
+                exclude=data["exclude_companies"])
 
-        # make temp file
-        new_file, filename = tempfile.mkstemp(suffix='.csv')
-        
-        # write in temp file from the results
-        jobtitle_match = [a[0][j] for j in data["jobtitles"]]
-        company_match = [b[0][j] for j in data["companies"]]
-        company_targets = []
-        for i in data["companies"]:
-            if i in b[2]:
-                company_targets.append(b[2][i])
-            else:
-                company_targets.append('')
+            test2.remove_company_extensions()
 
-        if len(data["jobtitles"]) > len(data["companies"]) and data["jobtitles"] != [] and data["companies"] != []:
-            for i in range(len(company_match), len(jobtitle_match) + 1):
-                company_match.append('')
-                company_targets.append('')
-                companies.append('')
+            test2.add_other_variations()
 
-        if data["jobtitles"] != [] and data["companies"] != []:
-            headers = ['Jobtitles', 'Jobtitles group', 'Companies', 'Companies group', 'Companies match']
-        elif data["jobtitles"] != [] and data["companies"] == []:
-            headers = ['Jobtitles', 'Jobtitles group']
-        elif data["jobtitles"] == [] and data["companies"] != []:
-            headers = ['Companies', 'Companies group', 'Companies match']
-            
-        # write in temp file from the results
-        with open(filename, 'w', encoding='UTF8', newline='') as csv_file:
-            writer = csv.writer(csv_file)
-            writer.writerow(headers)
-            
+            b = test2.check_percentage_match()
+
+            unique_comps = len(set(data["companies"]))
+
+            # DB variables to login
+            key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+            url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL") 
+            supabase: Client = supa_create_client(url, key)
+
+            comp_report_sum = b[1]
+            jt_report_sum = a[1]
+
+            # make unique url for the file name to be stored at
+            str = data["user_id"]+"/"+data["id"]+"/"+data["file_name"]+".csv"
+
+            # update the row in the db with a completed row with results
+            supabase.table("results").update(
+                {   
+                    "comp_high": comp_report_sum["High"],
+                    "comp_medium": comp_report_sum["Medium"],
+                    "comp_low": comp_report_sum["Low"],
+                    "job_title_high": jt_report_sum["High"],
+                    "job_title_medium": jt_report_sum["Medium"],
+                    "job_title_low": jt_report_sum["Low"],
+                    "job_title_unique_count": unique_jts,
+                    "comp_unique_count": unique_comps,
+                    "is_processing": False,
+                    "row_count": 6,
+                    "file": str}).eq("id", data["id"]).execute()
+
+            # open client connection from file storage
+            storage_client = create_client(url+ "/storage/v1", {"apiKey": key, "Authorization": f"Bearer {key}"}, is_async=False)
+
+            # make temp file
+            new_file, filename = tempfile.mkstemp(suffix='.csv')
+
+            # write in temp file from the results
+            jobtitle_match = [a[0][j] for j in data["jobtitles"]]
+            company_match = [b[0][j] for j in data["companies"]]
+            company_targets = []
+            for i in data["companies"]:
+                if i in b[2]:
+                    company_targets.append(b[2][i])
+                else:
+                    company_targets.append('')
+
+            if len(data["jobtitles"]) > len(data["companies"]) and data["jobtitles"] != [] and data["companies"] != []:
+                for i in range(len(company_match), len(jobtitle_match) + 1):
+                    company_match.append('')
+                    company_targets.append('')
+                    companies.append('')
+
             if data["jobtitles"] != [] and data["companies"] != []:
-                for index, i in enumerate(data["jobtitles"]):
-                    writer.writerow([i, jobtitle_match[index], data["companies"][index], company_match[index], company_targets[index]])
+                headers = ['Jobtitles', 'Jobtitles group', 'Companies', 'Companies group', 'Companies match']
             elif data["jobtitles"] != [] and data["companies"] == []:
-                for index, i in enumerate(data["jobtitles"]):
-                    writer.writerow([i, jobtitle_match[index]])
+                headers = ['Jobtitles', 'Jobtitles group']
             elif data["jobtitles"] == [] and data["companies"] != []:
-                for index, i in enumerate(data["companies"]):
-                    writer.writerow([i, company_match[index], company_targets[index]])
+                headers = ['Companies', 'Companies group', 'Companies match']
 
-        # store new file on the db
-        storage_client.get_bucket("reports").upload(str, new_file)
+            # write in temp file from the results
+            with open(filename, 'w', encoding='UTF8', newline='') as csv_file:
+                writer = csv.writer(csv_file)
+                writer.writerow(headers)
 
-        os.close(new_file)
+                if data["jobtitles"] != [] and data["companies"] != []:
+                    for index, i in enumerate(data["jobtitles"]):
+                        writer.writerow([i, jobtitle_match[index], data["companies"][index], company_match[index], company_targets[index]])
+                elif data["jobtitles"] != [] and data["companies"] == []:
+                    for index, i in enumerate(data["jobtitles"]):
+                        writer.writerow([i, jobtitle_match[index]])
+                elif data["jobtitles"] == [] and data["companies"] != []:
+                    for index, i in enumerate(data["companies"]):
+                        writer.writerow([i, company_match[index], company_targets[index]])
 
-        return
+            # store new file on the db
+            storage_client.get_bucket("reports").upload(str, new_file)
+
+            os.close(new_file)
+
+            return
+        except:
+            supabase.table("results").update(
+            { 
+                "error": "failed to upload results"
+            }).eq("id", data["id"]).execute()
+            
+            return 
