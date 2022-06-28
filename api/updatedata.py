@@ -603,7 +603,7 @@ class handler(BaseHTTPRequestHandler):
             
             supabase.table("results").update(
             { 
-                "error": "failed to upload results",
+                "error": "Failed to process data",
                 "is_processing": False
             }).eq("id", data["id"]).execute()
             

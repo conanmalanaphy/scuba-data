@@ -12,7 +12,7 @@ const theme = createTheme({
     },
     typography: {
         fontWeightMedium: 600,
-        fontFamily: "'Open Sans', sans-serif",
+        fontFamily: "'Ubuntu'",
         fontSize: 17,
         h1: {
             fontSize: '2.7rem',

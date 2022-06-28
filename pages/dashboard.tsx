@@ -241,7 +241,7 @@ function DashboardContent() {
                                         margin: 'auto',
                                         paddingTop: '3rem',
                                         gap: '0.5rem',
-                                        color: 'rgb(53, 113, 128)'
+                                        color: 'rgb(53, 113, 128)',
                                     }}
                                 >
                                     <AddCircleOutlineIcon />

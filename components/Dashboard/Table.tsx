@@ -1,6 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import ErrorIcon from '@mui/icons-material/Error'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Collapse from '@mui/material/Collapse'
@@ -39,10 +40,10 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
         comp_unique_count,
         is_processing,
         expected_completion_time,
-        error
+        error,
     } = row
 
-    return is_processing || error  ? (
+    return is_processing || error ? (
         <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
             <TableCell component="th" scope="row" sx={{ width: '1rem' }}>
                 <IconButton
@@ -56,16 +57,24 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
             <TableCell component="th" scope="row">
                 {name}
             </TableCell>
-            {is_processing ? <TableCell sx={{ fontWeight: '500', fontStyle: 'italic' }}>
+            {is_processing ? (
+                <TableCell sx={{ fontWeight: '500', fontStyle: 'italic' }}>
                     Expected Completion:{' '}
-                {new Intl.DateTimeFormat('en-GB', {
-                    timeStyle: 'medium',
-                    dateStyle: 'medium',
-                }).format(new Date(expected_completion_time))}
-            </TableCell> : <TableCell sx={{color:"red", fontWeight: '700'}} colSpan={2} >{error}</TableCell>}
-        {is_processing ? <TableCell>
-                <CircularProgress />
-            </TableCell> : null}
+                    {new Intl.DateTimeFormat('en-GB', {
+                        timeStyle: 'medium',
+                        dateStyle: 'medium',
+                    }).format(new Date(expected_completion_time))}
+                </TableCell>
+            ) : (
+                <TableCell sx={{ color: 'red', fontWeight: '700' }} colSpan={4}>
+                    <Typography sx={{display:"flex", gap:"1rem"}}> <ErrorIcon></ErrorIcon>{error}</Typography>
+                </TableCell>
+            )}
+            {is_processing ? (
+                <TableCell>
+                    <CircularProgress />
+                </TableCell>
+            ) : null}
         </TableRow>
     ) : (
         <React.Fragment>
