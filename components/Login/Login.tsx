@@ -2,9 +2,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
 import CssBaseline from '@mui/material/CssBaseline'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
 import Paper from '@mui/material/Paper'
@@ -14,10 +12,12 @@ import { useRouter } from 'next/router'
 import * as React from 'react'
 import { useState } from 'react'
 import { supabase } from '../../libs/initSupabase'
+import ResetPasswordModal from './Modal'
 
 export default function SignInSide() {
     const router = useRouter()
     const [email, setEmail] = useState('')
+    const [isOpen, setIsOpen] = useState(false)
     const [password, setPassword] = useState('')
 
     const handleSignIn = async (e: React.FormEvent) => {
@@ -64,6 +64,9 @@ export default function SignInSide() {
                 elevation={6}
                 square
             >
+                <ResetPasswordModal isOpen={isOpen} handleClose={()=>{
+                    setIsOpen(false)
+                }} />
                 <Box
                     sx={{
                         my: 8,
@@ -144,6 +147,13 @@ export default function SignInSide() {
                                 Create Account
                             </Button>
                         </Link>
+                        <Button
+                                fullWidth
+                                sx={{mt:"1rem"}}
+                                onClick={()=>{setIsOpen(true)}}
+                            >
+                                Reset Password
+                            </Button>
                     </Box>
                 </Box>
             </Grid>
