@@ -342,7 +342,7 @@ function sortData(data: any, sortBy: any) {
 
 interface formPost {
     id?: number
-    user?: string
+    user_id?: string
     name: string
     row_count: number
     file: string

@@ -38,7 +38,7 @@ const getCampaigns = async (res: any, jwt: any) => {
     const { data, error } = await supabase
         .from('campaigns')
         .select('*')
-        .eq('user', jwt.sub)
+        .eq('user_id', jwt.sub)
         .is('deleted_at', null)
 
     if (error) {
@@ -55,7 +55,7 @@ const getCampaigns = async (res: any, jwt: any) => {
                     keywords: JSON.parse(campaign.keywords),
                     companysList: JSON.parse(campaign.companys_list),
                     jobTitles: JSON.parse(campaign.job_titles),
-                    user: campaign.user,
+                    user_id: campaign.user_id,
                 }
             })
         return res.status(200).json(formattedData)
@@ -66,7 +66,7 @@ const getCampaigns = async (res: any, jwt: any) => {
 
 const newCampaign: any = async (res: any, body: any, jwt: any) => {
     const updates = {
-        user: jwt.sub,
+        user_id: jwt.sub,
         name: body.name,
         state: body.state,
         seniorites: JSON.stringify(body.seniorites),

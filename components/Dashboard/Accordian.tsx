@@ -16,7 +16,7 @@ interface AccordianProps {
 
 interface formPost {
     id?: number
-    user?: string
+    user_id?: string
     name: string
     row_count: number
     file: string

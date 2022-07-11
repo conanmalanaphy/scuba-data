@@ -20,7 +20,7 @@ interface item {
 }
 
 interface campaign {
-    user: string
+    user_id: string
     id: string
     name: string
     state: string
@@ -54,7 +54,7 @@ function Campaigns() {
                         keywords: [],
                         companysList: [],
                         jobTitles: [],
-                        user: '',
+                        user_id: '',
                     }
 
                     setIsOpen(false)

@@ -16,7 +16,7 @@ interface item {
 }
 
 interface Campaign {
-    user: string
+    user_id: string
     id: string
     name: string
     state: string

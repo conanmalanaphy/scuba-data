@@ -38,7 +38,7 @@ const getResults = async (res: any, jwt: any) => {
     const { data, error } = await supabase
         .from('results')
         .select('*')
-        .eq('user', jwt.sub)
+        .eq('user_id', jwt.sub)
         .is('deleted_at', null)
 
     if (error) {
@@ -53,7 +53,7 @@ const getResults = async (res: any, jwt: any) => {
 const newResult: any = async (res: any, body: any, jwt: any) => {
     const { data, error } = await supabase
         .from('results')
-        .upsert({ ...body, user: jwt.sub.toString() })
+        .upsert({ ...body, user_id: jwt.sub.toString() })
 
     if (error) {
         return res.status(500).json({ error: error.message })
