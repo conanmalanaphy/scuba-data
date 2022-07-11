@@ -59,11 +59,35 @@ export default function LineStepper({ onClose }: StepperProps) {
         setActiveStep((prevActiveStep) => prevActiveStep - 1)
     }
 
-    let stepContent = null
-
-    if (activeStep === steps.length) {
-        stepContent = (
-            <>
+    return (
+        <Box
+            sx={{
+                width: '100%',
+                height: '40vh',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+            }}
+        >
+            <Stepper activeStep={activeStep}>
+                {steps.map((label) => {
+                    const stepProps: { completed?: boolean } = {}
+                    return (
+                        <Step key={label} {...stepProps}>
+                            <StepLabel>{label}</StepLabel>
+                        </Step>
+                    )
+                })}
+            </Stepper>
+            <Box
+                sx={{
+                    display: activeStep === steps.length ? 'flex' : 'none',
+                    flexDirection: 'column',
+                    height: '100%',
+                    justifyContent: 'space-between',
+                    marginTop: '5rem',
+                }}
+            >
                 <Typography sx={{ mt: 2, mb: 1 }}>
                     All steps completed - you&apos;re finished
                 </Typography>
@@ -87,11 +111,8 @@ export default function LineStepper({ onClose }: StepperProps) {
                         Calculate
                     </Button>
                 </Box>
-            </>
-        )
-    } else if (activeStep == 0) {
-        stepContent = (
-            <Box>
+            </Box>
+            <Box sx={{ display: activeStep === 0 ? 'block' : 'none' }}>
                 <Box sx={{ mt: 2, mb: 1 }}>
                     <Stepper />
                 </Box>
@@ -126,10 +147,7 @@ export default function LineStepper({ onClose }: StepperProps) {
                     </Box>
                 </Box>
             </Box>
-        )
-    } else if (activeStep == 1) {
-        stepContent = (
-            <Box>
+            <Box sx={{ display: activeStep === 1 ? 'block' : 'none' }}>
                 <Box>
                     <Stepper />
                 </Box>
@@ -176,7 +194,7 @@ export default function LineStepper({ onClose }: StepperProps) {
                             <Divider />
                             <Table size="small">
                                 <TableBody>
-                                    {state.slice(0, 3).map((row, index) => {
+                                    {state?.slice(0, 3).map((row, index) => {
                                         return (
                                             <TableRow key={index}>
                                                 {row.map((a, index) => {
@@ -193,7 +211,6 @@ export default function LineStepper({ onClose }: StepperProps) {
                                                                     'ellipsis',
                                                             }}
                                                         >
-                                                            {' '}
                                                             {a}
                                                         </TableCell>
                                                     )
@@ -226,28 +243,25 @@ export default function LineStepper({ onClose }: StepperProps) {
                     </Box>
                 </Box>
             </Box>
-        )
-    } else {
-        stepContent = (
-            <>
+            <Box
+                sx={{
+                    display: activeStep === 2 ? 'flex' : 'none',
+                    flexDirection: 'column',
+                    pt: 2,
+                    height: '100%',
+                }}
+            >
                 <Box
                     sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        pt: 2,
+                        flex: '1 1 auto',
+                        pb: '1rem',
                         height: '100%',
+                        flexDirection: 'column',
+                        justifyContent: 'space-around',
+                        display: 'flex',
                     }}
                 >
-                    <Box
-                        sx={{
-                            flex: '1 1 auto',
-                            pb: '1rem',
-                            height: '100%',
-                            flexDirection: 'column',
-                            justifyContent: 'space-around',
-                            display: 'flex',
-                        }}
-                    >
+                    {data && (
                         <MultiSelect
                             items={data
                                 .filter((c: any) => c.state === 'LIVE')
@@ -259,50 +273,26 @@ export default function LineStepper({ onClose }: StepperProps) {
                                 setCampaigns(val)
                             }}
                         />
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                        <Button
-                            color="inherit"
-                            disabled={activeStep === 0}
-                            onClick={handleBack}
-                            sx={{ mr: 1 }}
-                        >
-                            Back
-                        </Button>
-                        <Box sx={{ flex: '1 1 auto' }} />
-                        <Button
-                            onClick={handleNext}
-                            disabled={campaigns.length == 0}
-                        >
-                            Next
-                        </Button>
-                    </Box>
+                    )}
                 </Box>
-            </>
-        )
-    }
-
-    return (
-        <Box
-            sx={{
-                width: '100%',
-                height: '40vh',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-            }}
-        >
-            <Stepper activeStep={activeStep}>
-                {steps.map((label) => {
-                    const stepProps: { completed?: boolean } = {}
-                    return (
-                        <Step key={label} {...stepProps}>
-                            <StepLabel>{label}</StepLabel>
-                        </Step>
-                    )
-                })}
-            </Stepper>
-            {stepContent}
+                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                    <Button
+                        color="inherit"
+                        disabled={activeStep === 0}
+                        onClick={handleBack}
+                        sx={{ mr: 1 }}
+                    >
+                        Back
+                    </Button>
+                    <Box sx={{ flex: '1 1 auto' }} />
+                    <Button
+                        onClick={handleNext}
+                        disabled={campaigns.length == 0}
+                    >
+                        Next
+                    </Button>
+                </Box>
+            </Box>
         </Box>
     )
 }
