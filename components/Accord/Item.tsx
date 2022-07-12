@@ -52,7 +52,7 @@ export default function Item({
                         setSenority(event.target.value)
                     }}
                     onKeyPress={(ev) => {
-                        if (ev.key === 'Enter') {
+                        if (ev.key === 'Enter' && senority.length > 0) {
                             ev.preventDefault()
                             updateData([
                                 ...items,
@@ -66,7 +66,7 @@ export default function Item({
                     }}
                 />
                 <Button
-                    disabled={isDisabled}
+                    disabled={isDisabled || senority.length === 0}
                     onClick={() => {
                         updateData([
                             ...items,
