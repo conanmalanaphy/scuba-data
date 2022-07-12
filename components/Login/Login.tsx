@@ -11,6 +11,8 @@ import Typography from '@mui/material/Typography'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 import { useState } from 'react'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '../Alert'
 import { supabase } from '../../libs/initSupabase'
 import ResetPasswordModal from './Modal'
 
@@ -19,6 +21,18 @@ export default function SignInSide() {
     const [email, setEmail] = useState('')
     const [isOpen, setIsOpen] = useState(false)
     const [password, setPassword] = useState('')
+    const [errorOpen, setErrorOpen] = React.useState('')
+
+    const handleClose = (
+        event?: React.SyntheticEvent | Event,
+        reason?: string
+    ) => {
+        if (reason === 'clickaway') {
+            return
+        }
+
+        setErrorOpen('')
+    }
 
     const handleSignIn = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -29,7 +43,7 @@ export default function SignInSide() {
         })
 
         if (error) {
-            alert(JSON.stringify(error))
+            setErrorOpen(error.message)
         } else {
             router.push('/dashboard')
         }
@@ -70,6 +84,19 @@ export default function SignInSide() {
                         setIsOpen(false)
                     }}
                 />
+                <Snackbar
+                    open={errorOpen.length > 0}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                >
+                    <Alert
+                        onClose={handleClose}
+                        severity="error"
+                        sx={{ width: '100%' }}
+                    >
+                        {errorOpen}
+                    </Alert>
+                </Snackbar>
                 <Box
                     sx={{
                         my: 8,
