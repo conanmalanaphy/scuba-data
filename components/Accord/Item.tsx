@@ -4,6 +4,7 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { useState } from 'react'
 import { useCSVReader } from 'react-papaparse'
+import ButtonGroup from '@mui/material/ButtonGroup'
 import List from './List'
 
 interface item {
@@ -65,59 +66,57 @@ export default function Item({
                         }
                     }}
                 />
-                <Button
-                    disabled={isDisabled || senority.length === 0}
-                    onClick={() => {
-                        updateData([
-                            ...items,
-                            {
-                                name: senority,
-                                isIncluded: true,
-                            },
-                        ])
-                        setSenority('')
-                    }}
-                >
-                    Add
-                </Button>
-                {includeUpload && (
-                    <CSVReader
-                        onUploadAccepted={(results: { data: string[][] }) => {
-                            const newData = results.data.slice(1)
-                            const newItems = newData.reduce(
-                                (memo: item[], b: string[]) => {
-                                    if (b.length == 2) {
-                                        memo.push({
-                                            name: b[0],
-                                            isIncluded: b[1] === 'TRUE',
-                                        })
-                                    }
-
-                                    return memo
+                <ButtonGroup sx={{ ml: 2, height: '3rem' }}>
+                    <Button
+                        disabled={isDisabled || senority.length === 0}
+                        onClick={() => {
+                            updateData([
+                                ...items,
+                                {
+                                    name: senority,
+                                    isIncluded: true,
                                 },
-                                []
-                            )
-
-                            updateData([...items, ...newItems])
+                            ])
+                            setSenority('')
                         }}
                     >
-                        {({ getRootProps }: any) => (
-                            <Button
-                                disabled={isDisabled}
-                                variant="contained"
-                                sx={{
-                                    mt: 'auto',
-                                    mb: 'auto',
-                                    height: '2.4rem',
-                                }}
-                                {...getRootProps()}
-                            >
-                                <AddIcon />
-                                Upload
-                            </Button>
-                        )}
-                    </CSVReader>
-                )}
+                        Add
+                    </Button>
+                    {includeUpload && (
+                        <CSVReader
+                            onUploadAccepted={(results: {
+                                data: string[][]
+                            }) => {
+                                const newData = results.data.slice(1)
+                                const newItems = newData.reduce(
+                                    (memo: item[], b: string[]) => {
+                                        if (b.length == 2) {
+                                            memo.push({
+                                                name: b[0],
+                                                isIncluded: b[1] === 'TRUE',
+                                            })
+                                        }
+
+                                        return memo
+                                    },
+                                    []
+                                )
+
+                                updateData([...items, ...newItems])
+                            }}
+                        >
+                            {({ getRootProps }: any) => (
+                                <Button
+                                    disabled={isDisabled}
+                                    {...getRootProps()}
+                                >
+                                    <AddIcon />
+                                    Upload
+                                </Button>
+                            )}
+                        </CSVReader>
+                    )}
+                </ButtonGroup>
             </div>
             <div
                 style={{
