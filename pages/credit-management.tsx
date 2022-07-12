@@ -20,7 +20,7 @@ import useSWR, { useSWRConfig } from 'swr'
 import Wrapper from '../components/Wrapper/Wrapper'
 import WithProtection from '../libs/WithProtection'
 import TableHead from '@mui/material/TableHead'
-import { getStripe } from '../libs/stripe-client';
+import { getStripe } from '../libs/stripe-client'
 
 const marks = [
     {
@@ -39,28 +39,28 @@ const marks = [
 
 const postData = async ({
     url,
-    data
-  }: {
-    url: string;
-    data?: { price: any };
-  }) => {
-    console.log('posting,', url, data);
-  
+    data,
+}: {
+    url: string
+    data?: { price: any }
+}) => {
+    console.log('posting,', url, data)
+
     const res: Response = await fetch(url, {
-      method: 'POST',
-      headers: new Headers({ 'Content-Type': 'application/json' }),
-      credentials: 'same-origin',
-      body: JSON.stringify(data)
-    });
-  
+        method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json' }),
+        credentials: 'same-origin',
+        body: JSON.stringify(data),
+    })
+
     if (!res.ok) {
-      console.log('Error in postData', { url, data, res });
-  
-      throw Error(res.statusText);
+        console.log('Error in postData', { url, data, res })
+
+        throw Error(res.statusText)
     }
-  
-    return res.json();
-  };
+
+    return res.json()
+}
 
 function calc(c: number) {
     if (c < 100) {
@@ -111,25 +111,24 @@ function Profile() {
     }
 
     const handleCheckout = async () => {
-    
         try {
-          const { sessionId } = await postData({
-            url: '/api/credit-management/create-checkout-session',
-          });
-    
-          const stripe = await getStripe();
-          
-          stripe?.redirectToCheckout({ sessionId });
+            const { sessionId } = await postData({
+                url: '/api/credit-management/create-checkout-session',
+            })
+
+            const stripe = await getStripe()
+
+            stripe?.redirectToCheckout({ sessionId })
         } catch (error) {
-          debugger;
+            debugger
 
-          return alert((error as Error)?.message);
+            return alert((error as Error)?.message)
         } finally {
-          debugger;
+            debugger
 
-          console.log("yee")
+            console.log('yee')
         }
-      };
+    }
 
     return (
         <Box sx={{ display: 'flex' }}>

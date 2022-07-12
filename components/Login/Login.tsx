@@ -64,9 +64,12 @@ export default function SignInSide() {
                 elevation={6}
                 square
             >
-                <ResetPasswordModal isOpen={isOpen} handleClose={()=>{
-                    setIsOpen(false)
-                }} />
+                <ResetPasswordModal
+                    isOpen={isOpen}
+                    handleClose={() => {
+                        setIsOpen(false)
+                    }}
+                />
                 <Box
                     sx={{
                         my: 8,
@@ -123,6 +126,11 @@ export default function SignInSide() {
                             ) => {
                                 setPassword(event?.target.value)
                             }}
+                            onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSignIn(e)
+                                }
+                            }}
                         />
                         <Link
                             sx={{
@@ -148,12 +156,14 @@ export default function SignInSide() {
                             </Button>
                         </Link>
                         <Button
-                                fullWidth
-                                sx={{mt:"1rem"}}
-                                onClick={()=>{setIsOpen(true)}}
-                            >
-                                Reset Password
-                            </Button>
+                            fullWidth
+                            sx={{ mt: '1rem' }}
+                            onClick={() => {
+                                setIsOpen(true)
+                            }}
+                        >
+                            Reset Password
+                        </Button>
                     </Box>
                 </Box>
             </Grid>
