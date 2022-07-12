@@ -20,6 +20,7 @@ import useSWR, { useSWRConfig } from 'swr'
 import Wrapper from '../components/Wrapper/Wrapper'
 import WithProtection from '../libs/WithProtection'
 import TableHead from '@mui/material/TableHead'
+import { getStripe } from '../libs/stripe-client';
 
 const marks = [
     {
@@ -35,6 +36,31 @@ const marks = [
         label: '1000',
     },
 ]
+
+const postData = async ({
+    url,
+    data
+  }: {
+    url: string;
+    data?: { price: any };
+  }) => {
+    console.log('posting,', url, data);
+  
+    const res: Response = await fetch(url, {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+      credentials: 'same-origin',
+      body: JSON.stringify(data)
+    });
+  
+    if (!res.ok) {
+      console.log('Error in postData', { url, data, res });
+  
+      throw Error(res.statusText);
+    }
+  
+    return res.json();
+  };
 
 function calc(c: number) {
     if (c < 100) {
@@ -83,6 +109,27 @@ function Profile() {
             )
         }
     }
+
+    const handleCheckout = async () => {
+    
+        try {
+          const { sessionId } = await postData({
+            url: '/api/credit-management/create-checkout-session',
+          });
+    
+          const stripe = await getStripe();
+          
+          stripe?.redirectToCheckout({ sessionId });
+        } catch (error) {
+          debugger;
+
+          return alert((error as Error)?.message);
+        } finally {
+          debugger;
+
+          console.log("yee")
+        }
+      };
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -389,7 +436,14 @@ function Profile() {
                                     sx={{ ml: 2 }}
                                     onClick={handleAdd}
                                 >
-                                    Pay £{value}
+                                    fake Pay £{value}
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    sx={{ ml: 2 }}
+                                    onClick={handleCheckout}
+                                >
+                                    Real Pay £{value}
                                 </Button>
                             </Paper>
                         </Box>
