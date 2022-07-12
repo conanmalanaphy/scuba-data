@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { SWRConfig } from 'swr'
+import Head from 'next/head'
 import { supabase } from '../libs/initSupabase'
 import '../styles/globals.css'
 import { ThemeProvider } from '@mui/material/styles'
@@ -60,6 +61,10 @@ const MyApp = ({ Component, pageProps }: any) => {
     return (
         <SWRConfig value={{ fetcher }}>
             <ThemeProvider theme={theme}>
+                <Head>
+                    <title>ScubaData</title>
+                    <link rel="icon" href="/diver.svg" />
+                </Head>
                 <Component {...pageProps} />
             </ThemeProvider>
         </SWRConfig>
