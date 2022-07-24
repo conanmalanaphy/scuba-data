@@ -147,7 +147,6 @@ export default function Wrapper({ pageName }: WrapperProps) {
                         justifyContent: 'space-between',
                     }}
                 >
-                    {' '}
                     <Box sx={{ display: 'flex' }}>
                         <IconButton
                             edge="start"

@@ -1,0 +1,3 @@
+process.env.NEXT_PUBLIC_SUPABASE_URL = "https://axysgpzttgzrhcmcyezv.supabase.co"
+process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4eXNncHp0dGd6cmhjbWN5ZXp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTQxMDc3MDIsImV4cCI6MTk2OTY4MzcwMn0._dxcNF4ShY1mpg2Dp4dU-uolkh8LEovuv9bc_gD0gnE"
+
