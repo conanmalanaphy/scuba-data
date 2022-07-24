@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { SWRConfig } from 'swr'
 import Head from 'next/head'
 import { supabase } from '@/libs/initSupabase'
-import '../styles/globals.css'
+import '@/styles/globals.css'
 import { ThemeProvider } from '@mui/material/styles'
 import { Session } from '@supabase/supabase-js'
 

@@ -11,7 +11,7 @@ import useSWR, { useSWRConfig } from 'swr'
 import ExportModal from '@/components/Dashboard/ExportModal'
 import Modal from '@/components/Dashboard/ImportModal'
 import Table from '@/components/Dashboard/Table'
-import Wrapper from '@/components/Wrapper'
+import Wrapper from '@/components/Core/Wrapper'
 import { supabase } from '@/libs/initSupabase'
 import WithProtection from '@/libs/WithProtection'
 

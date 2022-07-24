@@ -11,7 +11,7 @@ import {
 } from '@mui/material'
 import * as React from 'react'
 import { useState } from 'react'
-import Wrapper from '@/components/Wrapper'
+import Wrapper from '@/components/Core/Wrapper'
 import { supabase } from '@/libs/initSupabase'
 import WithProtection from '@/libs/WithProtection'
 

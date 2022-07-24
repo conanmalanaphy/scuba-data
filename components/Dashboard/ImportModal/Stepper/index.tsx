@@ -16,7 +16,7 @@ import {
 import { useState, ChangeEvent } from 'react'
 import { steps } from './Stepper.CONSTANTS'
 import useSWR from 'swr'
-import MultiSelect from '@/components/MultiSelect'
+import MultiSelect from '@/components/Dashboard/ImportModal/Stepper/MultiSelect'
 import CSVUploader from '@/core/CSVFileUploader'
 
 interface StepperProps {

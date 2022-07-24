@@ -19,7 +19,7 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
-import Wrapper from '@/components/Wrapper'
+import Wrapper from '@/components/Core/Wrapper'
 import { getStripe } from '@/libs/stripe-client'
 import WithProtection from '@/libs/WithProtection'
 

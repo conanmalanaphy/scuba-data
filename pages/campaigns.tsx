@@ -9,9 +9,9 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
-import Accord from '@/components//Accordion'
-import CampaignModal from '@/components//CampaignModal'
-import Wrapper from '@/components//Wrapper'
+import Accord from '@/components/Campaign/Accordion'
+import CampaignModal from '@/components/Campaign/CampaignModal'
+import Wrapper from '@/components/Core/Wrapper'
 import WithProtection from '@/libs/WithProtection'
 
 interface item {

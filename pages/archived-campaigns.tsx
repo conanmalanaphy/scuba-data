@@ -9,8 +9,8 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
-import Accordion from '@/components/Accordion'
-import Wrapper from '@/components/Wrapper'
+import Accordion from '@/components/Campaign/Accordion'
+import Wrapper from '@/components/Core/Wrapper'
 import WithProtection from '@/libs/WithProtection'
 
 function ArchivedCampaigns() {
