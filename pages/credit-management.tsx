@@ -15,6 +15,7 @@ import {
     TableRow,
     Toolbar,
     Typography,
+    SelectChangeEvent,
 } from '@mui/material'
 import { useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
@@ -27,7 +28,7 @@ const postData = async ({
     data,
 }: {
     url: string
-    data?: { price: any }
+    data?: { price: number }
 }) => {
     console.log('posting,', url, data)
 
@@ -47,19 +48,7 @@ const postData = async ({
     return res.json()
 }
 
-function calc(c: number) {
-    if (c < 100) {
-        return c * 1
-    } else if (c >= 100 && c < 500) {
-        const lower = c - 100
-        return 100 + lower * 0.5
-    } else {
-        const lower = c - 500
-        return 300 + lower * 0.1
-    }
-}
-
-const priceMap: any = {
+const priceMap: { [name: string]: number } = {
     '20': 1000,
     '100': 5000,
     '150': 10000,
@@ -76,7 +65,7 @@ function Profile() {
     const { data, error } = useSWR(`/api/credit-management/add-credits`)
     const [value, setValue] = useState(20)
 
-    const handleChange = (event: any) => {
+    const handleChange = (event: SelectChangeEvent) => {
         setValue(parseInt(event.target.value, 10))
     }
 
@@ -85,10 +74,10 @@ function Profile() {
             await mutate(
                 `/api/credit-management/add-credits`,
                 fetcher(`/api/credit-management/add-credits`, {
-                    credit_count: priceMap[value.toString() as any] + data,
+                    credit_count: priceMap[value.toString()] + data,
                 }),
                 {
-                    optimisticData: priceMap[value.toString() as any] + data,
+                    optimisticData: priceMap[value.toString()] + data,
                     rollbackOnError: true,
                 }
             )

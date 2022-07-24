@@ -1,11 +1,11 @@
 import { NextApiHandler } from 'next'
-import { supabase } from '../../libs/initSupabase'
-import jwt_decode , { JwtPayload }from 'jwt-decode'
+import { supabase } from '@/libs/initSupabase'
+import jwt_decode, { JwtPayload } from 'jwt-decode'
 import type { NextApiResponse } from 'next'
 
 const updates: NextApiHandler = async (req, res) => {
     const token: string = req.headers.token as string
-    const jwt:JwtPayload = jwt_decode(token)
+    const jwt: JwtPayload = jwt_decode(token)
 
     supabase.auth.setAuth(token)
 
@@ -16,7 +16,7 @@ const updates: NextApiHandler = async (req, res) => {
     return res.status(404).json({ error: 'API method not found' })
 }
 
-const getCampaigns = async (res: any, jwt: JwtPayload) => {
+const getCampaigns = async (res: NextApiResponse, jwt: JwtPayload) => {
     const { data, error } = await supabase
         .from('campaigns')
         .select('*')
@@ -46,7 +46,11 @@ const getCampaigns = async (res: any, jwt: JwtPayload) => {
     return res.status(500).json({ error: 'Something bad happened' })
 }
 
-const update = async (res: NextApiResponse, body: Campaign, jwt: JwtPayload) => {
+const update = async (
+    res: NextApiResponse,
+    body: Campaign,
+    jwt: JwtPayload
+) => {
     const updates = {
         state: body.state,
         seniorites: JSON.stringify(body.seniorites),

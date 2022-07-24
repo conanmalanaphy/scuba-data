@@ -3,11 +3,12 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
+import { Session } from '@supabase/supabase-js'
 
 const withAuth = (Component: any) => {
     const AuthenticatedComponent = () => {
         const router = useRouter()
-        const [data, setData] = useState<any>()
+        const [data, setData] = useState<Session>()
 
         useEffect(() => {
             const user = supabase.auth.session()

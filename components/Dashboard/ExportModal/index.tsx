@@ -1,14 +1,14 @@
 import { Button, Dialog, DialogContent, DialogTitle } from '@mui/material'
 import useSWR, { useSWRConfig } from 'swr'
 import { downloadFile } from './ExportModal.HELPER'
-import { supabase } from '../../../libs/initSupabase'
+import { supabase } from '@/libs/initSupabase'
 
 interface ModalProps {
     isExportOpen: boolean
     cost: number
     fileUrl: string
     id: string
-    paid_for: boolean|undefined
+    paid_for: boolean | undefined
     handleClose: () => void
 }
 
@@ -47,11 +47,13 @@ export default function Modal({
 
                         const fileName = fileUrl.split('/')
 
-                        downloadFile(
-                            file,
-                            fileName[fileName.length - 1],
-                            'text/csv'
-                        )
+                        if (file) {
+                            downloadFile(
+                                file,
+                                fileName[fileName.length - 1],
+                                'text/csv'
+                            )
+                        }
 
                         handleClose()
 

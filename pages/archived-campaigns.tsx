@@ -5,7 +5,7 @@ import {
     CircularProgress,
     CssBaseline,
     Link,
-    Toolbar
+    Toolbar,
 } from '@mui/material'
 import { useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
@@ -16,7 +16,7 @@ import WithProtection from '@/libs/WithProtection'
 function ArchivedCampaigns() {
     const [expanded, setExpanded] = useState('')
     const { fetcher, mutate } = useSWRConfig()
-    const { data, error } = useSWR(`/api/campaigns/archived`)
+    const { data, error } = useSWR<Campaign[]>(`/api/campaigns/archived`)
 
     const handleChange = (event: string) => {
         setExpanded((prevstate: string) => {
@@ -65,7 +65,7 @@ function ArchivedCampaigns() {
                         }}
                     >
                         {!error && data ? (
-                            data.map((item: any) => (
+                            data.map((item) => (
                                 <Accordion
                                     key={item.id}
                                     updateData={() => {}}
@@ -75,7 +75,7 @@ function ArchivedCampaigns() {
                                     isDisabled
                                     sendToArchive={async () => {
                                         const newData = data.filter(
-                                            (post: any) => post.id !== item.id
+                                            (post) => post.id !== item.id
                                         )
 
                                         if (fetcher) {

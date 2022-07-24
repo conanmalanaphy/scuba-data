@@ -1,8 +1,8 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
-import { supabase } from '../../libs/initSupabase'
-import Alert from '../Core/Alert'
+import { useState, SyntheticEvent } from 'react'
+import { supabase } from '@/libs/initSupabase'
+import Alert from '@/core/Alert'
 import ResetPasswordModal from './ResetPasswordModal'
 
 import {
@@ -25,7 +25,10 @@ export default function SignInSide() {
     const [password, setPassword] = useState('')
     const [errorOpen, setErrorOpen] = useState('')
 
-    const handleClose = (event?: any, reason?: string) => {
+    const handleClose = (
+        event?: Event | SyntheticEvent<any, Event>,
+        reason?: string
+    ) => {
         if (reason === 'clickaway') {
             return
         }
@@ -33,7 +36,7 @@ export default function SignInSide() {
         setErrorOpen('')
     }
 
-    const handleSignIn = async (e: any) => {
+    const handleSignIn = async (e: Event | SyntheticEvent<any, Event>) => {
         e.preventDefault()
 
         const { error } = await supabase.auth.signIn({

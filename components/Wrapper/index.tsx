@@ -7,7 +7,7 @@ import {
     Menu as MenuIcon,
     MonetizationOn as MonetizationOnIcon,
     ScubaDiving as ScubaDivingIcon,
-    SettingsApplications as SettingsApplicationsIcon
+    SettingsApplications as SettingsApplicationsIcon,
 } from '@mui/icons-material'
 import {
     AppBar as MuiAppBar,
@@ -23,22 +23,13 @@ import {
     ListItemIcon,
     ListItemText,
     Toolbar,
-    Typography
+    Typography,
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { useRouter } from 'next/router'
 import { Fragment, useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
-import { supabase } from '../../libs/initSupabase'
-
-const fetcher = async (url: string) => {
-    const res = await fetch(url)
-    if (!res.ok) {
-        throw Error("Yo that's NOT OK!!!")
-    }
-    const data = await res.json()
-    return data
-}
+import { supabase } from '@/libs/initSupabase'
 
 const drawerWidth = 260
 
@@ -130,14 +121,13 @@ interface WrapperProps {
 export default function Wrapper({ pageName }: WrapperProps) {
     const [open, setOpen] = useState(false)
     const router = useRouter()
-    const { fetcher, mutate } = useSWRConfig()
     const { data, error } = useSWR(`/api/credit-management/add-credits`)
 
     const toggleDrawer = () => {
         setOpen(!open)
     }
 
-    const handleLogOut = async (e: any) => {
+    const handleLogOut = async () => {
         const { error } = await supabase.auth.signOut()
 
         if (error) {

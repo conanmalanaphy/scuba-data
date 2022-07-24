@@ -1,6 +1,12 @@
 import {
-    Box, Chip, FormControl, InputLabel,
-    MenuItem, OutlinedInput, Select
+    Box,
+    Chip,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    OutlinedInput,
+    Select,
+    SelectChangeEvent,
 } from '@mui/material'
 
 const ITEM_HEIGHT = 48
@@ -29,7 +35,7 @@ export default function MultiSelect({
     campaigns,
     setCampaigns,
 }: MultiSelectProps) {
-    const handleChange = ({ target: { value } }: any) => {
+    const handleChange = ({ target: { value } }: SelectChangeEvent<string>) => {
         setCampaigns([value] as unknown as string[])
     }
 
@@ -46,7 +52,7 @@ export default function MultiSelect({
                             label="Campaign"
                         />
                     }
-                    renderValue={(selected: any) => (
+                    renderValue={() => (
                         <Box
                             sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
                         >

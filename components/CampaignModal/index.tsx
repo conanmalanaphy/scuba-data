@@ -9,13 +9,14 @@ import {
     Select,
     TextField,
     InputLabel,
+    SelectChangeEvent,
 } from '@mui/material'
 import { useState } from 'react'
 
 interface CampaignModalProps {
     isOpen: boolean
     handleClose: () => void
-    onSubmit: (name: any) => void
+    onSubmit: (campaign: Partial<Campaign>) => void
     campaigns?: Campaign[]
 }
 
@@ -28,8 +29,8 @@ export default function CampaignModal({
     const [name, setName] = useState('')
     const [campaign, setCampaign] = useState('')
 
-    const handleChange = (event: any) => {
-        setCampaign(event.target.value as string)
+    const handleChange = (event: SelectChangeEvent<string>) => {
+        setCampaign(event.target.value)
     }
 
     return (

@@ -1,4 +1,4 @@
-import { stripe } from '../../libs/stripe'
+import { stripe } from '@/libs/stripe'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 const createCheckoutSession = async (
@@ -26,10 +26,10 @@ const createCheckoutSession = async (
             })
 
             return res.status(200).json({ sessionId: session.id })
-        } catch (err: any) {
+        } catch (err) {
             console.log(err)
             res.status(500).json({
-                error: { statusCode: 500, message: err.message },
+                error: { statusCode: 500, message: "Couldn't process payment" },
             })
         }
     } else {

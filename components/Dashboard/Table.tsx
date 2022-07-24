@@ -21,17 +21,17 @@ import {
     TextField,
     Typography,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, ChangeEvent } from 'react'
 
 interface RowProps {
     row: formPost
     handleClickExportOpen: (
         id: number | undefined,
         row_count: number,
-        file: any,
-        paid_for: boolean|undefined
+        file: string,
+        paid_for: boolean | undefined
     ) => void
-    onDelete: (id: number | undefined) => void
+    onDelete: (id: number) => void
 }
 function Row({ row, handleClickExportOpen, onDelete }: RowProps) {
     const [open, setOpen] = useState(false)
@@ -142,7 +142,7 @@ function Row({ row, handleClickExportOpen, onDelete }: RowProps) {
                     <IconButton
                         edge="start"
                         color="inherit"
-                        onClick={() => onDelete(id)}
+                        onClick={() => onDelete(id as number)}
                         sx={{
                             marginLeft: '1rem',
                         }}
@@ -321,7 +321,7 @@ function Row({ row, handleClickExportOpen, onDelete }: RowProps) {
     )
 }
 
-function sortData(data: any, sortBy: any) {
+function sortData(data: formPost[], sortBy: SortBy) {
     switch (sortBy.sortBy) {
         case 'name':
             return [...data].sort((i, j) => {
@@ -330,7 +330,7 @@ function sortData(data: any, sortBy: any) {
                     : ('' + i.name).localeCompare(j.name) * -1
             })
         case 'createdDate':
-            return [...data].sort((i: any, j: any) => {
+            return [...data].sort((i, j) => {
                 if (i.created_at < j.created_at) {
                     return sortBy.sortDirection === 'asc' ? -1 : 1
                 } else {
@@ -342,7 +342,7 @@ function sortData(data: any, sortBy: any) {
                 }
             })
         case 'uniqueRows':
-            return [...data].sort((i: any, j: any) => {
+            return [...data].sort((i, j) => {
                 return sortBy.sortDirection === 'asc'
                     ? i.row_count - j.row_count
                     : j.row_count - i.row_count
@@ -360,18 +360,35 @@ function filterlist(list: formPost[], name: string) {
 }
 
 type SortDirection = 'asc' | 'desc'
-interface sortBy {
+
+interface SortBy {
     sortBy: string
     sortDirection: SortDirection
 }
-export default function TableC({ data, handleClickExportOpen, onDelete }: any) {
-    const [sortBy, setSortBy] = useState<sortBy>({
+
+interface TableCProps {
+    data: formPost[]
+    handleClickExportOpen: (
+        id: number | undefined,
+        cost: number,
+        fileUrl: string,
+        paid_for: boolean | undefined
+    ) => void
+    onDelete: (id: number) => void
+}
+
+export default function TableC({
+    data,
+    handleClickExportOpen,
+    onDelete,
+}: TableCProps) {
+    const [sortBy, setSortBy] = useState<SortBy>({
         sortBy: 'name',
         sortDirection: 'asc',
     })
-    const [sortedData, setSortedData] = useState<any>([])
+    const [sortedData, setSortedData] = useState<formPost[]>([])
 
-    const requestSort = (pSortBy: any) => {
+    const requestSort = (pSortBy: string) => {
         let sortOrder: SortDirection = 'asc'
         let sortByc = sortBy.sortBy
 
@@ -399,7 +416,7 @@ export default function TableC({ data, handleClickExportOpen, onDelete }: any) {
                 label="Filter Results"
                 type="email"
                 variant="standard"
-                onChange={(event: any) => {
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     setSortedData(filterlist(data, event.target.value))
                 }}
             />
@@ -449,7 +466,7 @@ export default function TableC({ data, handleClickExportOpen, onDelete }: any) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sortedData.map((item: any, indx: number) => (
+                        {sortedData.map((item, indx: number) => (
                             <Row
                                 row={item}
                                 key={indx}

@@ -1,11 +1,11 @@
 import { NextApiHandler } from 'next'
-import { supabase } from '../../libs/initSupabase'
-import jwt_decode , { JwtPayload }from 'jwt-decode'
+import { supabase } from '@/libs/initSupabase'
+import jwt_decode, { JwtPayload } from 'jwt-decode'
 import type { NextApiResponse } from 'next'
 
 const Campaigns: NextApiHandler = async (req, res) => {
     const token: string = req.headers.token as string
-    const jwt:JwtPayload = jwt_decode(token)
+    const jwt: JwtPayload = jwt_decode(token)
 
     supabase.auth.setAuth(token)
 
@@ -20,7 +20,11 @@ const Campaigns: NextApiHandler = async (req, res) => {
     return res.status(404).json({ error: 'API method not found' })
 }
 
-const deleteCampaign = async (res: NextApiResponse, body: Campaign, jwt: JwtPayload) => {
+const deleteCampaign = async (
+    res: NextApiResponse,
+    body: Campaign,
+    jwt: JwtPayload
+) => {
     const { data, error } = await supabase
         .from('campaigns')
         .update({ deleted_at: new Date().toISOString() })
@@ -65,7 +69,11 @@ const getCampaigns = async (res: NextApiResponse, jwt: JwtPayload) => {
     return res.status(500).json({ error: 'Something bad happened' })
 }
 
-const newCampaign: any = async (res: NextApiResponse, body: Campaign, jwt: JwtPayload) => {
+const newCampaign = async (
+    res: NextApiResponse,
+    body: Campaign,
+    jwt: JwtPayload
+) => {
     const updates = {
         user_id: jwt.sub,
         name: body.name,

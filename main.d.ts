@@ -9,7 +9,7 @@ interface DB_Campaign {
     name: string
     state: string
     seniorites: string
-    keywords:string
+    keywords: string
     companys_list: string
     job_titles: string
 }
@@ -31,7 +31,7 @@ interface formPost {
     name: string
     row_count: number
     file: string
-    campaigns: string[] 
+    campaigns: string[]
     comp_high: number
     comp_medium: number
     comp_low: number
@@ -41,12 +41,16 @@ interface formPost {
     job_title_unique_count: number
     comp_unique_count: number
     created_at: string
-    paid_for?: boolean |undefined
+    paid_for?: boolean | undefined
     is_processing: boolean
     expected_completion_time: string
     error: string
 }
 
 interface User {
-    credit_count:number
+    credit_count: number
+}
+
+interface APIError {
+    message: string
 }

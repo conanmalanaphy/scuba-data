@@ -2,24 +2,32 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { SWRConfig } from 'swr'
 import Head from 'next/head'
-import { supabase } from '../libs/initSupabase'
+import { supabase } from '@/libs/initSupabase'
 import '../styles/globals.css'
 import { ThemeProvider } from '@mui/material/styles'
+import { Session } from '@supabase/supabase-js'
+
 import theme from '../theme'
 
 const MyApp = ({ Component, pageProps }: any) => {
     const router = useRouter()
-    const [session, setSession] = useState<any>(null)
+    const [session, setSession] = useState<Session>()
 
     useEffect(() => {
         if (!router.asPath.includes('#access_token')) {
             sessionStorage.removeItem('AUTH')
         }
-        setSession(supabase.auth.session())
+        const newSession = supabase.auth.session()
+
+        if (newSession) {
+            setSession(newSession)
+        }
 
         const { data: authListener } = supabase.auth.onAuthStateChange(
-            (_event: any, session: any) => {
-                setSession(session)
+            (_event: any, newSession: Session | null) => {
+                if (newSession) {
+                    setSession(newSession)
+                }
             }
         )
         const handleRouteChange = () => {}
@@ -32,11 +40,11 @@ const MyApp = ({ Component, pageProps }: any) => {
         }
     }, [router])
 
-    const fetcher = (url: any, data: any, method: any) => {
-        const options: any = {
+    const fetcher = (url: string, data: any, method: string) => {
+        const options: RequestInit = {
             headers: new Headers({
                 'Content-Type': 'application/json',
-                token: session?.access_token,
+                token: session?.access_token as string,
             }),
             credentials: 'same-origin',
         }

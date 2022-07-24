@@ -45,7 +45,7 @@ function Campaigns() {
                 handleClose={() => {
                     setIsOpen(false)
                 }}
-                onSubmit={async (addedCampaign: any) => {
+                onSubmit={async (addedCampaign: Partial<Campaign>) => {
                     const newCampaign = {
                         id: '',
                         name: name,
@@ -76,7 +76,7 @@ function Campaigns() {
                 isOpen={isSaveAsOpen}
                 handleClose={() => setIsSaveAsOpen(false)}
                 campaigns={data}
-                onSubmit={(newCampaign: any) => {
+                onSubmit={(newCampaign: Partial<Campaign>) => {
                     if (fetcher) {
                         mutate(
                             `/api/campaigns/main`,

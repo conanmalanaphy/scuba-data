@@ -17,15 +17,15 @@ import WithProtection from '@/libs/WithProtection'
 
 async function pythonScript(
     newData: string[][],
-    campaigns: any,
+    formPost: Campaign,
     jobTitleCoumn: number,
     companyCoumn: number,
     fileName: string,
     id: number,
     fetcher: any
 ) {
-    const processedfile = newData.reduce<any>(
-        (memo, val: any) => {
+    const processedfile = newData.reduce(
+        (memo, val) => {
             if (val[0]) {
                 memo.jobTitles.push(val[jobTitleCoumn])
             }
@@ -35,7 +35,7 @@ async function pythonScript(
             }
             return memo
         },
-        { jobTitles: [], compainies: [] }
+        { jobTitles: [] as string[], compainies: [] as string[] }
     )
 
     const user = supabase.auth.user()
@@ -46,29 +46,29 @@ async function pythonScript(
         id: id.toString(),
         jobtitles: processedfile.jobTitles,
         companies: processedfile.compainies,
-        kw: isIncluded(campaigns.keywords),
-        exclude_kw: isNotIncluded(campaigns.keywords),
-        sen: isIncluded(campaigns.seniorites),
-        exclude_sen: isNotIncluded(campaigns.seniorites),
-        jt: isIncluded(campaigns.jobTitles),
-        exclude_jt: isNotIncluded(campaigns.jobTitles),
-        include_companies: isIncluded(campaigns.companysList),
-        exclude_companies: isNotIncluded(campaigns.companysList),
+        kw: isIncluded(formPost.keywords),
+        exclude_kw: isNotIncluded(formPost.keywords),
+        sen: isIncluded(formPost.seniorites),
+        exclude_sen: isNotIncluded(formPost.seniorites),
+        jt: isIncluded(formPost.jobTitles),
+        exclude_jt: isNotIncluded(formPost.jobTitles),
+        include_companies: isIncluded(formPost.companysList),
+        exclude_companies: isNotIncluded(formPost.companysList),
     })
 }
 
-function isIncluded(data: any) {
-    return data.filter((a: any) => a.isIncluded).map((a: any) => a.name)
+function isIncluded(data: CampaignItem[]) {
+    return data.filter((a) => a.isIncluded).map((a) => a.name)
 }
 
-function isNotIncluded(data: any) {
-    return data.filter((a: any) => !a.isIncluded).map((a: any) => a.name)
+function isNotIncluded(data: CampaignItem[]) {
+    return data.filter((a) => !a.isIncluded).map((a) => a.name)
 }
 
 function DashboardContent() {
     const [isOpen, setIsOpen] = useState(false)
     const { fetcher, mutate } = useSWRConfig()
-    const { data, error } = useSWR(`/api/dashboard/main`, {
+    const { data, error } = useSWR<formPost[]>(`/api/dashboard/main`, {
         refreshInterval: 1000,
     })
 
@@ -89,15 +89,15 @@ function DashboardContent() {
     const handleClickExportOpen = (
         id: number | undefined,
         cost: number,
-        fileUrl: any,
-        paid_for: any
+        fileUrl: string,
+        paid_for: boolean | undefined
     ) => {
         setexportModal({
             isOpen: true,
-            fileUrl: fileUrl,
-            cost: cost,
-            id: id,
-            paid_for: paid_for,
+            fileUrl,
+            cost,
+            id,
+            paid_for,
         })
     }
     const handleExportClose = () => {
@@ -141,7 +141,7 @@ function DashboardContent() {
                         handleClose={handleClose}
                         processfile={async (
                             newData: string[][],
-                            campaigns: any,
+                            campaigns: Campaign,
                             jobTitleCoumn: number,
                             companyCoumn: number,
                             fileName: string
@@ -207,9 +207,11 @@ function DashboardContent() {
                                     handleClickExportOpen={
                                         handleClickExportOpen
                                     }
-                                    onDelete={async (id: any) => {
+                                    onDelete={async (
+                                        id: number | undefined
+                                    ) => {
                                         const newData = data.filter(
-                                            (post: any) => post.id !== id
+                                            (post) => post.id !== id
                                         )
 
                                         if (fetcher) {

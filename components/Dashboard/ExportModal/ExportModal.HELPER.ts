@@ -1,4 +1,4 @@
-export function downloadFile(data: any, filename: string, mime: string) {
+export function downloadFile(data: Blob, filename: string, mime: string) {
     // It is necessary to create a new blob object with mime-type explicitly set
     // otherwise only Chrome works like it should
     const blob = new Blob([data], { type: mime || 'application/octet-stream' })

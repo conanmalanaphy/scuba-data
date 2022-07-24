@@ -81,6 +81,10 @@ const styles = {
     } as CSSProperties,
 }
 
+interface onUploadAccepted {
+    data: string[][]
+}
+
 interface CSVReaderProps {
     onUploadAccepted: (data: string[][]) => void
 }
@@ -94,7 +98,7 @@ export default function CSVReader({ onUploadAccepted }: CSVReaderProps) {
 
     return (
         <CSVReader
-            onUploadAccepted={(results: any) => {
+            onUploadAccepted={(results: onUploadAccepted) => {
                 onUploadAccepted(results.data)
                 setZoneHover(false)
             }}

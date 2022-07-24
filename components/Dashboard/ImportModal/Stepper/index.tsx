@@ -13,23 +13,16 @@ import {
     TextField,
     Typography,
 } from '@mui/material'
-
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
+import { steps } from './Stepper.CONSTANTS'
 import useSWR from 'swr'
-import MultiSelect from '../../../MultiSelect'
-import CSVUploader from '../../../Core/CSVFileUploader'
-
-const steps = ['Upload file', 'File Mapping', 'Choose Campaign']
-
-interface item {
-    name: string
-    id: string
-}
+import MultiSelect from '@/components/MultiSelect'
+import CSVUploader from '@/core/CSVFileUploader'
 
 interface StepperProps {
     onClose: (
         data: string[][],
-        campaigns: string[],
+        campaign: Campaign,
         jobTitleCoumn: number,
         companyCoumn: number,
         filename: string
@@ -44,15 +37,19 @@ export default function LineStepper({ onClose }: StepperProps) {
     const [jobTitleCoumn, setJobTitleCoumn] = useState(1)
     const [companyCoumn, setCompanyCoumn] = useState(2)
 
-    const handleJobTitleCoumnChange = (event: any) => {
-        setJobTitleCoumn(event.target.value)
+    const handleJobTitleCoumnChange = (
+        event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+        setJobTitleCoumn(Number(event.target.value))
     }
 
-    const handleCompanyCoumnChange = (event: any) => {
-        setCompanyCoumn(event.target.value)
+    const handleCompanyCoumnChange = (
+        event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+        setCompanyCoumn(Number(event.target.value))
     }
 
-    const { data, error } = useSWR(`/api/campaigns/main`)
+    const { data, error } = useSWR<Campaign[]>(`/api/campaigns/main`)
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1)
@@ -98,17 +95,19 @@ export default function LineStepper({ onClose }: StepperProps) {
                     <Box sx={{ flex: '1 1 auto' }} />
                     <Button
                         onClick={() => {
-                            const campaignData = data.find((cam: any) => {
-                                return cam.id === campaigns[0]
+                            const campaignData = data?.find((cam) => {
+                                return cam.id?.toString() === campaigns[0]
                             })
 
-                            onClose(
-                                state,
-                                campaignData,
-                                jobTitleCoumn - 1,
-                                companyCoumn - 1,
-                                filename
-                            )
+                            if (campaignData) {
+                                onClose(
+                                    state,
+                                    campaignData,
+                                    jobTitleCoumn - 1,
+                                    companyCoumn - 1,
+                                    filename
+                                )
+                            }
                         }}
                     >
                         Calculate
@@ -267,8 +266,8 @@ export default function LineStepper({ onClose }: StepperProps) {
                     {data && (
                         <MultiSelect
                             items={data
-                                .filter((c: any) => c.state === 'LIVE')
-                                .map(({ id, name }: item) => {
+                                .filter((c) => c.state === 'LIVE')
+                                .map(({ id, name }) => {
                                     return { id, name }
                                 })}
                             campaigns={campaigns}

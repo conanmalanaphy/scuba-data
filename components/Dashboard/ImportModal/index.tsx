@@ -7,7 +7,7 @@ interface ModalProps {
     handleClose: () => void
     processfile: (
         data: string[][],
-        campaigns: string[],
+        campaigns: Campaign,
         jobTitleCoumn: number,
         companyCoumn: number,
         fileName: string
