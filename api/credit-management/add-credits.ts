@@ -1,10 +1,12 @@
 import { NextApiHandler } from 'next'
 import { supabase } from '../../libs/initSupabase'
-import jwt_decode from 'jwt-decode'
+import jwt_decode , { JwtPayload }from 'jwt-decode'
+import type { NextApiResponse } from 'next'
+
 
 const Tasks: NextApiHandler = async (req, res) => {
     const token: string = req.headers.token as string
-    const jwt = jwt_decode(token)
+    const jwt:JwtPayload = jwt_decode(token)
 
     supabase.auth.setAuth(token)
 
@@ -17,7 +19,7 @@ const Tasks: NextApiHandler = async (req, res) => {
     return res.status(404).json({ error: 'API method not found' })
 }
 
-const getTasks = async (res: any, jwt: any) => {
+const getTasks = async (res: NextApiResponse, jwt: JwtPayload) => {
     const { data, error } = await supabase
         .from('users')
         .select('*')
@@ -32,7 +34,7 @@ const getTasks = async (res: any, jwt: any) => {
     return res.status(500).json({ error: 'Something bad happened' })
 }
 
-const saveTask: any = async (res: any, body: any, jwt: any) => {
+const saveTask: any = async (res: NextApiResponse, body: User, jwt: JwtPayload) => {
     const { data, error } = await supabase
         .from('users')
         .update({ credit_count: body.credit_count })

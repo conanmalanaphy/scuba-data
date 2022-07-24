@@ -3,6 +3,17 @@ interface CampaignItem {
     isIncluded: boolean
 }
 
+interface DB_Campaign {
+    user_id: string
+    id: string
+    name: string
+    state: string
+    seniorites: string
+    keywords:string
+    companys_list: string
+    job_titles: string
+}
+
 interface Campaign {
     user_id: string
     id: string
@@ -20,7 +31,7 @@ interface formPost {
     name: string
     row_count: number
     file: string
-    campaigns: string[]
+    campaigns: string[] 
     comp_high: number
     comp_medium: number
     comp_low: number
@@ -30,8 +41,12 @@ interface formPost {
     job_title_unique_count: number
     comp_unique_count: number
     created_at: string
-    paid_for?: any
+    paid_for?: boolean
     is_processing: boolean
     expected_completion_time: string
     error: string
+}
+
+interface User {
+    credit_count:number
 }

@@ -1,10 +1,11 @@
 import { NextApiHandler } from 'next'
 import { supabase } from '../../libs/initSupabase'
-import jwt_decode from 'jwt-decode'
+import jwt_decode , { JwtPayload }from 'jwt-decode'
+import type { NextApiResponse } from 'next'
 
 const Campaigns: NextApiHandler = async (req, res) => {
     const token: string = req.headers.token as string
-    const jwt = jwt_decode(token)
+    const jwt:JwtPayload = jwt_decode(token)
 
     supabase.auth.setAuth(token)
 
@@ -19,7 +20,7 @@ const Campaigns: NextApiHandler = async (req, res) => {
     return res.status(404).json({ error: 'API method not found' })
 }
 
-const deleteCampaign = async (res: any, body: any, jwt: any) => {
+const deleteCampaign = async (res: NextApiResponse, body: Campaign, jwt: JwtPayload) => {
     const { data, error } = await supabase
         .from('campaigns')
         .update({ deleted_at: new Date().toISOString() })
@@ -34,7 +35,7 @@ const deleteCampaign = async (res: any, body: any, jwt: any) => {
     return res.status(500).json({ error: 'Something bad happened' })
 }
 
-const getCampaigns = async (res: any, jwt: any) => {
+const getCampaigns = async (res: NextApiResponse, jwt: JwtPayload) => {
     const { data, error } = await supabase
         .from('campaigns')
         .select('*')
@@ -45,8 +46,8 @@ const getCampaigns = async (res: any, jwt: any) => {
         return res.status(500).json({ error: error.message })
     } else if (data) {
         const formattedData = data
-            .filter((a: any) => a.state !== 'ARCHIVED')
-            .map((campaign: any) => {
+            .filter((campaign: DB_Campaign) => campaign.state !== 'ARCHIVED')
+            .map((campaign: DB_Campaign) => {
                 return {
                     id: campaign.id,
                     name: campaign.name,
@@ -64,7 +65,7 @@ const getCampaigns = async (res: any, jwt: any) => {
     return res.status(500).json({ error: 'Something bad happened' })
 }
 
-const newCampaign: any = async (res: any, body: any, jwt: any) => {
+const newCampaign: any = async (res: NextApiResponse, body: Campaign, jwt: JwtPayload) => {
     const updates = {
         user_id: jwt.sub,
         name: body.name,

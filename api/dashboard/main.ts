@@ -1,10 +1,13 @@
 import { NextApiHandler } from 'next'
 import { supabase } from '../../libs/initSupabase'
-import jwt_decode from 'jwt-decode'
+import jwt_decode , { JwtPayload }from 'jwt-decode'
+import type { NextApiResponse } from 'next'
+
+
 
 const Results: NextApiHandler = async (req, res) => {
     const token: string = req.headers.token as string
-    const jwt = jwt_decode(token)
+    const jwt :JwtPayload= jwt_decode(token)
 
     supabase.auth.setAuth(token)
 
@@ -19,7 +22,7 @@ const Results: NextApiHandler = async (req, res) => {
     return res.status(404).json({ error: 'API method not found' })
 }
 
-const deleteResult = async (res: any, body: any, jwt: any) => {
+const deleteResult = async (res: NextApiResponse, body: formPost, jwt: JwtPayload) => {
     const { data, error } = await supabase
         .from('results')
         .update({ deleted_at: new Date().toISOString() })
@@ -34,7 +37,7 @@ const deleteResult = async (res: any, body: any, jwt: any) => {
     return res.status(500).json({ error: 'Something bad happened' })
 }
 
-const getResults = async (res: any, jwt: any) => {
+const getResults = async (res: NextApiResponse, jwt: JwtPayload) => {
     const { data, error } = await supabase
         .from('results')
         .select('*')
@@ -50,10 +53,10 @@ const getResults = async (res: any, jwt: any) => {
     return res.status(500).json({ error: 'Something bad happened' })
 }
 
-const newResult: any = async (res: any, body: any, jwt: any) => {
+const newResult: any = async (res: NextApiResponse, body: formPost, jwt: JwtPayload) => {
     const { data, error } = await supabase
         .from('results')
-        .upsert({ ...body, user_id: jwt.sub.toString() })
+        .upsert({ ...body, user_id: jwt.sub?.toString() })
 
     if (error) {
         return res.status(500).json({ error: error.message })
