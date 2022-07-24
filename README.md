@@ -1,3 +1,12 @@
+## Live site 
+Can be found at https://scuba-data.vercel.app/ 
+The test account is 
+
+```
+username: conanmalanaphy@gmail.com
+password:conan2
+```
+
 ## Running locally
 
 First, run the development server:
