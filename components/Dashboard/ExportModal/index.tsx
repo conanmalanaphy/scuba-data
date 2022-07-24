@@ -3,7 +3,7 @@ import useSWR, { useSWRConfig } from 'swr'
 import { downloadFile } from './ExportModal.HELPER'
 import { supabase } from '@/libs/initSupabase'
 
-interface ModalProps {
+interface Props {
     isExportOpen: boolean
     cost: number
     fileUrl: string
@@ -19,9 +19,46 @@ export default function Modal({
     id,
     paid_for,
     cost,
-}: ModalProps) {
+}: Props) {
     const { data } = useSWR(`/api/credit-management/add-credits`)
     const { fetcher, mutate } = useSWRConfig()
+
+    const onButtonClick = async () => {
+        const { data: file, error } = await supabase.storage
+            .from('reports')
+            .download(fileUrl)
+
+        const fileName = fileUrl.split('/')
+
+        if (file) {
+            downloadFile(file, fileName[fileName.length - 1], 'text/csv')
+        }
+
+        handleClose()
+
+        if (fetcher) {
+            await mutate(
+                `/api/dashboard/main`,
+                fetcher(`/api/dashboard/main`, {
+                    id: id,
+                    paid_for: true,
+                })
+            )
+        }
+
+        if (fetcher && !paid_for) {
+            await mutate(
+                `/api/credit-management/add-credits`,
+                fetcher(`/api/credit-management/add-credits`, {
+                    credit_count: data - cost,
+                }),
+                {
+                    optimisticData: data - cost,
+                    rollbackOnError: true,
+                }
+            )
+        }
+    }
 
     return (
         <Dialog
@@ -40,46 +77,7 @@ export default function Modal({
                 <Button
                     variant="contained"
                     disabled={!paid_for && data < cost}
-                    onClick={async () => {
-                        const { data: file, error } = await supabase.storage
-                            .from('reports')
-                            .download(fileUrl)
-
-                        const fileName = fileUrl.split('/')
-
-                        if (file) {
-                            downloadFile(
-                                file,
-                                fileName[fileName.length - 1],
-                                'text/csv'
-                            )
-                        }
-
-                        handleClose()
-
-                        if (fetcher) {
-                            await mutate(
-                                `/api/dashboard/main`,
-                                fetcher(`/api/dashboard/main`, {
-                                    id: id,
-                                    paid_for: true,
-                                })
-                            )
-                        }
-
-                        if (fetcher && !paid_for) {
-                            await mutate(
-                                `/api/credit-management/add-credits`,
-                                fetcher(`/api/credit-management/add-credits`, {
-                                    credit_count: data - cost,
-                                }),
-                                {
-                                    optimisticData: data - cost,
-                                    rollbackOnError: true,
-                                }
-                            )
-                        }
-                    }}
+                    onClick={onButtonClick}
                 >
                     Download
                 </Button>

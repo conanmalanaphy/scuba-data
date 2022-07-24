@@ -54,3 +54,10 @@ interface User {
 interface APIError {
     message: string
 }
+
+type SortDirection = 'asc' | 'desc'
+
+interface SortBy {
+    sortBy: string
+    sortDirection: SortDirection
+}
