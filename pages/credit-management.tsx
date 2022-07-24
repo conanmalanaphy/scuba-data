@@ -1,26 +1,26 @@
-import { Typography } from '@mui/material'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import CircularProgress from '@mui/material/CircularProgress'
-import Container from '@mui/material/Container'
-import CssBaseline from '@mui/material/CssBaseline'
-import Paper from '@mui/material/Paper'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableFooter from '@mui/material/TableFooter'
-import TableRow from '@mui/material/TableRow'
-import Toolbar from '@mui/material/Toolbar'
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Container,
+    CssBaseline,
+    MenuItem,
+    Paper,
+    Select,
+    Table,
+    TableBody,
+    TableCell,
+    TableFooter,
+    TableHead,
+    TableRow,
+    Toolbar,
+    Typography,
+} from '@mui/material'
 import { useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
-import Wrapper from '../components/Wrapper/Wrapper'
-import WithProtection from '../libs/WithProtection'
-import TableHead from '@mui/material/TableHead'
+import Wrapper from '../components/Wrapper'
 import { getStripe } from '../libs/stripe-client'
+import WithProtection from '../libs/WithProtection'
 
 const marks = [
     {
@@ -91,7 +91,7 @@ function Profile() {
     const { data, error } = useSWR(`/api/credit-management/add-credits`)
     const [value, setValue] = useState(20)
 
-    const handleChange = (event: SelectChangeEvent) => {
+    const handleChange = (event: any) => {
         setValue(parseInt(event.target.value, 10))
     }
 

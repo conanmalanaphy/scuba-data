@@ -1,18 +1,20 @@
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import Stepper from '../Dashboard/Stepper'
-import { supabase } from '../../libs/initSupabase'
+import { supabase } from '../../../libs/initSupabase'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import { useState } from 'react'
 
-interface ModalProps {
+interface ResetPasswordModalProps {
     isOpen: boolean
     handleClose: () => void
 }
 
-export default function Modal({ isOpen, handleClose }: ModalProps) {
+export default function ResetPasswordModal({
+    isOpen,
+    handleClose,
+}: ResetPasswordModalProps) {
     const [email, setEmail] = useState('')
 
     const handleSignIn = async (e: React.FormEvent) => {

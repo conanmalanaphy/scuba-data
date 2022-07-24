@@ -1,26 +1,40 @@
-import DeleteIcon from '@mui/icons-material/Delete'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-import ErrorIcon from '@mui/icons-material/Error'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Collapse from '@mui/material/Collapse'
-import IconButton from '@mui/material/IconButton'
-import Table from '@mui/material/Table'
-import Paper from '@mui/material/Paper'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableFooter from '@mui/material/TableFooter'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import TableSortLabel from '@mui/material/TableSortLabel'
-import Typography from '@mui/material/Typography'
-import * as React from 'react'
-import TextField from '@mui/material/TextField'
-import CircularProgress from '@mui/material/CircularProgress'
+import {
+    Delete as DeleteIcon,
+    Error as ErrorIcon,
+    KeyboardArrowDown as KeyboardArrowDownIcon,
+    KeyboardArrowUp as KeyboardArrowUpIcon,
+} from '@mui/icons-material'
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Collapse,
+    IconButton,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableFooter,
+    TableHead,
+    TableRow,
+    TableSortLabel,
+    TextField,
+    Typography,
+} from '@mui/material'
+import { useEffect, useState } from 'react'
 
-function Row({ row, handleClickExportOpen, onDelete }: any) {
-    const [open, setOpen] = React.useState(false)
+interface RowProps {
+    row: formPost
+    handleClickExportOpen: (
+        id: number | undefined,
+        row_count: number,
+        file: any,
+        paid_for: boolean
+    ) => void
+    onDelete: (id: number | undefined) => void
+}
+function Row({ row, handleClickExportOpen, onDelete }: RowProps) {
+    const [open, setOpen] = useState(false)
 
     const {
         name,
@@ -28,7 +42,6 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
         created_at,
         id,
         file,
-        campaigns,
         paid_for,
         comp_high,
         comp_medium,
@@ -84,7 +97,7 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
             ) : null}
         </TableRow>
     ) : (
-        <React.Fragment>
+        <>
             <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
                 <TableCell component="th" scope="row" sx={{ width: '1rem' }}>
                     <IconButton
@@ -304,7 +317,7 @@ function Row({ row, handleClickExportOpen, onDelete }: any) {
                     </Collapse>
                 </TableCell>
             </TableRow>
-        </React.Fragment>
+        </>
     )
 }
 
@@ -340,24 +353,6 @@ function sortData(data: any, sortBy: any) {
     }
 }
 
-interface formPost {
-    id?: number
-    user_id?: string
-    name: string
-    row_count: number
-    file: string
-    campaigns: string[]
-    comp_high: number
-    comp_medium: number
-    comp_low: number
-    job_title_high: number
-    job_title_medium: number
-    job_title_low: number
-    job_title_unique_count: number
-    comp_unique_count: number
-    created_at: string
-}
-
 function filterlist(list: formPost[], name: string) {
     return list.filter(function (s: formPost) {
         return s.name.match(name)
@@ -370,11 +365,11 @@ interface sortBy {
     sortDirection: SortDirection
 }
 export default function TableC({ data, handleClickExportOpen, onDelete }: any) {
-    const [sortBy, setSortBy] = React.useState<sortBy>({
+    const [sortBy, setSortBy] = useState<sortBy>({
         sortBy: 'name',
         sortDirection: 'asc',
     })
-    const [sortedData, setSortedData] = React.useState<any>([])
+    const [sortedData, setSortedData] = useState<any>([])
 
     const requestSort = (pSortBy: any) => {
         let sortOrder: SortDirection = 'asc'
@@ -392,7 +387,7 @@ export default function TableC({ data, handleClickExportOpen, onDelete }: any) {
         })
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         setSortedData(sortData(data, sortBy))
     }, [data, sortBy, setSortedData])
 

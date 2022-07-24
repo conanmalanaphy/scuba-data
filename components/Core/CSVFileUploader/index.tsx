@@ -88,7 +88,6 @@ interface CSVReaderProps {
 export default function CSVReader({ onUploadAccepted }: CSVReaderProps) {
     const { CSVReader } = useCSVReader()
     const [zoneHover, setZoneHover] = useState(false)
-    const [filename, setFilename] = useState('')
     const [removeHoverColor, setRemoveHoverColor] = useState(
         DEFAULT_REMOVE_HOVER_COLOR
     )

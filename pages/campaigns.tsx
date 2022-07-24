@@ -1,17 +1,17 @@
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import CssBaseline from '@mui/material/CssBaseline'
-import Link from '@mui/material/Link'
-import Toolbar from '@mui/material/Toolbar'
-import { useState } from 'react'
-import CampaignModal from '../components/CampaignModal/CampaignModal'
-import CampaignCopyModal from '../components/CampaignModal/CampaignCopyModal'
-import Wrapper from '../components/Wrapper/Wrapper'
-import Accord from '../components/Accord/Accord'
-import CircularProgress from '@mui/material/CircularProgress'
-import { useSWRConfig } from 'swr'
-import useSWR from 'swr'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import {
+    Box,
+    Button,
+    CircularProgress,
+    CssBaseline,
+    Link,
+    Toolbar,
+} from '@mui/material'
+import { useState } from 'react'
+import useSWR, { useSWRConfig } from 'swr'
+import Accord from '../components/Accordion'
+import CampaignModal from '../components/CampaignModal'
+import Wrapper from '../components/Wrapper'
 import WithProtection from '../libs/WithProtection'
 
 interface item {
@@ -45,7 +45,7 @@ function Campaigns() {
                 handleClose={() => {
                     setIsOpen(false)
                 }}
-                onSubmit={async (name: string) => {
+                onSubmit={async (addedCampaign: any) => {
                     const newCampaign = {
                         id: '',
                         name: name,
@@ -55,6 +55,7 @@ function Campaigns() {
                         companysList: [],
                         jobTitles: [],
                         user_id: '',
+                        ...addedCampaign,
                     }
 
                     setIsOpen(false)
@@ -71,7 +72,7 @@ function Campaigns() {
                     }
                 }}
             />
-            <CampaignCopyModal
+            <CampaignModal
                 isOpen={isSaveAsOpen}
                 handleClose={() => setIsSaveAsOpen(false)}
                 campaigns={data}

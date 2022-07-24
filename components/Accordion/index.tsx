@@ -1,30 +1,18 @@
-import ArchiveIcon from '@mui/icons-material/Archive'
-import DeleteIcon from '@mui/icons-material/Delete'
-import Accordion from '@mui/material/Accordion'
-import AccordionDetails from '@mui/material/AccordionDetails'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import Box from '@mui/material/Box'
-import IconButton from '@mui/material/IconButton'
-import ToggleButton from '@mui/material/ToggleButton'
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
-import Typography from '@mui/material/Typography'
+import {
+    Archive as ArchiveIcon,
+    Delete as DeleteIcon,
+} from '@mui/icons-material'
+import {
+    Accordion as MUIAccordion,
+    AccordionDetails,
+    AccordionSummary,
+    Box,
+    IconButton,
+    ToggleButton,
+    ToggleButtonGroup,
+    Typography,
+} from '@mui/material'
 import Item from './Item'
-
-interface item {
-    name: string
-    isIncluded: boolean
-}
-
-interface Campaign {
-    user_id: string
-    id: string
-    name: string
-    state: string
-    seniorites: item[]
-    keywords: item[]
-    companysList: item[]
-    jobTitles: item[]
-}
 
 interface AccordProps {
     isExpanded: boolean
@@ -46,7 +34,7 @@ export default function Accord({
     onDelete,
 }: AccordProps) {
     return (
-        <Accordion expanded={isExpanded} onChange={handleChange}>
+        <MUIAccordion expanded={isExpanded} onChange={handleChange}>
             <AccordionSummary
                 aria-controls="panel1bh-content"
                 id="panel1bh-header"
@@ -126,7 +114,7 @@ export default function Accord({
                 >
                     <Item
                         label="Seniorites"
-                        updateData={(data: item[]) => {
+                        updateData={(data: CampaignItem[]) => {
                             updateData({ ...item, seniorites: data })
                         }}
                         items={item.seniorites}
@@ -134,7 +122,7 @@ export default function Accord({
                     />
                     <Item
                         label="Keywords"
-                        updateData={(data: item[]) => {
+                        updateData={(data: CampaignItem[]) => {
                             updateData({ ...item, keywords: data })
                         }}
                         items={item.keywords}
@@ -142,7 +130,7 @@ export default function Accord({
                     />
                     <Item
                         label="Job Titles"
-                        updateData={(data: item[]) => {
+                        updateData={(data: CampaignItem[]) => {
                             updateData({ ...item, jobTitles: data })
                         }}
                         items={item.jobTitles}
@@ -153,7 +141,7 @@ export default function Accord({
                 <Box sx={{ flex: '40%', maxwidth: '40%' }}>
                     <Item
                         label="Companies"
-                        updateData={(data: item[]) => {
+                        updateData={(data: CampaignItem[]) => {
                             updateData({ ...item, companysList: data })
                         }}
                         items={item.companysList}
@@ -162,6 +150,6 @@ export default function Accord({
                     />
                 </Box>
             </AccordionDetails>
-        </Accordion>
+        </MUIAccordion>
     )
 }

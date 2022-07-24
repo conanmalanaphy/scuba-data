@@ -1,22 +1,30 @@
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import Step from '@mui/material/Step'
-import StepLabel from '@mui/material/StepLabel'
-import Stepper from '@mui/material/Stepper'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableFooter from '@mui/material/TableFooter'
-import TableRow from '@mui/material/TableRow'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
-import * as React from 'react'
+import {
+    Box,
+    Divider,
+    Button,
+    Step,
+    StepLabel,
+    Stepper,
+    Table,
+    TableBody,
+    TableCell,
+    TableFooter,
+    TableRow,
+    TextField,
+    Typography,
+} from '@mui/material'
+
+import { useState } from 'react'
 import useSWR from 'swr'
-import MultiSelect from '../MultiSelect/MultiSelect'
-import CSVUploader from './CSVUploader'
+import MultiSelect from '../../../MultiSelect'
+import CSVUploader from '../../../Core/CSVFileUploader'
 
 const steps = ['Upload file', 'File Mapping', 'Choose Campaign']
+
+interface item {
+    name: string
+    id: string
+}
 
 interface StepperProps {
     onClose: (
@@ -28,18 +36,13 @@ interface StepperProps {
     ) => void
 }
 
-interface item {
-    name: string
-    id: string
-}
-
 export default function LineStepper({ onClose }: StepperProps) {
-    const [activeStep, setActiveStep] = React.useState<number>(0)
-    const [state, setState] = React.useState<string[][]>([])
-    const [filename, setFilename] = React.useState<string>('')
-    const [campaigns, setCampaigns] = React.useState<string[]>([])
-    const [jobTitleCoumn, setJobTitleCoumn] = React.useState(1)
-    const [companyCoumn, setCompanyCoumn] = React.useState(2)
+    const [activeStep, setActiveStep] = useState<number>(0)
+    const [state, setState] = useState<string[][]>([])
+    const [filename, setFilename] = useState<string>('')
+    const [campaigns, setCampaigns] = useState<string[]>([])
+    const [jobTitleCoumn, setJobTitleCoumn] = useState(1)
+    const [companyCoumn, setCompanyCoumn] = useState(2)
 
     const handleJobTitleCoumnChange = (event: any) => {
         setJobTitleCoumn(event.target.value)

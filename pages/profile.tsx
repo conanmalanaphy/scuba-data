@@ -1,17 +1,19 @@
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Container from '@mui/material/Container'
-import CssBaseline from '@mui/material/CssBaseline'
-import Grid from '@mui/material/Grid'
-import Paper from '@mui/material/Paper'
-import TextField from '@mui/material/TextField'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
+import {
+    Box,
+    Button,
+    Container,
+    CssBaseline,
+    Grid,
+    Paper,
+    TextField,
+    Toolbar,
+    Typography,
+} from '@mui/material'
 import * as React from 'react'
-import Wrapper from '../components/Wrapper/Wrapper'
+import { useState } from 'react'
+import Wrapper from '../components/Wrapper'
 import { supabase } from '../libs/initSupabase'
 import WithProtection from '../libs/WithProtection'
-import { useState } from 'react'
 
 function Profile() {
     const profile = supabase.auth.user()

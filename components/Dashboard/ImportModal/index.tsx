@@ -1,6 +1,5 @@
-import Dialog from '@mui/material/Dialog'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
+import { Dialog, DialogContent, DialogTitle } from '@mui/material'
+
 import Stepper from './Stepper'
 
 interface ModalProps {

@@ -10,8 +10,6 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 export default function Header(): JSX.Element {
-    const router = useRouter()
-
     return (
         <Box
             sx={{

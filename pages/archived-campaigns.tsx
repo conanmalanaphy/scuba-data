@@ -1,14 +1,16 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import CircularProgress from '@mui/material/CircularProgress'
-import CssBaseline from '@mui/material/CssBaseline'
-import Link from '@mui/material/Link'
-import Toolbar from '@mui/material/Toolbar'
+import {
+    Box,
+    Button,
+    CircularProgress,
+    CssBaseline,
+    Link,
+    Toolbar
+} from '@mui/material'
 import { useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
-import Accord from '../components/Accord/Accord'
-import Wrapper from '../components/Wrapper/Wrapper'
+import Accord from '../components/Accordion'
+import Wrapper from '../components/Wrapper'
 import WithProtection from '../libs/WithProtection'
 
 function ArchivedCampaigns() {

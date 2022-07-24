@@ -1,32 +1,35 @@
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import DashboardIcon from '@mui/icons-material/Dashboard'
-import LogoutIcon from '@mui/icons-material/Logout'
-import MenuIcon from '@mui/icons-material/Menu'
-import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
-import ScubaDivingIcon from '@mui/icons-material/ScubaDiving'
-import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications'
-import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange'
-import MuiAppBar from '@mui/material/AppBar'
-import Divider from '@mui/material/Divider'
-import MuiDrawer from '@mui/material/Drawer'
-import IconButton from '@mui/material/IconButton'
-import Link from '@mui/material/Link'
-import List from '@mui/material/List'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
+import {
+    AccountCircle as AccountCircleIcon,
+    ChevronLeft as ChevronLeftIcon,
+    CurrencyExchange as CurrencyExchangeIcon,
+    Dashboard as DashboardIcon,
+    Logout as LogoutIcon,
+    Menu as MenuIcon,
+    MonetizationOn as MonetizationOnIcon,
+    ScubaDiving as ScubaDivingIcon,
+    SettingsApplications as SettingsApplicationsIcon
+} from '@mui/icons-material'
+import {
+    AppBar as MuiAppBar,
+    Box,
+    Chip,
+    CircularProgress,
+    Divider,
+    Drawer as MuiDrawer,
+    IconButton,
+    Link,
+    List,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Toolbar,
+    Typography
+} from '@mui/material'
 import { styled } from '@mui/material/styles'
-import Toolbar from '@mui/material/Toolbar'
-import React, { Fragment, useState } from 'react'
-import { supabase } from '../../libs/initSupabase'
 import { useRouter } from 'next/router'
-import Chip from '@mui/material/Chip'
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
-import { useSWRConfig } from 'swr'
-import CircularProgress from '@mui/material/CircularProgress'
-import useSWR from 'swr'
+import { Fragment, useState } from 'react'
+import useSWR, { useSWRConfig } from 'swr'
+import { supabase } from '../../libs/initSupabase'
 
 const fetcher = async (url: string) => {
     const res = await fetch(url)
@@ -134,9 +137,7 @@ export default function Wrapper({ pageName }: WrapperProps) {
         setOpen(!open)
     }
 
-    const handleLogOut = async (
-        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-    ) => {
+    const handleLogOut = async (e: any) => {
         const { error } = await supabase.auth.signOut()
 
         if (error) {

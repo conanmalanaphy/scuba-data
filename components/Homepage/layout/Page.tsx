@@ -1,7 +1,7 @@
 import { Container, Typography } from '@mui/material'
 import Head from 'next/head'
 
-type Props = {
+type PageProps = {
     title?: string
     seoTitle?: string
     maxWidth?: false | 'md' | 'xs' | 'sm' | 'lg' | 'xl' | undefined
@@ -13,7 +13,7 @@ export default function Page({
     seoTitle,
     maxWidth = 'md',
     children,
-}: Props): JSX.Element {
+}: PageProps): JSX.Element {
     return (
         <PageWrapper title={seoTitle ?? title} maxWidth={maxWidth}>
             {title ? (
@@ -26,7 +26,11 @@ export default function Page({
     )
 }
 
-function PageWrapper({ children, title, maxWidth = 'md' }: Props): JSX.Element {
+function PageWrapper({
+    children,
+    title,
+    maxWidth = 'md',
+}: PageProps): JSX.Element {
     let titleString = 'ScubaData'
     if (title) {
         titleString = 'ScubaData | ' + title

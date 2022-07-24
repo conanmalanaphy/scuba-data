@@ -1,38 +1,7 @@
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
+import { Button, Dialog, DialogContent, DialogTitle } from '@mui/material'
 import useSWR, { useSWRConfig } from 'swr'
-
-import { supabase } from '../../libs/initSupabase'
-
-function downloadFile(data: any, filename: string, mime: string) {
-    // It is necessary to create a new blob object with mime-type explicitly set
-    // otherwise only Chrome works like it should
-    const blob = new Blob([data], { type: mime || 'application/octet-stream' })
-
-    // Other browsers
-    // Create a link pointing to the ObjectURL containing the blob
-    const blobURL = window.URL.createObjectURL(blob)
-    const tempLink = document.createElement('a')
-    tempLink.style.display = 'none'
-    tempLink.href = blobURL
-    tempLink.setAttribute('download', filename)
-    // Safari thinks _blank anchor are pop ups. We only want to set _blank
-    // target if the browser does not support the HTML5 download attribute.
-    // This allows you to download files in desktop safari if pop up blocking
-    // is enabled.
-    if (typeof tempLink.download === 'undefined') {
-        tempLink.setAttribute('target', '_blank')
-    }
-    document.body.appendChild(tempLink)
-    tempLink.click()
-    document.body.removeChild(tempLink)
-    setTimeout(() => {
-        // For Firefox it is necessary to delay revoking the ObjectURL
-        window.URL.revokeObjectURL(blobURL)
-    }, 100)
-}
+import { downloadFile } from './ExportModal.HELPER'
+import { supabase } from '../../../libs/initSupabase'
 
 interface ModalProps {
     isExportOpen: boolean

@@ -1,23 +1,18 @@
 import Chip from '@mui/material/Chip'
 
-interface item {
-    name: string
-    isIncluded: boolean
-}
-
 interface ListProps {
-    items: item[]
-    a: item
+    items: CampaignItem[]
+    campaignItem: CampaignItem
     filterProp: string
     newState: boolean
-    setState: (items: item[]) => void
+    setState: (items: CampaignItem[]) => void
     colour: string
     isDisabled: boolean
 }
 
 export default function List({
     items,
-    a,
+    campaignItem,
     filterProp,
     newState,
     setState,
@@ -27,15 +22,15 @@ export default function List({
     return (
         <Chip
             disabled={isDisabled}
-            key={a.name}
+            key={campaignItem.name}
             sx={{
                 bgcolor: `${colour}`,
                 color: 'white',
             }}
-            label={a.name}
+            label={campaignItem.name}
             onClick={() => {
-                const newItems = items.map((item: item) => {
-                    if (a.name === item.name) {
+                const newItems = items.map((item) => {
+                    if (campaignItem.name === item.name) {
                         return {
                             ...item,
                             [filterProp]: !newState,
@@ -46,8 +41,8 @@ export default function List({
                 setState(newItems)
             }}
             onDelete={() => {
-                const newItems = items.filter((item: item) => {
-                    return a.name !== item.name
+                const newItems = items.filter((item) => {
+                    return campaignItem.name !== item.name
                 })
                 setState(newItems)
             }}

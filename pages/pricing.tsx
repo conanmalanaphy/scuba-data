@@ -1,13 +1,14 @@
-import Box from '@mui/material/Box'
-import React from 'react'
-import TableHead from '@mui/material/TableHead'
+import {
+    Box,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableFooter,
+    TableHead,
+    TableRow,
+} from '@mui/material'
 import Layout from '../components/Homepage/layout/Layout'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableFooter from '@mui/material/TableFooter'
-import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
 
 export default function Pricing(): JSX.Element {
     return (

@@ -1,32 +1,31 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import Avatar from '@mui/material/Avatar'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import CssBaseline from '@mui/material/CssBaseline'
-import Grid from '@mui/material/Grid'
-import Link from '@mui/material/Link'
-import Paper from '@mui/material/Paper'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
 import { useRouter } from 'next/router'
-import * as React from 'react'
 import { useState } from 'react'
-import Snackbar from '@mui/material/Snackbar'
-import Alert from '../Alert'
 import { supabase } from '../../libs/initSupabase'
-import ResetPasswordModal from './Modal'
+import Alert from '../Core/Alert'
+import ResetPasswordModal from './ResetPasswordModal'
+
+import {
+    Avatar,
+    Box,
+    Button,
+    CssBaseline,
+    Grid,
+    Link,
+    Paper,
+    Snackbar,
+    TextField,
+    Typography,
+} from '@mui/material'
 
 export default function SignInSide() {
     const router = useRouter()
     const [email, setEmail] = useState('')
     const [isOpen, setIsOpen] = useState(false)
     const [password, setPassword] = useState('')
-    const [errorOpen, setErrorOpen] = React.useState('')
+    const [errorOpen, setErrorOpen] = useState('')
 
-    const handleClose = (
-        event?: React.SyntheticEvent | Event,
-        reason?: string
-    ) => {
+    const handleClose = (event?: any, reason?: string) => {
         if (reason === 'clickaway') {
             return
         }
@@ -34,7 +33,7 @@ export default function SignInSide() {
         setErrorOpen('')
     }
 
-    const handleSignIn = async (e: React.FormEvent) => {
+    const handleSignIn = async (e: any) => {
         e.preventDefault()
 
         const { error } = await supabase.auth.signIn({

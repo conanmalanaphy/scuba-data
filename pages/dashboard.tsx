@@ -1,17 +1,19 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import CircularProgress from '@mui/material/CircularProgress'
-import CssBaseline from '@mui/material/CssBaseline'
-import Toolbar from '@mui/material/Toolbar'
+import {
+    Box,
+    Button,
+    CircularProgress,
+    CssBaseline,
+    Toolbar,
+} from '@mui/material'
 import { useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
 import ExportModal from '../components/Dashboard/ExportModal'
-import Modal from '../components/Dashboard/Modal'
+import Modal from '../components/Dashboard/ImportModal'
 import Table from '../components/Dashboard/Table'
-import Wrapper from '../components/Wrapper/Wrapper'
-import WithProtection from '../libs/WithProtection'
+import Wrapper from '../components/Wrapper'
 import { supabase } from '../libs/initSupabase'
+import WithProtection from '../libs/WithProtection'
 
 async function pythonScript(
     newData: string[][],
@@ -53,10 +55,6 @@ async function pythonScript(
         include_companies: isIncluded(campaigns.companysList),
         exclude_companies: isNotIncluded(campaigns.companysList),
     })
-}
-
-interface obje {
-    [key: string]: string
 }
 
 function isIncluded(data: any) {

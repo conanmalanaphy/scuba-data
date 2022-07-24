@@ -1,12 +1,7 @@
-import * as React from 'react'
-import { Theme, useTheme } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
-import Chip from '@mui/material/Chip'
+import {
+    Box, Chip, FormControl, InputLabel,
+    MenuItem, OutlinedInput, Select
+} from '@mui/material'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -34,7 +29,7 @@ export default function MultiSelect({
     campaigns,
     setCampaigns,
 }: MultiSelectProps) {
-    const handleChange = ({ target: { value } }: SelectChangeEvent) => {
+    const handleChange = ({ target: { value } }: any) => {
         setCampaigns([value] as unknown as string[])
     }
 
@@ -51,7 +46,7 @@ export default function MultiSelect({
                             label="Campaign"
                         />
                     }
-                    renderValue={(selected) => (
+                    renderValue={(selected: any) => (
                         <Box
                             sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
                         >

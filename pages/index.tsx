@@ -1,20 +1,17 @@
-import Button from '@mui/material/Button'
-import Container from '@mui/material/Container'
-import Box from '@mui/material/Box'
-import CodeIcon from '@mui/icons-material/Code'
-import StarIcon from '@mui/icons-material/Star'
-import PeopleIcon from '@mui/icons-material/People'
-import Page from '../components/Homepage/layout/Page'
-import HeroSection from '../components/Homepage/HeroSection'
-import React from 'react'
-import FeatureContainer from '../components/Homepage/FeatureContainer'
-import FeatureBlocksContainer from '../components/Homepage/FeatureBlocksContainer'
-import FeatureBlock from '../components/Homepage/FeatureBlock'
-import BigSection from '../components/Homepage/BigSection'
-import Image from 'next/image'
+import {
+    Code as CodeIcon,
+    People as PeopleIcon,
+    Star as StarIcon,
+} from '@mui/icons-material'
+
+import { Box, Button, Link } from '@mui/material'
 import ContactSection from '../components/Homepage/ContactSection'
+import FeatureBlock from '../components/Homepage/FeatureBlock'
+import FeatureBlocksContainer from '../components/Homepage/FeatureBlocksContainer'
+import FeatureContainer from '../components/Homepage/FeatureContainer'
+import HeroSection from '../components/Homepage/HeroSection'
 import Layout from '../components/Homepage/layout/Layout'
-import Link from '@mui/material/Link'
+import Page from '../components/Homepage/layout/Page'
 
 export default function HomePage(): JSX.Element {
     return (

@@ -1,21 +1,13 @@
 import AddIcon from '@mui/icons-material/Add'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
+import { Box, Button, TextField, ButtonGroup } from '@mui/material'
 import { useState } from 'react'
 import { useCSVReader } from 'react-papaparse'
-import ButtonGroup from '@mui/material/ButtonGroup'
 import List from './List'
 
-interface item {
-    name: string
-    isIncluded: boolean
-}
-
 interface ItemProps {
-    items: item[]
+    items: CampaignItem[]
     label: string
-    updateData: (items: item[]) => void
+    updateData: (items: CampaignItem[]) => void
     includeUpload?: boolean
     isDisabled: boolean
 }
@@ -27,12 +19,13 @@ export default function Item({
     includeUpload = false,
     isDisabled,
 }: ItemProps) {
-    const [senority, setSenority] = useState<string>('')
+    const [senority, setSenority] = useState('')
     const { CSVReader } = useCSVReader()
 
-    const setState = (data: item[]) => {
+    const setState = (data: CampaignItem[]) => {
         updateData(data)
     }
+
     return (
         <Box
             sx={{
@@ -89,7 +82,7 @@ export default function Item({
                             }) => {
                                 const newData = results.data.slice(1)
                                 const newItems = newData.reduce(
-                                    (memo: item[], b: string[]) => {
+                                    (memo: CampaignItem[], b: string[]) => {
                                         if (b.length == 2) {
                                             memo.push({
                                                 name: b[0],
@@ -126,12 +119,14 @@ export default function Item({
                 }}
             >
                 {items
-                    .filter((a: item) => a.isIncluded)
-                    .map((a: item) => (
+                    .filter(
+                        (campaignItem: CampaignItem) => campaignItem.isIncluded
+                    )
+                    .map((campaignItem: CampaignItem) => (
                         <List
-                            key={a.name}
+                            key={campaignItem.name}
                             isDisabled={isDisabled}
-                            a={a}
+                            campaignItem={campaignItem}
                             items={items}
                             filterProp="isIncluded"
                             newState={true}
@@ -141,12 +136,14 @@ export default function Item({
                     ))}
 
                 {items
-                    .filter((a: item) => !a.isIncluded)
-                    .map((a: item) => (
+                    .filter(
+                        (campaignItem: CampaignItem) => !campaignItem.isIncluded
+                    )
+                    .map((campaignItem: CampaignItem) => (
                         <List
-                            key={a.name}
+                            key={campaignItem.name}
                             isDisabled={isDisabled}
-                            a={a}
+                            campaignItem={campaignItem}
                             items={items}
                             filterProp="isIncluded"
                             newState={false}

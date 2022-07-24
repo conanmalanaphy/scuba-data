@@ -1,37 +1,24 @@
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
-import TextField from '@mui/material/TextField'
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    MenuItem,
+    Select,
+    TextField,
+    InputLabel,
+} from '@mui/material'
 import { useState } from 'react'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
-
-interface item {
-    name: string
-    isIncluded: boolean
-}
-
-interface Campaign {
-    user_id: string
-    id: string
-    name: string
-    state: string
-    seniorites: item[]
-    keywords: item[]
-    companysList: item[]
-    jobTitles: item[]
-}
 
 interface CampaignModalProps {
     isOpen: boolean
     handleClose: () => void
-    onSubmit: (campaign: any) => void
-    campaigns: Campaign[]
+    onSubmit: (name: any) => void
+    campaigns?: Campaign[]
 }
+
 export default function CampaignModal({
     isOpen,
     handleClose,
@@ -41,7 +28,7 @@ export default function CampaignModal({
     const [name, setName] = useState('')
     const [campaign, setCampaign] = useState('')
 
-    const handleChange = (event: SelectChangeEvent) => {
+    const handleChange = (event: any) => {
         setCampaign(event.target.value as string)
     }
 
@@ -72,27 +59,29 @@ export default function CampaignModal({
                         }
                     }}
                 />
-                <FormControl fullWidth sx={{ mt: 3 }}>
-                    <InputLabel id="demo-simple-select-label">
-                        Campaign
-                    </InputLabel>
-                    <Select
-                        value={campaign}
-                        label="Select Campaign"
-                        onChange={handleChange}
-                    >
-                        {campaigns?.map((item) => {
-                            return (
-                                <MenuItem
-                                    key={item.id.toString()}
-                                    value={item.id.toString()}
-                                >
-                                    {item.name}
-                                </MenuItem>
-                            )
-                        })}
-                    </Select>
-                </FormControl>
+                {campaigns ? (
+                    <FormControl fullWidth sx={{ mt: 3 }}>
+                        <InputLabel id="demo-simple-select-label">
+                            Campaign
+                        </InputLabel>
+                        <Select
+                            value={campaign}
+                            label="Select Campaign"
+                            onChange={handleChange}
+                        >
+                            {campaigns?.map((item) => {
+                                return (
+                                    <MenuItem
+                                        key={item.id.toString()}
+                                        value={item.id.toString()}
+                                    >
+                                        {item.name}
+                                    </MenuItem>
+                                )
+                            })}
+                        </Select>
+                    </FormControl>
+                ) : null}
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
