@@ -28,7 +28,7 @@ export default function ContactSection(): JSX.Element {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <Container>
-                            <Image src="/diver.svg" width={400} height={250} />
+                            <Image src="/diver.svg" width={400} height={250} alt="diver"/>
                         </Container>
                     </Grid>
                 </Grid>

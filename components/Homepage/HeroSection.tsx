@@ -26,7 +26,7 @@ export default function HeroSection({
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <Container>
-                            <Image src={image} width={400} height={400} />
+                            <Image src={image} width={400} height={400} alt="hero"/>
                         </Container>
                     </Grid>
                 </Grid>

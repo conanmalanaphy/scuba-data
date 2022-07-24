@@ -41,7 +41,7 @@ interface formPost {
     job_title_unique_count: number
     comp_unique_count: number
     created_at: string
-    paid_for?: boolean
+    paid_for?: boolean |undefined
     is_processing: boolean
     expected_completion_time: string
     error: string

@@ -8,7 +8,7 @@ interface ModalProps {
     cost: number
     fileUrl: string
     id: string
-    paid_for: boolean
+    paid_for: boolean|undefined
     handleClose: () => void
 }
 

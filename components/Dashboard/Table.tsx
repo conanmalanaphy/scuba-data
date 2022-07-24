@@ -29,7 +29,7 @@ interface RowProps {
         id: number | undefined,
         row_count: number,
         file: any,
-        paid_for: boolean
+        paid_for: boolean|undefined
     ) => void
     onDelete: (id: number | undefined) => void
 }
