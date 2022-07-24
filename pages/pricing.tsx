@@ -8,7 +8,7 @@ import {
     TableHead,
     TableRow,
 } from '@mui/material'
-import Layout from '../components/Homepage/layout/Layout'
+import Layout from '@/components/Homepage/layout/Layout'
 
 export default function Pricing(): JSX.Element {
     return (

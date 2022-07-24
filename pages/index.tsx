@@ -3,15 +3,14 @@ import {
     People as PeopleIcon,
     Star as StarIcon,
 } from '@mui/icons-material'
-
 import { Box, Button, Link } from '@mui/material'
-import ContactSection from '../components/Homepage/ContactSection'
-import FeatureBlock from '../components/Homepage/FeatureBlock'
-import FeatureBlocksContainer from '../components/Homepage/FeatureBlocksContainer'
-import FeatureContainer from '../components/Homepage/FeatureContainer'
-import HeroSection from '../components/Homepage/HeroSection'
-import Layout from '../components/Homepage/layout/Layout'
-import Page from '../components/Homepage/layout/Page'
+import ContactSection from '@/components/Homepage/ContactSection'
+import FeatureBlock from '@/components/Homepage/FeatureBlock'
+import FeatureBlocksContainer from '@/components/Homepage/FeatureBlocksContainer'
+import FeatureContainer from '@/components/Homepage/FeatureContainer'
+import HeroSection from '@/components/Homepage/HeroSection'
+import Layout from '@/components/Homepage/layout/Layout'
+import Page from '@/components/Homepage/layout/Page'
 
 export default function HomePage(): JSX.Element {
     return (

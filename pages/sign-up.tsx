@@ -12,8 +12,8 @@ import {
 } from '@mui/material'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import * as React from 'react'
-import Layout from '../components/Homepage/layout/Layout'
-import { supabase } from '../libs/initSupabase'
+import Layout from '@/components/Homepage/layout/Layout'
+import { supabase } from '@/libs/initSupabase'
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,

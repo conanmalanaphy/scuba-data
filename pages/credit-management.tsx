@@ -18,24 +18,9 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
-import Wrapper from '../components/Wrapper'
-import { getStripe } from '../libs/stripe-client'
-import WithProtection from '../libs/WithProtection'
-
-const marks = [
-    {
-        value: 100,
-        label: '100',
-    },
-    {
-        value: 500,
-        label: '500',
-    },
-    {
-        value: 1000,
-        label: '1000',
-    },
-]
+import Wrapper from '@/components/Wrapper'
+import { getStripe } from '@/libs/stripe-client'
+import WithProtection from '@/libs/WithProtection'
 
 const postData = async ({
     url,

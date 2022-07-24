@@ -11,9 +11,9 @@ import {
 } from '@mui/material'
 import * as React from 'react'
 import { useState } from 'react'
-import Wrapper from '../components/Wrapper'
-import { supabase } from '../libs/initSupabase'
-import WithProtection from '../libs/WithProtection'
+import Wrapper from '@/components/Wrapper'
+import { supabase } from '@/libs/initSupabase'
+import WithProtection from '@/libs/WithProtection'
 
 function Profile() {
     const profile = supabase.auth.user()

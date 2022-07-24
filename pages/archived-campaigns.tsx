@@ -9,9 +9,9 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
-import Accord from '../components/Accordion'
-import Wrapper from '../components/Wrapper'
-import WithProtection from '../libs/WithProtection'
+import Accordion from '@/components/Accordion'
+import Wrapper from '@/components/Wrapper'
+import WithProtection from '@/libs/WithProtection'
 
 function ArchivedCampaigns() {
     const [expanded, setExpanded] = useState('')
@@ -66,7 +66,7 @@ function ArchivedCampaigns() {
                     >
                         {!error && data ? (
                             data.map((item: any) => (
-                                <Accord
+                                <Accordion
                                     key={item.id}
                                     updateData={() => {}}
                                     item={item}

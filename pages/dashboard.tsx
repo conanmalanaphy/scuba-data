@@ -8,12 +8,12 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
-import ExportModal from '../components/Dashboard/ExportModal'
-import Modal from '../components/Dashboard/ImportModal'
-import Table from '../components/Dashboard/Table'
-import Wrapper from '../components/Wrapper'
-import { supabase } from '../libs/initSupabase'
-import WithProtection from '../libs/WithProtection'
+import ExportModal from '@/components/Dashboard/ExportModal'
+import Modal from '@/components/Dashboard/ImportModal'
+import Table from '@/components/Dashboard/Table'
+import Wrapper from '@/components/Wrapper'
+import { supabase } from '@/libs/initSupabase'
+import WithProtection from '@/libs/WithProtection'
 
 async function pythonScript(
     newData: string[][],
