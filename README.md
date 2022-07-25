@@ -1,6 +1,7 @@
-## Live site 
-Can be found at https://scuba-data.vercel.app/ 
-The test account is 
+## Live site
+
+Can be found at https://scuba-data.vercel.app/
+The test account is
 
 ```
 username: conanmalanaphy@gmail.com
@@ -14,10 +15,10 @@ First, run the development server:
 ```bash
 vercel dev
 ```
+
 This is to test the serverless functions locally
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
 
 ## Prettier
 
@@ -37,7 +38,7 @@ npm run lint
 
 ## Supabase
 
-Database url 
+Database url
 
 ```bash
 https://app.supabase.com/project/axysgpzttgzrhcmcyezv
