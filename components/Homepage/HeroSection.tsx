@@ -30,7 +30,7 @@ export default function HeroSection({
                                 src={image}
                                 width={400}
                                 height={400}
-                                alt="hero"
+                                alt="Diver"
                             />
                         </Container>
                     </Grid>

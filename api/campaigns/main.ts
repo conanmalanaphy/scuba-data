@@ -3,6 +3,28 @@ import { supabase } from '../../libs/initSupabase'
 import jwt_decode, { JwtPayload } from 'jwt-decode'
 import type { NextApiResponse } from 'next'
 
+interface DB_Campaign {
+    user_id: string
+    id: string
+    name: string
+    state: string
+    seniorites: string
+    keywords: string
+    companys_list: string
+    job_titles: string
+}
+
+interface Campaign {
+    user_id: string
+    id: string
+    name: string
+    state: string
+    seniorites: CampaignItem[]
+    keywords: CampaignItem[]
+    companysList: CampaignItem[]
+    jobTitles: CampaignItem[]
+}
+
 const Campaigns: NextApiHandler = async (req, res) => {
     const token: string = req.headers.token as string
     const jwt: JwtPayload = jwt_decode(token)
