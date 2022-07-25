@@ -4,7 +4,7 @@ import Footer from './Footer'
 interface RowProps {
     setOpen: (isOpen: boolean) => void
     open: boolean
-    row: formPost
+    row: FormPost
     handleClickExportOpen: (
         id: number | undefined,
         row_count: number,

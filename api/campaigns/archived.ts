@@ -1,5 +1,5 @@
 import { NextApiHandler } from 'next'
-import { supabase } from '@/libs/initSupabase'
+import { supabase } from '../../libs/initSupabase'
 import jwt_decode, { JwtPayload } from 'jwt-decode'
 import type { NextApiResponse } from 'next'
 

@@ -1,5 +1,5 @@
 import { NextApiHandler } from 'next'
-import { supabase } from '@/libs/initSupabase'
+import { supabase } from '../../libs/initSupabase'
 
 const user: NextApiHandler = async (req, res) => {
     if (req.method === 'POST') {

@@ -1,4 +1,4 @@
-export function sortData(data: formPost[], sortBy: SortBy) {
+export function sortData(data: FormPost[], sortBy: SortBy) {
     switch (sortBy.sortBy) {
         case 'name':
             return [...data].sort((i, j) => {
@@ -30,8 +30,8 @@ export function sortData(data: formPost[], sortBy: SortBy) {
     }
 }
 
-export function filterlist(list: formPost[], name: string) {
-    return list.filter(function (s: formPost) {
+export function filterlist(list: FormPost[], name: string) {
+    return list.filter(function (s: FormPost) {
         return s.name.match(name)
     })
 }

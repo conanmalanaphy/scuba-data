@@ -6,7 +6,7 @@ type Props = {
     title: string
     subtitle: string
     image: string
-    children?: React.ReactNodeArray
+    children?: React.ReactNode
 }
 
 export default function HeroSection({
@@ -14,7 +14,7 @@ export default function HeroSection({
     subtitle,
     image,
     children,
-}: Props): JSX.Element {
+}: Props) {
     return (
         <Box sx={{ backgroundColor: (theme) => theme.palette.secondary.main }}>
             <Container maxWidth="md">

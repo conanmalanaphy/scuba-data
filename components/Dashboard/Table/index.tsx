@@ -15,7 +15,7 @@ import Row from './Row'
 import { filterlist, sortData } from './row.HELPER'
 
 interface TableProps {
-    data: formPost[]
+    data: FormPost[]
     handleClickExportOpen: (
         id: number | undefined,
         cost: number,
@@ -34,7 +34,7 @@ export default function Table({
         sortBy: 'name',
         sortDirection: 'asc',
     })
-    const [sortedData, setSortedData] = useState<formPost[]>([])
+    const [sortedData, setSortedData] = useState<FormPost[]>([])
 
     const requestSort = (pSortBy: string) => {
         let sortOrder: SortDirection = 'asc'

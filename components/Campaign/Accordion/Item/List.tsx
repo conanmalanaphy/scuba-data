@@ -19,6 +19,26 @@ export default function List({
     colour,
     isDisabled,
 }: ListProps) {
+    const onClickHandler = () => {
+        const newItems = items.map((item) => {
+            if (campaignItem.name === item.name) {
+                return {
+                    ...item,
+                    [filterProp]: !newState,
+                }
+            }
+            return item
+        })
+        setState(newItems)
+    }
+
+    const onDeleteHandler = () => {
+        const newItems = items.filter((item) => {
+            return campaignItem.name !== item.name
+        })
+        setState(newItems)
+    }
+
     return (
         <Chip
             disabled={isDisabled}
@@ -28,24 +48,8 @@ export default function List({
                 color: 'white',
             }}
             label={campaignItem.name}
-            onClick={() => {
-                const newItems = items.map((item) => {
-                    if (campaignItem.name === item.name) {
-                        return {
-                            ...item,
-                            [filterProp]: !newState,
-                        }
-                    }
-                    return item
-                })
-                setState(newItems)
-            }}
-            onDelete={() => {
-                const newItems = items.filter((item) => {
-                    return campaignItem.name !== item.name
-                })
-                setState(newItems)
-            }}
+            onClick={onClickHandler}
+            onDelete={onDeleteHandler}
         />
     )
 }

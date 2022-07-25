@@ -1,6 +1,6 @@
 import AddIcon from '@mui/icons-material/Add'
 import { Box, Button, TextField, ButtonGroup } from '@mui/material'
-import { useState } from 'react'
+import { useState, KeyboardEvent } from 'react'
 import { useCSVReader } from 'react-papaparse'
 import List from './List'
 
@@ -26,6 +26,47 @@ export default function Item({
         updateData(data)
     }
 
+    const onInputEnterPress = (ev: KeyboardEvent<HTMLInputElement>) => {
+        if (ev.key === 'Enter' && senority.length > 0) {
+            ev.preventDefault()
+            updateData([
+                ...items,
+                {
+                    name: senority,
+                    isIncluded: true,
+                },
+            ])
+            setSenority('')
+        }
+    }
+
+    const onButtonClick = () => {
+        updateData([
+            ...items,
+            {
+                name: senority,
+                isIncluded: true,
+            },
+        ])
+        setSenority('')
+    }
+
+    const onUploadAccepted = (results: { data: string[][] }) => {
+        const newData = results.data.slice(1)
+        const newItems = newData.reduce((memo: CampaignItem[], b: string[]) => {
+            if (b.length == 2) {
+                memo.push({
+                    name: b[0],
+                    isIncluded: b[1] === 'TRUE',
+                })
+            }
+
+            return memo
+        }, [])
+
+        updateData([...items, ...newItems])
+    }
+
     return (
         <Box
             sx={{
@@ -45,59 +86,17 @@ export default function Item({
                     onChange={(event) => {
                         setSenority(event.target.value)
                     }}
-                    onKeyPress={(ev) => {
-                        if (ev.key === 'Enter' && senority.length > 0) {
-                            ev.preventDefault()
-                            updateData([
-                                ...items,
-                                {
-                                    name: senority,
-                                    isIncluded: true,
-                                },
-                            ])
-                            setSenority('')
-                        }
-                    }}
+                    onKeyPress={onInputEnterPress}
                 />
                 <ButtonGroup sx={{ ml: 2, height: '3rem' }}>
                     <Button
                         disabled={isDisabled || senority.length === 0}
-                        onClick={() => {
-                            updateData([
-                                ...items,
-                                {
-                                    name: senority,
-                                    isIncluded: true,
-                                },
-                            ])
-                            setSenority('')
-                        }}
+                        onClick={onButtonClick}
                     >
                         Add
                     </Button>
                     {includeUpload && (
-                        <CSVReader
-                            onUploadAccepted={(results: {
-                                data: string[][]
-                            }) => {
-                                const newData = results.data.slice(1)
-                                const newItems = newData.reduce(
-                                    (memo: CampaignItem[], b: string[]) => {
-                                        if (b.length == 2) {
-                                            memo.push({
-                                                name: b[0],
-                                                isIncluded: b[1] === 'TRUE',
-                                            })
-                                        }
-
-                                        return memo
-                                    },
-                                    []
-                                )
-
-                                updateData([...items, ...newItems])
-                            }}
-                        >
+                        <CSVReader onUploadAccepted={onUploadAccepted}>
                             {({ getRootProps }: any) => (
                                 <Button
                                     disabled={isDisabled}

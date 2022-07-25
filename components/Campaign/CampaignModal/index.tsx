@@ -11,7 +11,7 @@ import {
     InputLabel,
     SelectChangeEvent,
 } from '@mui/material'
-import { useState } from 'react'
+import { useState, KeyboardEvent } from 'react'
 
 interface CampaignModalProps {
     isOpen: boolean
@@ -33,6 +33,25 @@ export default function CampaignModal({
         setCampaign(event.target.value)
     }
 
+    const onKeyPress = (ev: KeyboardEvent<HTMLInputElement>) => {
+        if (ev.key === 'Enter') {
+            ev.preventDefault()
+
+            const foundCampaign = campaigns?.find((a) => {
+                return a.id == campaign
+            })
+            onSubmit({ ...foundCampaign, id: '', name })
+        }
+    }
+
+    const onSubmitClicked = () => {
+        const foundCampaign = campaigns?.find((a) => {
+            return a.id == campaign
+        })
+
+        onSubmit({ ...foundCampaign, name, id: '' })
+    }
+
     return (
         <Dialog open={isOpen} onClose={handleClose}>
             <DialogTitle>Create a Campaign</DialogTitle>
@@ -49,16 +68,7 @@ export default function CampaignModal({
                     onChange={(event) => {
                         setName(event.target.value)
                     }}
-                    onKeyPress={(ev) => {
-                        if (ev.key === 'Enter') {
-                            ev.preventDefault()
-
-                            const foundCampaign = campaigns?.find((a) => {
-                                return a.id == campaign
-                            })
-                            onSubmit({ ...foundCampaign, id: '', name })
-                        }
-                    }}
+                    onKeyPress={onKeyPress}
                 />
                 {campaigns ? (
                     <FormControl fullWidth sx={{ mt: 3 }}>
@@ -86,16 +96,7 @@ export default function CampaignModal({
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button
-                    onClick={() => {
-                        const foundCampaign = campaigns?.find((a) => {
-                            return a.id == campaign
-                        })
-
-                        onSubmit({ ...foundCampaign, name, id: '' })
-                    }}
-                    disabled={name.length === 0}
-                >
+                <Button onClick={onSubmitClicked} disabled={name.length === 0}>
                     Add
                 </Button>
             </DialogActions>

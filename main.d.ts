@@ -25,7 +25,7 @@ interface Campaign {
     jobTitles: CampaignItem[]
 }
 
-interface formPost {
+interface FormPost {
     id?: number | undefined
     user_id?: string
     name: string

@@ -10,7 +10,7 @@ import {
 
 interface FooterProps {
     open: boolean
-    row: formPost
+    row: FormPost
 }
 
 export default function Footer({ open, row }: FooterProps) {

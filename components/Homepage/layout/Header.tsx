@@ -6,10 +6,9 @@ import {
     Divider,
     Button,
 } from '@mui/material'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
 
-export default function Header(): JSX.Element {
+export default function Header() {
     return (
         <Box
             sx={{

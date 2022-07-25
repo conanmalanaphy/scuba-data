@@ -8,7 +8,7 @@ import { Button, IconButton, TableCell, TableRow } from '@mui/material'
 interface HeaderProps {
     setOpen: (isOpen: boolean) => void
     open: boolean
-    row: formPost
+    row: FormPost
     handleClickExportOpen: (
         id: number | undefined,
         row_count: number,

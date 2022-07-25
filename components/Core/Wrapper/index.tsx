@@ -28,7 +28,7 @@ import {
 import { styled } from '@mui/material/styles'
 import { useRouter } from 'next/router'
 import { Fragment, useState } from 'react'
-import useSWR, { useSWRConfig } from 'swr'
+import useSWR from 'swr'
 import { supabase } from '@/libs/initSupabase'
 
 const drawerWidth = 260

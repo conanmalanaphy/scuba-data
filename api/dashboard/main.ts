@@ -1,7 +1,29 @@
 import { NextApiHandler } from 'next'
-import { supabase } from '@/libs/initSupabase'
+import { supabase } from '../../libs/initSupabase'
 import jwt_decode, { JwtPayload } from 'jwt-decode'
 import type { NextApiResponse } from 'next'
+
+interface FormPost {
+    id?: number | undefined
+    user_id?: string
+    name: string
+    row_count: number
+    file: string
+    campaigns: string[]
+    comp_high: number
+    comp_medium: number
+    comp_low: number
+    job_title_high: number
+    job_title_medium: number
+    job_title_low: number
+    job_title_unique_count: number
+    comp_unique_count: number
+    created_at: string
+    paid_for?: boolean | undefined
+    is_processing: boolean
+    expected_completion_time: string
+    error: string
+}
 
 const Results: NextApiHandler = async (req, res) => {
     const token: string = req.headers.token as string
@@ -22,7 +44,7 @@ const Results: NextApiHandler = async (req, res) => {
 
 const deleteResult = async (
     res: NextApiResponse,
-    body: formPost,
+    body: FormPost,
     jwt: JwtPayload
 ) => {
     const { data, error } = await supabase
@@ -57,7 +79,7 @@ const getResults = async (res: NextApiResponse, jwt: JwtPayload) => {
 
 const newResult = async (
     res: NextApiResponse,
-    body: formPost,
+    body: FormPost,
     jwt: JwtPayload
 ) => {
     const { data, error } = await supabase

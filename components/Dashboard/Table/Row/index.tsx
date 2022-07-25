@@ -3,7 +3,7 @@ import ProcessedRow from './ProcessedRow'
 import UnprocessedRow from './UnprocessedRow'
 
 interface RowProps {
-    row: formPost
+    row: FormPost
     handleClickExportOpen: (
         id: number | undefined,
         row_count: number,

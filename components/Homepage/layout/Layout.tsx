@@ -7,10 +7,7 @@ type Props = {
     isAlt?: boolean
 }
 
-export default function Layout({
-    children,
-    isAlt = false,
-}: Props): JSX.Element {
+export default function Layout({ children, isAlt = false }: Props) {
     return (
         <Box
             sx={{

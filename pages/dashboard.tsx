@@ -17,7 +17,7 @@ import WithProtection from '@/libs/WithProtection'
 
 async function pythonScript(
     newData: string[][],
-    formPost: Campaign,
+    FormPost: Campaign,
     jobTitleCoumn: number,
     companyCoumn: number,
     fileName: string,
@@ -46,14 +46,14 @@ async function pythonScript(
         id: id.toString(),
         jobtitles: processedfile.jobTitles,
         companies: processedfile.compainies,
-        kw: isIncluded(formPost.keywords),
-        exclude_kw: isNotIncluded(formPost.keywords),
-        sen: isIncluded(formPost.seniorites),
-        exclude_sen: isNotIncluded(formPost.seniorites),
-        jt: isIncluded(formPost.jobTitles),
-        exclude_jt: isNotIncluded(formPost.jobTitles),
-        include_companies: isIncluded(formPost.companysList),
-        exclude_companies: isNotIncluded(formPost.companysList),
+        kw: isIncluded(FormPost.keywords),
+        exclude_kw: isNotIncluded(FormPost.keywords),
+        sen: isIncluded(FormPost.seniorites),
+        exclude_sen: isNotIncluded(FormPost.seniorites),
+        jt: isIncluded(FormPost.jobTitles),
+        exclude_jt: isNotIncluded(FormPost.jobTitles),
+        include_companies: isIncluded(FormPost.companysList),
+        exclude_companies: isNotIncluded(FormPost.companysList),
     })
 }
 
@@ -68,7 +68,7 @@ function isNotIncluded(data: CampaignItem[]) {
 function DashboardContent() {
     const [isOpen, setIsOpen] = useState(false)
     const { fetcher, mutate } = useSWRConfig()
-    const { data, error } = useSWR<formPost[]>(`/api/dashboard/main`, {
+    const { data, error } = useSWR<FormPost[]>(`/api/dashboard/main`, {
         refreshInterval: 1000,
     })
 

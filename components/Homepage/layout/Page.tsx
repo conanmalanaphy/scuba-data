@@ -1,5 +1,6 @@
 import { Container, Typography } from '@mui/material'
 import Head from 'next/head'
+import { ConditionalWrapper } from '@/libs/helperFunctions'
 
 type PageProps = {
     title?: string
@@ -13,7 +14,7 @@ export default function Page({
     seoTitle,
     maxWidth = 'md',
     children,
-}: PageProps): JSX.Element {
+}: PageProps) {
     return (
         <PageWrapper title={seoTitle ?? title} maxWidth={maxWidth}>
             {title ? (
@@ -26,17 +27,22 @@ export default function Page({
     )
 }
 
-function PageWrapper({
-    children,
-    title,
-    maxWidth = 'md',
-}: PageProps): JSX.Element {
+function PageWrapper({ children = null, title, maxWidth = 'md' }: PageProps) {
     let titleString = 'ScubaData'
+
     if (title) {
         titleString = 'ScubaData | ' + title
     }
-    if (maxWidth === false) {
-        return (
+
+    return (
+        <ConditionalWrapper
+            condition={maxWidth === false}
+            wrapper={(children) => (
+                <Container maxWidth={maxWidth} sx={{ pt: 2 }}>
+                    {children}
+                </Container>
+            )}
+        >
             <>
                 <Head>
                     <title>{titleString}</title>
@@ -44,30 +50,9 @@ function PageWrapper({
                         name="viewport"
                         content="initial-scale=1, width=device-width"
                     />
-                    <meta
-                        name="description"
-                        content="Modern website templates built with React, Next, Material-UI, Firebase, and more."
-                    />
                 </Head>
                 {children}
             </>
-        )
-    } else {
-        return (
-            <Container maxWidth={maxWidth} sx={{ pt: 2 }}>
-                <Head>
-                    <title>{titleString}</title>
-                    <meta
-                        name="viewport"
-                        content="initial-scale=1, width=device-width"
-                    />
-                    <meta
-                        name="description"
-                        content="Modern website templates built with React, Next, Material-UI, Firebase, and more."
-                    />
-                </Head>
-                {children}
-            </Container>
-        )
-    }
+        </ConditionalWrapper>
+    )
 }

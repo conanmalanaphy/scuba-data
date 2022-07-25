@@ -1,4 +1,4 @@
-import { stripe } from '@/libs/stripe'
+import { stripe } from '../../libs/stripe'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 const createCheckoutSession = async (

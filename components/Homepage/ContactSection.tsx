@@ -2,7 +2,7 @@ import React from 'react'
 import { Typography, Box, Grid, Container, Button } from '@mui/material'
 import Image from 'next/image'
 
-export default function ContactSection(): JSX.Element {
+export default function ContactSection() {
     return (
         <Container maxWidth="md">
             <Box
